@@ -24,8 +24,6 @@
 		451C94AC1D045CE600C5F640 /* EonilJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 451C94A41D045CD600C5F640 /* EonilJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		451C94B01D045F4600C5F640 /* HTTPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C94AF1D045F4600C5F640 /* HTTPService.swift */; };
 		451C94BB1D047CB900C5F640 /* ImplicitImports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C94BA1D047CB900C5F640 /* ImplicitImports.swift */; };
-		451C94D31D0482CB00C5F640 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 451C94D21D0482CB00C5F640 /* README.md */; };
-		451C94D51D0482E800C5F640 /* NOTE.md in Sources */ = {isa = PBXBuildFile; fileRef = 451C94D41D0482E800C5F640 /* NOTE.md */; };
 		459B5F881D0310740081D8FF /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F871D0310740081D8FF /* ApplicationController.swift */; };
 		459B5F8F1D0310740081D8FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F8E1D0310740081D8FF /* Assets.xcassets */; };
 		459B5F921D0310740081D8FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F901D0310740081D8FF /* LaunchScreen.storyboard */; };
@@ -521,11 +519,9 @@
 				459B5FA21D0310B40081D8FF /* Action.swift in Sources */,
 				459B5FDE1D031D140081D8FF /* UtilityFunctions.swift in Sources */,
 				451C94BB1D047CB900C5F640 /* ImplicitImports.swift in Sources */,
-				451C94D51D0482E800C5F640 /* NOTE.md in Sources */,
 				459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */,
 				459B5FAE1D03198E0081D8FF /* HomeViewController.swift in Sources */,
 				451C93E71D0359FE00C5F640 /* DTOSummary.swift in Sources */,
-				451C94D31D0482CB00C5F640 /* README.md in Sources */,
 				451C93B21D031D9200C5F640 /* State.swift in Sources */,
 				451C94B01D045F4600C5F640 /* HTTPService.swift in Sources */,
 				451C93BF1D033B0000C5F640 /* UtilityExtensions.swift in Sources */,
