@@ -7,12 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		451C93B21D031D9200C5F640 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93B11D031D9200C5F640 /* State.swift */; };
+		451C93BB1D03202F00C5F640 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93BA1D03202F00C5F640 /* MainWindowController.swift */; };
+		451C93BF1D033B0000C5F640 /* UtilityExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93BE1D033B0000C5F640 /* UtilityExtensions.swift */; };
+		451C93E71D0359FE00C5F640 /* DTOSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93DF1D0359FE00C5F640 /* DTOSummary.swift */; };
+		451C93E81D0359FE00C5F640 /* DTOAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93E01D0359FE00C5F640 /* DTOAuthor.swift */; };
+		451C93E91D0359FE00C5F640 /* DTOCrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93E11D0359FE00C5F640 /* DTOCrate.swift */; };
+		451C93EA1D0359FE00C5F640 /* DTODependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93E21D0359FE00C5F640 /* DTODependency.swift */; };
+		451C93EB1D0359FE00C5F640 /* DTODownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93E31D0359FE00C5F640 /* DTODownload.swift */; };
+		451C93EC1D0359FE00C5F640 /* DTOKeyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93E41D0359FE00C5F640 /* DTOKeyword.swift */; };
+		451C93ED1D0359FE00C5F640 /* DTOUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93E51D0359FE00C5F640 /* DTOUser.swift */; };
+		451C93EE1D0359FE00C5F640 /* DTOVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93E61D0359FE00C5F640 /* DTOVersion.swift */; };
+		451C93F11D035A0900C5F640 /* JSONParsingExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93EF1D035A0900C5F640 /* JSONParsingExtensions.swift */; };
+		451C93F21D035A0900C5F640 /* JSONParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C93F01D035A0900C5F640 /* JSONParsing.swift */; };
+		451C94AB1D045CE600C5F640 /* EonilJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 451C94A41D045CD600C5F640 /* EonilJSON.framework */; };
+		451C94AC1D045CE600C5F640 /* EonilJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 451C94A41D045CD600C5F640 /* EonilJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		451C94B01D045F4600C5F640 /* HTTPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C94AF1D045F4600C5F640 /* HTTPService.swift */; };
+		451C94BB1D047CB900C5F640 /* ImplicitImports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C94BA1D047CB900C5F640 /* ImplicitImports.swift */; };
+		451C94D31D0482CB00C5F640 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 451C94D21D0482CB00C5F640 /* README.md */; };
+		451C94D51D0482E800C5F640 /* NOTE.md in Sources */ = {isa = PBXBuildFile; fileRef = 451C94D41D0482E800C5F640 /* NOTE.md */; };
 		459B5F881D0310740081D8FF /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F871D0310740081D8FF /* ApplicationController.swift */; };
 		459B5F8F1D0310740081D8FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F8E1D0310740081D8FF /* Assets.xcassets */; };
 		459B5F921D0310740081D8FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F901D0310740081D8FF /* LaunchScreen.storyboard */; };
 		459B5F9A1D03107C0081D8FF /* Driver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F991D03107C0081D8FF /* Driver.swift */; };
 		459B5F9C1D03109F0081D8FF /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F9B1D03109F0081D8FF /* Renderer.swift */; };
-		459B5F9E1D0310A40081D8FF /* UserInteractionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F9D1D0310A40081D8FF /* UserInteractionState.swift */; };
 		459B5FA21D0310B40081D8FF /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FA11D0310B40081D8FF /* Action.swift */; };
 		459B5FA61D0310E30081D8FF /* DriverCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FA51D0310E30081D8FF /* DriverCommand.swift */; };
 		459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FA91D03132A0081D8FF /* APIService.swift */; };
@@ -20,9 +38,163 @@
 		459B5FAE1D03198E0081D8FF /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FAD1D03198E0081D8FF /* HomeViewController.swift */; };
 		459B5FB01D0319960081D8FF /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FAF1D0319960081D8FF /* SearchViewController.swift */; };
 		459B5FB21D0319A00081D8FF /* CrateDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FB11D0319A00081D8FF /* CrateDetailViewController.swift */; };
+		459B5FD41D031C870081D8FF /* EonilToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FD11D031C7C0081D8FF /* EonilToolbox.framework */; };
+		459B5FD51D031C870081D8FF /* EonilToolbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FD11D031C7C0081D8FF /* EonilToolbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		459B5FD91D031C8D0081D8FF /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FBE1D031C780081D8FF /* BoltsSwift.framework */; };
+		459B5FDA1D031C8D0081D8FF /* BoltsSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FBE1D031C780081D8FF /* BoltsSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		459B5FDE1D031D140081D8FF /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		451C94A31D045CD600C5F640 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 451C949C1D045CD600C5F640 /* EonilJSON.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 451C94541D044ABD00C5F640;
+			remoteInfo = "EonilJSON-iOS";
+		};
+		451C94A51D045CD600C5F640 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 451C949C1D045CD600C5F640 /* EonilJSON.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 451C946D1D0451D800C5F640;
+			remoteInfo = "EonilJSON-iOS-Tests";
+		};
+		451C94A71D045CD600C5F640 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 451C949C1D045CD600C5F640 /* EonilJSON.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 451C947F1D0457F300C5F640;
+			remoteInfo = "EonilJSON-OSX";
+		};
+		451C94A91D045CD600C5F640 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 451C949C1D045CD600C5F640 /* EonilJSON.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 451C94901D04595400C5F640;
+			remoteInfo = "EonilJSON-OSX-Tests";
+		};
+		451C94AD1D045CE600C5F640 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 451C949C1D045CD600C5F640 /* EonilJSON.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 451C94531D044ABD00C5F640;
+			remoteInfo = "EonilJSON-iOS";
+		};
+		459B5FBD1D031C780081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 87FEF3661A9085FA00C60678;
+			remoteInfo = "BoltsSwift-iOS";
+		};
+		459B5FBF1D031C780081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 87FEF3711A9085FA00C60678;
+			remoteInfo = "BoltsSwiftTests-iOS";
+		};
+		459B5FC11D031C780081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81CC14EC1A9BE0A100B28F86;
+			remoteInfo = "BoltsSwift-OSX";
+		};
+		459B5FC31D031C780081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81CC14F61A9BE0A100B28F86;
+			remoteInfo = "BoltsSwiftTests-OSX";
+		};
+		459B5FC51D031C780081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 065894FF1C9A93B7000FDDA6;
+			remoteInfo = "BoltsSwift-tvOS";
+		};
+		459B5FC71D031C780081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0658951B1C9A947B000FDDA6;
+			remoteInfo = "BoltsSwiftTests-tvOS";
+		};
+		459B5FC91D031C780081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 065894E71C9A933B000FDDA6;
+			remoteInfo = "BoltsSwift-watchOS";
+		};
+		459B5FD01D031C7C0081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45771A9D1CD0E1A30096947A;
+			remoteInfo = "EonilToolbox-iOS";
+		};
+		459B5FD21D031C7C0081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45771B101CD0EAE10096947A;
+			remoteInfo = "EonilToolbox-OSX";
+		};
+		459B5FD61D031C870081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 45771A9C1CD0E1A30096947A;
+			remoteInfo = "EonilToolbox-iOS";
+		};
+		459B5FDB1D031C8D0081D8FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 87FEF3651A9085FA00C60678;
+			remoteInfo = "BoltsSwift-iOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		459B5FD81D031C870081D8FF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				459B5FD51D031C870081D8FF /* EonilToolbox.framework in Embed Frameworks */,
+				459B5FDA1D031C8D0081D8FF /* BoltsSwift.framework in Embed Frameworks */,
+				451C94AC1D045CE600C5F640 /* EonilJSON.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		451C93B11D031D9200C5F640 /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		451C93BA1D03202F00C5F640 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
+		451C93BE1D033B0000C5F640 /* UtilityExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityExtensions.swift; sourceTree = "<group>"; };
+		451C93DF1D0359FE00C5F640 /* DTOSummary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTOSummary.swift; sourceTree = "<group>"; };
+		451C93E01D0359FE00C5F640 /* DTOAuthor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTOAuthor.swift; sourceTree = "<group>"; };
+		451C93E11D0359FE00C5F640 /* DTOCrate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTOCrate.swift; sourceTree = "<group>"; };
+		451C93E21D0359FE00C5F640 /* DTODependency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTODependency.swift; sourceTree = "<group>"; };
+		451C93E31D0359FE00C5F640 /* DTODownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTODownload.swift; sourceTree = "<group>"; };
+		451C93E41D0359FE00C5F640 /* DTOKeyword.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTOKeyword.swift; sourceTree = "<group>"; };
+		451C93E51D0359FE00C5F640 /* DTOUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTOUser.swift; sourceTree = "<group>"; };
+		451C93E61D0359FE00C5F640 /* DTOVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTOVersion.swift; sourceTree = "<group>"; };
+		451C93EF1D035A0900C5F640 /* JSONParsingExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParsingExtensions.swift; sourceTree = "<group>"; };
+		451C93F01D035A0900C5F640 /* JSONParsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParsing.swift; sourceTree = "<group>"; };
+		451C949C1D045CD600C5F640 /* EonilJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EonilJSON.xcodeproj; path = ../submodules/json.swift/EonilJSON.xcodeproj; sourceTree = "<group>"; };
+		451C94AF1D045F4600C5F640 /* HTTPService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPService.swift; sourceTree = "<group>"; };
+		451C94BA1D047CB900C5F640 /* ImplicitImports.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImplicitImports.swift; sourceTree = "<group>"; };
+		451C94D21D0482CB00C5F640 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		451C94D41D0482E800C5F640 /* NOTE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = NOTE.md; sourceTree = "<group>"; };
 		459B5F841D0310740081D8FF /* CratesIOCatalogue3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CratesIOCatalogue3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		459B5F871D0310740081D8FF /* ApplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationController.swift; sourceTree = "<group>"; };
 		459B5F8E1D0310740081D8FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -30,7 +202,6 @@
 		459B5F931D0310740081D8FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		459B5F991D03107C0081D8FF /* Driver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Driver.swift; sourceTree = "<group>"; };
 		459B5F9B1D03109F0081D8FF /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
-		459B5F9D1D0310A40081D8FF /* UserInteractionState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInteractionState.swift; sourceTree = "<group>"; };
 		459B5FA11D0310B40081D8FF /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		459B5FA51D0310E30081D8FF /* DriverCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverCommand.swift; sourceTree = "<group>"; };
 		459B5FA91D03132A0081D8FF /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
@@ -38,6 +209,9 @@
 		459B5FAD1D03198E0081D8FF /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		459B5FAF1D0319960081D8FF /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		459B5FB11D0319A00081D8FF /* CrateDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateDetailViewController.swift; sourceTree = "<group>"; };
+		459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BoltsSwift.xcodeproj; path = "../submodules/Bolts-Swift/BoltsSwift.xcodeproj"; sourceTree = "<group>"; };
+		459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EonilToolbox.xcodeproj; path = ../submodules/toolbox.swift/EonilToolbox.xcodeproj; sourceTree = "<group>"; };
+		459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,15 +219,52 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				459B5FD41D031C870081D8FF /* EonilToolbox.framework in Frameworks */,
+				459B5FD91D031C8D0081D8FF /* BoltsSwift.framework in Frameworks */,
+				451C94AB1D045CE600C5F640 /* EonilJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		451C93DE1D03598100C5F640 /* (API service) */ = {
+			isa = PBXGroup;
+			children = (
+				459B5FA91D03132A0081D8FF /* APIService.swift */,
+				451C93EF1D035A0900C5F640 /* JSONParsingExtensions.swift */,
+				451C93F01D035A0900C5F640 /* JSONParsing.swift */,
+				451C93DF1D0359FE00C5F640 /* DTOSummary.swift */,
+				451C93E01D0359FE00C5F640 /* DTOAuthor.swift */,
+				451C93E11D0359FE00C5F640 /* DTOCrate.swift */,
+				451C93E21D0359FE00C5F640 /* DTODependency.swift */,
+				451C93E31D0359FE00C5F640 /* DTODownload.swift */,
+				451C93E41D0359FE00C5F640 /* DTOKeyword.swift */,
+				451C93E51D0359FE00C5F640 /* DTOUser.swift */,
+				451C93E61D0359FE00C5F640 /* DTOVersion.swift */,
+			);
+			name = "(API service)";
+			sourceTree = "<group>";
+		};
+		451C949D1D045CD600C5F640 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				451C94A41D045CD600C5F640 /* EonilJSON.framework */,
+				451C94A61D045CD600C5F640 /* EonilJSON-iOS-Tests.xctest */,
+				451C94A81D045CD600C5F640 /* EonilJSON.framework */,
+				451C94AA1D045CD600C5F640 /* EonilJSON-OSX-Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		459B5F7B1D0310730081D8FF = {
 			isa = PBXGroup;
 			children = (
+				451C94D21D0482CB00C5F640 /* README.md */,
+				451C94D41D0482E800C5F640 /* NOTE.md */,
+				451C949C1D045CD600C5F640 /* EonilJSON.xcodeproj */,
+				459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */,
+				459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */,
 				459B5F861D0310740081D8FF /* CratesIOCatalogue3 */,
 				459B5F851D0310740081D8FF /* Products */,
 			);
@@ -72,20 +283,48 @@
 			children = (
 				459B5F991D03107C0081D8FF /* Driver.swift */,
 				459B5FA51D0310E30081D8FF /* DriverCommand.swift */,
-				459B5F9D1D0310A40081D8FF /* UserInteractionState.swift */,
+				451C93B11D031D9200C5F640 /* State.swift */,
 				459B5FA11D0310B40081D8FF /* Action.swift */,
 				459B5F9B1D03109F0081D8FF /* Renderer.swift */,
+				451C93BA1D03202F00C5F640 /* MainWindowController.swift */,
 				459B5FAB1D0319860081D8FF /* RootViewController.swift */,
 				459B5FAD1D03198E0081D8FF /* HomeViewController.swift */,
 				459B5FAF1D0319960081D8FF /* SearchViewController.swift */,
 				459B5FB11D0319A00081D8FF /* CrateDetailViewController.swift */,
-				459B5FA91D03132A0081D8FF /* APIService.swift */,
 				459B5F871D0310740081D8FF /* ApplicationController.swift */,
+				451C93DE1D03598100C5F640 /* (API service) */,
+				451C94AF1D045F4600C5F640 /* HTTPService.swift */,
+				459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */,
+				451C93BE1D033B0000C5F640 /* UtilityExtensions.swift */,
+				451C94BA1D047CB900C5F640 /* ImplicitImports.swift */,
 				459B5F8E1D0310740081D8FF /* Assets.xcassets */,
 				459B5F901D0310740081D8FF /* LaunchScreen.storyboard */,
 				459B5F931D0310740081D8FF /* Info.plist */,
 			);
 			path = CratesIOCatalogue3;
+			sourceTree = "<group>";
+		};
+		459B5FB41D031C780081D8FF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				459B5FBE1D031C780081D8FF /* BoltsSwift.framework */,
+				459B5FC01D031C780081D8FF /* BoltsSwiftTests.xctest */,
+				459B5FC21D031C780081D8FF /* BoltsSwift.framework */,
+				459B5FC41D031C780081D8FF /* BoltsSwiftTests.xctest */,
+				459B5FC61D031C780081D8FF /* BoltsSwift.framework */,
+				459B5FC81D031C780081D8FF /* BoltsSwiftTests.xctest */,
+				459B5FCA1D031C780081D8FF /* BoltsSwift.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		459B5FCC1D031C7C0081D8FF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				459B5FD11D031C7C0081D8FF /* EonilToolbox.framework */,
+				459B5FD31D031C7C0081D8FF /* EonilToolbox.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -98,10 +337,14 @@
 				459B5F801D0310740081D8FF /* Sources */,
 				459B5F811D0310740081D8FF /* Frameworks */,
 				459B5F821D0310740081D8FF /* Resources */,
+				459B5FD81D031C870081D8FF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				459B5FD71D031C870081D8FF /* PBXTargetDependency */,
+				459B5FDC1D031C8D0081D8FF /* PBXTargetDependency */,
+				451C94AE1D045CE600C5F640 /* PBXTargetDependency */,
 			);
 			name = CratesIOCatalogue3;
 			productName = CratesIOCatalogue3;
@@ -134,12 +377,120 @@
 			mainGroup = 459B5F7B1D0310730081D8FF;
 			productRefGroup = 459B5F851D0310740081D8FF /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 459B5FB41D031C780081D8FF /* Products */;
+					ProjectRef = 459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */;
+				},
+				{
+					ProductGroup = 451C949D1D045CD600C5F640 /* Products */;
+					ProjectRef = 451C949C1D045CD600C5F640 /* EonilJSON.xcodeproj */;
+				},
+				{
+					ProductGroup = 459B5FCC1D031C7C0081D8FF /* Products */;
+					ProjectRef = 459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				459B5F831D0310740081D8FF /* CratesIOCatalogue3 */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		451C94A41D045CD600C5F640 /* EonilJSON.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = EonilJSON.framework;
+			remoteRef = 451C94A31D045CD600C5F640 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		451C94A61D045CD600C5F640 /* EonilJSON-iOS-Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "EonilJSON-iOS-Tests.xctest";
+			remoteRef = 451C94A51D045CD600C5F640 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		451C94A81D045CD600C5F640 /* EonilJSON.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = EonilJSON.framework;
+			remoteRef = 451C94A71D045CD600C5F640 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		451C94AA1D045CD600C5F640 /* EonilJSON-OSX-Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "EonilJSON-OSX-Tests.xctest";
+			remoteRef = 451C94A91D045CD600C5F640 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		459B5FBE1D031C780081D8FF /* BoltsSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = BoltsSwift.framework;
+			remoteRef = 459B5FBD1D031C780081D8FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		459B5FC01D031C780081D8FF /* BoltsSwiftTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BoltsSwiftTests.xctest;
+			remoteRef = 459B5FBF1D031C780081D8FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		459B5FC21D031C780081D8FF /* BoltsSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = BoltsSwift.framework;
+			remoteRef = 459B5FC11D031C780081D8FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		459B5FC41D031C780081D8FF /* BoltsSwiftTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BoltsSwiftTests.xctest;
+			remoteRef = 459B5FC31D031C780081D8FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		459B5FC61D031C780081D8FF /* BoltsSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = BoltsSwift.framework;
+			remoteRef = 459B5FC51D031C780081D8FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		459B5FC81D031C780081D8FF /* BoltsSwiftTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BoltsSwiftTests.xctest;
+			remoteRef = 459B5FC71D031C780081D8FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		459B5FCA1D031C780081D8FF /* BoltsSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = BoltsSwift.framework;
+			remoteRef = 459B5FC91D031C780081D8FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		459B5FD11D031C7C0081D8FF /* EonilToolbox.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = EonilToolbox.framework;
+			remoteRef = 459B5FD01D031C7C0081D8FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		459B5FD31D031C7C0081D8FF /* EonilToolbox.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = EonilToolbox.framework;
+			remoteRef = 459B5FD21D031C7C0081D8FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		459B5F821D0310740081D8FF /* Resources */ = {
@@ -160,19 +511,54 @@
 			files = (
 				459B5FB01D0319960081D8FF /* SearchViewController.swift in Sources */,
 				459B5FB21D0319A00081D8FF /* CrateDetailViewController.swift in Sources */,
+				451C93BB1D03202F00C5F640 /* MainWindowController.swift in Sources */,
+				451C93EB1D0359FE00C5F640 /* DTODownload.swift in Sources */,
+				451C93F11D035A0900C5F640 /* JSONParsingExtensions.swift in Sources */,
 				459B5F9C1D03109F0081D8FF /* Renderer.swift in Sources */,
+				451C93E81D0359FE00C5F640 /* DTOAuthor.swift in Sources */,
+				451C93E91D0359FE00C5F640 /* DTOCrate.swift in Sources */,
 				459B5F9A1D03107C0081D8FF /* Driver.swift in Sources */,
 				459B5FA21D0310B40081D8FF /* Action.swift in Sources */,
-				459B5F9E1D0310A40081D8FF /* UserInteractionState.swift in Sources */,
+				459B5FDE1D031D140081D8FF /* UtilityFunctions.swift in Sources */,
+				451C94BB1D047CB900C5F640 /* ImplicitImports.swift in Sources */,
+				451C94D51D0482E800C5F640 /* NOTE.md in Sources */,
 				459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */,
 				459B5FAE1D03198E0081D8FF /* HomeViewController.swift in Sources */,
+				451C93E71D0359FE00C5F640 /* DTOSummary.swift in Sources */,
+				451C94D31D0482CB00C5F640 /* README.md in Sources */,
+				451C93B21D031D9200C5F640 /* State.swift in Sources */,
+				451C94B01D045F4600C5F640 /* HTTPService.swift in Sources */,
+				451C93BF1D033B0000C5F640 /* UtilityExtensions.swift in Sources */,
+				451C93ED1D0359FE00C5F640 /* DTOUser.swift in Sources */,
+				451C93EA1D0359FE00C5F640 /* DTODependency.swift in Sources */,
+				451C93F21D035A0900C5F640 /* JSONParsing.swift in Sources */,
 				459B5F881D0310740081D8FF /* ApplicationController.swift in Sources */,
+				451C93EE1D0359FE00C5F640 /* DTOVersion.swift in Sources */,
 				459B5FAC1D0319860081D8FF /* RootViewController.swift in Sources */,
 				459B5FA61D0310E30081D8FF /* DriverCommand.swift in Sources */,
+				451C93EC1D0359FE00C5F640 /* DTOKeyword.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		451C94AE1D045CE600C5F640 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "EonilJSON-iOS";
+			targetProxy = 451C94AD1D045CE600C5F640 /* PBXContainerItemProxy */;
+		};
+		459B5FD71D031C870081D8FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "EonilToolbox-iOS";
+			targetProxy = 459B5FD61D031C870081D8FF /* PBXContainerItemProxy */;
+		};
+		459B5FDC1D031C8D0081D8FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "BoltsSwift-iOS";
+			targetProxy = 459B5FDB1D031C8D0081D8FF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		459B5F901D0310740081D8FF /* LaunchScreen.storyboard */ = {
@@ -275,6 +661,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = CratesIOCatalogue3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Eonil.CratesIOCatalogue3;
@@ -286,6 +673,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = CratesIOCatalogue3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Eonil.CratesIOCatalogue3;
@@ -312,6 +700,7 @@
 				459B5F981D0310740081D8FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

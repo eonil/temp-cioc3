@@ -6,6 +6,14 @@
 //  Copyright © 2016 Eonil. All rights reserved.
 //
 
+import UIKit
+
 final class Renderer {
-    
+    private let main = MainWindowController()
+    func render() {
+        main.render()
+    }
+}
+protocol Renderable {
+    func render()
 }

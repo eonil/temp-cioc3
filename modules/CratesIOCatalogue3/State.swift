@@ -6,6 +6,8 @@
 //  Copyright © 2016 Eonil. All rights reserved.
 //
 
+import EonilToolbox
+
 struct State {
     var database = DatabaseState()
     var navigation = NavigationState()
@@ -19,21 +21,23 @@ struct DatabaseState {
     var crateDetails = [CrateID: CrateDetailState]()
 }
 struct NavigationState {
-    var screen: ScreenState = .Home
+    var mode: ModeID = .Browse
     var home = HomeState()
     var search: SearchNavigationState?
     var detailStack = [CrateID]()
+
+//    mutating func pushCrateDetail(crateID: CrateID) {
+//
+//    }
 }
-enum ScreenState {
-    case Home
-    /// - Parameter stack:
-    ///     Stacked details screens.
+enum ModeID {
+    case Browse
     case Search
-    case CrateDetail(stack: [CrateID])
 }
 struct HomeState {
-    var popularItems = [CrateID]()
     var newItems = [CrateID]()
+    var popularItems = [CrateID]()
+    var justUpdatedItems = [CrateID]()
 }
 struct SearchNavigationState {
     var expression: String?
@@ -49,14 +53,23 @@ struct DetailNavigationState {
 
 
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MARK: -
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct CrateID: Hashable {
+    private let oid = ObjectAddressID()
     var hashValue: Int {
-        return
+        return oid.hashValue
     }
 }
 func ==(a: CrateID, b: CrateID) -> Bool {
-    return
+    return a.oid == b.oid
 }
+
 struct CrateSummaryState {
 }
 struct CrateDetailState {

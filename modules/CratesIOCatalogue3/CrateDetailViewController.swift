@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class CrateDetailViewController: UIViewController {
+final class CrateDetailViewController: UIViewController, Renderable {
     var crateID: CrateID? {
         didSet {
             render()
@@ -18,6 +18,4 @@ final class CrateDetailViewController: UIViewController {
     func render() {
 
     }
-
-    
 }

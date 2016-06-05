@@ -8,5 +8,8 @@
 
 import UIKit
 
-final class SearchViewController: UISearchContainerViewController {
+final class SearchViewController: UISearchContainerViewController, Renderable {
+    func render() {
+        
+    }
 }

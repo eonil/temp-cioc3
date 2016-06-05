@@ -9,6 +9,9 @@
 import Foundation
 
 enum DriverCommand {
+    case Reset
+    case Pause
+    case Resume
     case WaitForDuration(duration: NSTimeInterval)
     case UserInterface(Action)
 }
