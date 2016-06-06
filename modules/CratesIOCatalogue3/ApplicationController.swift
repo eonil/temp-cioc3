@@ -13,7 +13,10 @@ final class ApplicationController: UIResponder, UIApplicationDelegate, DriverAcc
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         driver.dispatch(DriverCommand.Reset)
-        let h = HomeState(newItems: [CrateID(), CrateID(), CrateID()], popularItems: [CrateID(), CrateID(), CrateID()], justUpdatedItems: [CrateID(), CrateID(), CrateID()])
+        var h = HomeState()
+        h.newItems.appendContentsOf(Repeat(count: 4, repeatedValue: CrateID()))
+        h.popularItems.appendContentsOf(Repeat(count: 4, repeatedValue: CrateID()))
+        h.justUpdatedItems.appendContentsOf(Repeat(count: 4, repeatedValue: CrateID()))
         let n = NavigationState(mode: .Browse, home: h, search: nil, detailStack: [])
         driver.dispatch(DriverCommand.UserInterface(Action.ReconfigureNavigation(n)))
         return true

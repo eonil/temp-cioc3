@@ -24,6 +24,7 @@
 		451C94AC1D045CE600C5F640 /* EonilJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 451C94A41D045CD600C5F640 /* EonilJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		451C94B01D045F4600C5F640 /* HTTPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C94AF1D045F4600C5F640 /* HTTPService.swift */; };
 		451C94BB1D047CB900C5F640 /* ImplicitImports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C94BA1D047CB900C5F640 /* ImplicitImports.swift */; };
+		451C94D71D05096C00C5F640 /* DTOID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C94D61D05096C00C5F640 /* DTOID.swift */; };
 		459B5F881D0310740081D8FF /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F871D0310740081D8FF /* ApplicationController.swift */; };
 		459B5F8F1D0310740081D8FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F8E1D0310740081D8FF /* Assets.xcassets */; };
 		459B5F921D0310740081D8FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F901D0310740081D8FF /* LaunchScreen.storyboard */; };
@@ -193,6 +194,7 @@
 		451C94BA1D047CB900C5F640 /* ImplicitImports.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImplicitImports.swift; sourceTree = "<group>"; };
 		451C94D21D0482CB00C5F640 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		451C94D41D0482E800C5F640 /* NOTE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = NOTE.md; sourceTree = "<group>"; };
+		451C94D61D05096C00C5F640 /* DTOID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTOID.swift; sourceTree = "<group>"; };
 		459B5F841D0310740081D8FF /* CratesIOCatalogue3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CratesIOCatalogue3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		459B5F871D0310740081D8FF /* ApplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationController.swift; sourceTree = "<group>"; };
 		459B5F8E1D0310740081D8FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 				459B5FA91D03132A0081D8FF /* APIService.swift */,
 				451C93EF1D035A0900C5F640 /* JSONParsingExtensions.swift */,
 				451C93F01D035A0900C5F640 /* JSONParsing.swift */,
+				451C94D61D05096C00C5F640 /* DTOID.swift */,
 				451C93DF1D0359FE00C5F640 /* DTOSummary.swift */,
 				451C93E01D0359FE00C5F640 /* DTOAuthor.swift */,
 				451C93E11D0359FE00C5F640 /* DTOCrate.swift */,
@@ -518,6 +521,7 @@
 				459B5F9A1D03107C0081D8FF /* Driver.swift in Sources */,
 				459B5FA21D0310B40081D8FF /* Action.swift in Sources */,
 				459B5FDE1D031D140081D8FF /* UtilityFunctions.swift in Sources */,
+				451C94D71D05096C00C5F640 /* DTOID.swift in Sources */,
 				451C94BB1D047CB900C5F640 /* ImplicitImports.swift in Sources */,
 				459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */,
 				459B5FAE1D03198E0081D8FF /* HomeViewController.swift in Sources */,

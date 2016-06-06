@@ -49,6 +49,7 @@ final class Driver {
         renderer.render()
     }
     private func step(command: DriverCommand) throws {
+        debugPrint("Processing command: `\(command)`")
         switch command {
         case .Reset:
             state = State()

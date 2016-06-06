@@ -11,7 +11,7 @@ public enum DTOAuthor {
     case Name(String)
 }
 extension DTOAuthor {
-	public var description:String {
+	public var name: String {
 		get {
 			switch self {
 			case .User(let s):

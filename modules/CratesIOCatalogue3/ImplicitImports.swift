@@ -9,3 +9,4 @@
 import Foundation.NSURL
 
 typealias NSURL = Foundation.NSURL
+typealias NSDate = Foundation.NSDate

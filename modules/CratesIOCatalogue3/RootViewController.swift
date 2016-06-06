@@ -43,7 +43,6 @@ final class RootViewController: UINavigationController, DriverAccessible, Render
                 }
                 crateDetailStack = driver.state.navigation.detailStack.map({ makeCrateDetailVC($0) })
                 setViewControllers([home] + crateDetailStack, animated: animated)
-                
             }
         }
         currentState = driver.state.navigation

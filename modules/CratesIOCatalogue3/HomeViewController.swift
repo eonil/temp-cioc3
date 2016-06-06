@@ -24,6 +24,11 @@ private enum CellTypeID: String {
 final class HomeViewController: UIViewController, Renderable, DriverAccessible {
     private let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     private var installer = ViewInstaller()
+    private var currentVersion: Version?
+
+    var flowLayout: UICollectionViewFlowLayout? {
+        return collectionView.collectionViewLayout as? UICollectionViewFlowLayout
+    }
     func render() {
         installer.installIfNeeded {
             collectionView.backgroundColor = UIColor.whiteColor()
@@ -33,14 +38,27 @@ final class HomeViewController: UIViewController, Renderable, DriverAccessible {
             collectionView.delegate = self
             view.addSubview(collectionView)
         }
+        renderLayoutOnly()
+        renderSummaryListInformationOnly()
+    }
+    func renderLayoutOnly() {
         collectionView.frame = view.bounds
+        if let flowLayout = flowLayout {
+            flowLayout.itemSize = CGSize(width: collectionView.bounds.width, height: 44)
+        }
+    }
+    func renderSummaryListInformationOnly() {
+        guard currentVersion != driver.state.navigation.home.version else { return }
         collectionView.reloadData()
+        currentVersion = driver.state.navigation.home.version
     }
 }
 extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    @objc
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return SectionID.all.count
     }
+    @objc
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch SectionID.all[section] {
         case .NewCrates:        return driver.state.navigation.home.newItems.count
@@ -48,16 +66,20 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         case .JustUpdated:      return driver.state.navigation.home.justUpdatedItems.count
         }
     }
+    @objc
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellTypeID.CrateSummary.rawValue, forIndexPath: indexPath) as? CrateSummaryCell else {
             return collectionView.dequeueReusableCellWithReuseIdentifier(CellTypeID.Error.rawValue, forIndexPath: indexPath)
         }
         return cell
     }
+    @objc
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         guard let cell = cell as? CrateSummaryCell else { return }
-        cell.crateSummary = driver.state.database.crateSummaries[getCrateIDFor(indexPath)]
+        let crateID = getCrateIDFor(indexPath)
+        cell.crateSummary = driver.state.database.crates[crateID]?.summary
     }
+    @objc
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let crateID = getCrateIDFor(indexPath)
         driver.dispatch(DriverCommand.UserInterface(Action.PushCrateDetail(crateID)))
