@@ -9,12 +9,24 @@
 import BoltsSwift
 import EonilToolbox
 
+/// Application master control.
+///
+/// Driver just dispatches messages to appropriate services and does nothing else.
+///
+/// - Note: I still am not sure on this.
+///         1. Collect all messages and dispatch them globally serially.
+///         2. Expose services directly and let subsystems to dispatch to them directly.
+///             So messages can be dispatched paralelly.
+///
+///
 final class Driver {
     private static let theDriver = Driver()
     private var cmdq = [(DriverCommand,TaskCompletionSource<()>)]()
     private var isPaused = false
-    private(set) var state = State()
-    private let renderer = Renderer()
+
+
+    let userInteraction = UserInteractionService()
+    let operation = OperationService()
 
     init() {
         do {
@@ -40,19 +52,18 @@ final class Driver {
             do {
                 try step(command)
                 completion.trySetResult(())
-                debugPrint(state.navigation.detailStack)
             }
             catch let error {
                 completion.trySetError(error)
             }
         }
-        renderer.render()
     }
     private func step(command: DriverCommand) throws {
-        debugPrint("Processing command: `\(command)`")
+        debugLog(command)
         switch command {
         case .Reset:
-            state = State()
+            // No-op for now.
+            break
 
         case .Pause:
             isPaused = true
@@ -63,14 +74,18 @@ final class Driver {
         case .WaitForDuration(let duration):
             MARK_unimplemented()
 
-        case .UserInterface(let action):
-            switch action {
-            case .ReconfigureNavigation(let n):
-                state.navigation = n
-            case .PushCrateDetail(let crateID):
-                state.navigation.detailStack.append(crateID)
-            }
+        case .Operation(let message):
+            operation.dispatch(message)
+
+        case .UserInteraction(let message):
+            userInteraction.dispatch(message)
         }
+    }
+}
+
+extension Driver {
+    func dispatch(message: OperationCommand) -> Task<()> {
+        return dispatch(DriverCommand.Operation(message))
     }
 }
 

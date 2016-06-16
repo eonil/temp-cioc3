@@ -48,9 +48,9 @@ final class HomeViewController: UIViewController, Renderable, DriverAccessible {
         }
     }
     func renderSummaryListInformationOnly() {
-        guard currentVersion != driver.state.navigation.home.version else { return }
+        guard currentVersion != state.navigation.home.version else { return }
         collectionView.reloadData()
-        currentVersion = driver.state.navigation.home.version
+        currentVersion = state.navigation.home.version
     }
 }
 extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -61,9 +61,9 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     @objc
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch SectionID.all[section] {
-        case .NewCrates:        return driver.state.navigation.home.newItems.count
-        case .MostDownloaded:   return driver.state.navigation.home.popularItems.count
-        case .JustUpdated:      return driver.state.navigation.home.justUpdatedItems.count
+        case .NewCrates:        return state.navigation.home.newItems.count
+        case .MostDownloaded:   return state.navigation.home.popularItems.count
+        case .JustUpdated:      return state.navigation.home.justUpdatedItems.count
         }
     }
     @objc
@@ -77,19 +77,21 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         guard let cell = cell as? CrateSummaryCell else { return }
         let crateID = getCrateIDFor(indexPath)
-        cell.crateSummary = driver.state.database.crates[crateID]?.summary
+        cell.crateSummary = state.database.crates[crateID]?.summary
     }
     @objc
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let crateID = getCrateIDFor(indexPath)
-        driver.dispatch(DriverCommand.UserInterface(Action.PushCrateDetail(crateID)))
+        driver.userInteraction.dispatch { state in
+            state.navigation.pushCrateDetail(crateID)
+        }
     }
 
     private func getCrateIDFor(indexPath: NSIndexPath) -> CrateID {
         switch SectionID.all[indexPath.section] {
-        case .NewCrates:        return driver.state.navigation.home.newItems[indexPath.item]
-        case .MostDownloaded:   return driver.state.navigation.home.popularItems[indexPath.item]
-        case .JustUpdated:      return driver.state.navigation.home.justUpdatedItems[indexPath.item]
+        case .NewCrates:        return state.navigation.home.newItems[indexPath.item]
+        case .MostDownloaded:   return state.navigation.home.popularItems[indexPath.item]
+        case .JustUpdated:      return state.navigation.home.justUpdatedItems[indexPath.item]
         }
     }
 }

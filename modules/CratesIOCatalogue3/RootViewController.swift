@@ -31,27 +31,27 @@ final class RootViewController: UINavigationController, DriverAccessible, Render
 //        case .Search:
 //        }
 
-        if driver.state.navigation.detailStack == [] {
+        if state.navigation.detailStack == [] {
             setViewControllers([home], animated: animated)
         }
         else {
-            if driver.state.navigation.detailStack != (currentState?.detailStack ?? []) {
+            if state.navigation.detailStack != (currentState?.detailStack ?? []) {
                 func makeCrateDetailVC(crateID: CrateID) -> CrateDetailViewController {
                     let vc = CrateDetailViewController()
                     vc.crateID = crateID
                     return vc
                 }
-                crateDetailStack = driver.state.navigation.detailStack.map({ makeCrateDetailVC($0) })
+                crateDetailStack = state.navigation.detailStack.map({ makeCrateDetailVC($0) })
                 setViewControllers([home] + crateDetailStack, animated: animated)
             }
         }
-        currentState = driver.state.navigation
+        currentState = state.navigation
     }
     private func scanNavigationStateOnly() {
-        var navigationState = driver.state.navigation
         let newStack = viewControllers[1..<viewControllers.count].flatMap({ $0 as? CrateDetailViewController }).flatMap({ $0.crateID })
-        navigationState.detailStack = newStack
-        driver.dispatch(DriverCommand.UserInterface(Action.ReconfigureNavigation(navigationState)))
+        driver.userInteraction.dispatch { state in
+            state.navigation.resetDetailStack(newStack)
+        }
     }
 }
 
@@ -62,8 +62,7 @@ extension RootViewController: UINavigationControllerDelegate {
     func navigationController(navigationController: UINavigationController, didShowViewController viewController: UIViewController, animated: Bool) {
         inTransition = false
 
-
-        if driver.state.navigation.detailStack == (currentState?.detailStack ?? []) {
+        if state.navigation.detailStack == (currentState?.detailStack ?? []) {
             // Navigation has not been changed.
             // Whatever user did, it need to be reflected.
             // Follow view state.

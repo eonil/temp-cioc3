@@ -30,7 +30,7 @@ struct APIService {
             let u = NSURLComponents()
             u.scheme = "https"
             u.host = "crates.io"
-            u.path = "/summary"		// This is the only exception that does not use `/api/v1` prefix. I don't know why. Aask them.
+            u.path = "/summary"		// This is the only exception that does not use `/api/v1` prefix. I don't know why. Ask them.
             u.port = 443
             guard let u1 = u.URL else { return Task(error: APIError.CannotMakeRequestURL) }
             return HTTPService.getJSON(u1).continueOnSuccessWith(continuation: { (j: JSON.Value) throws -> DTOSummary in

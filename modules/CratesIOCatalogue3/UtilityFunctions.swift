@@ -10,3 +10,17 @@
 func MARK_unimplemented() {
     fatalError("This feature has not been implemented.")
 }
+
+func debugLog<T>(value: T) {
+    assert({
+        print("\(value)")
+        return true
+    }())
+}
+
+/// `fatalError(message)`, but report first before crash.
+@noreturn
+func fatalErrorWithReporting(message: String) {
+    MARK_unimplemented()
+//    fatalError(message)
+}

@@ -1,5 +1,5 @@
 //
-//  State.swift
+//  UserInteractionState.swift
 //  CratesIOCatalogue3
 //
 //  Created by Hoon H. on 2016/06/04.
@@ -8,26 +8,61 @@
 
 import EonilToolbox
 
-struct State {
+struct UserInteractionState {
     var database = DatabaseState()
     var navigation = NavigationState()
+}
+
+extension UserInteractionState {
+    mutating func reloadHome(dtoSummary: DTOSummary) {
+        navigation.home.justUpdatedItems = dtoSummary.just_updated.map { database.appendOrUpdateCrate($0) }
+        navigation.home.newItems = dtoSummary.new_crates.map { database.appendOrUpdateCrate($0) }
+        navigation.home.popularItems = dtoSummary.most_downloaded.map { database.appendOrUpdateCrate($0) }
+    }
 }
 
 /// View-level state database.
 /// Some data can be thought as a local-cache of remote data obtained by API call.
 /// Some data can be stored in local storage such as SQLite database if needed.
 struct DatabaseState {
-    var crates = [CrateID: CrateState]()
+    private(set) var crates = [CrateID: CrateState]()
+    private var crateServersideIDMapping = [String: CrateID]()
+    mutating func appendOrUpdateCrate(dto: DTOCrate) -> CrateID {
+        if let oldCrateID = crateServersideIDMapping[dto.id] {
+            return oldCrateID
+        }
+        else {
+            let newCrateID = CrateID()
+            crateServersideIDMapping[dto.id] = newCrateID
+            crates[newCrateID] = CrateState(serversideID: dto.id, summary: nil, detail: nil)
+            return newCrateID
+        }
+    }
 }
-struct NavigationState {
-    var mode: ModeID = .Browse
-    var home = HomeState()
-    var search: SearchNavigationState?
-    var detailStack = [CrateID]()
 
-//    mutating func pushCrateDetail(crateID: CrateID) {
-//
-//    }
+/// To change navigation state,
+/// 1. Copy current state
+/// 2. modify it using mutator methods.
+/// 3. Dispatch modified state to driver.
+struct NavigationState {
+    private(set) var mode: ModeID = .Browse
+    private(set) var home = HomeState()
+    private(set) var search: SearchNavigationState?
+    private(set) var detailStack = [CrateID]()
+
+    init() {
+    }
+    mutating func resetDetailStack(newDetailStack: [CrateID]) {
+        detailStack = newDetailStack
+    }
+    mutating func pushCrateDetail(crateID: CrateID) {
+        mode = .Browse
+        detailStack.append(crateID)
+    }
+    mutating func popTopCrateDetail() {
+        mode = .Browse
+        detailStack.removeLast()
+    }
 }
 enum ModeID {
     case Browse
@@ -79,7 +114,7 @@ func ==(a: CrateID, b: CrateID) -> Bool {
 struct CrateState {
     /// Only server manages crate key, so server-side ID
     /// always exists.
-    var serversideID: Int32
+    var serversideID: String
     var summary: CrateSummaryState?
     var detail: CrateDetailState?
 }
