@@ -39,7 +39,6 @@
 		459B5FA61D0310E30081D8FF /* DriverCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FA51D0310E30081D8FF /* DriverCommand.swift */; };
 		459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FA91D03132A0081D8FF /* APIService.swift */; };
 		459B5FAC1D0319860081D8FF /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FAB1D0319860081D8FF /* RootViewController.swift */; };
-		459B5FAE1D03198E0081D8FF /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FAD1D03198E0081D8FF /* HomeViewController.swift */; };
 		459B5FB01D0319960081D8FF /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FAF1D0319960081D8FF /* SearchViewController.swift */; };
 		459B5FB21D0319A00081D8FF /* CrateDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FB11D0319A00081D8FF /* CrateDetailViewController.swift */; };
 		459B5FD41D031C870081D8FF /* EonilToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FD11D031C7C0081D8FF /* EonilToolbox.framework */; };
@@ -216,7 +215,6 @@
 		459B5FA51D0310E30081D8FF /* DriverCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverCommand.swift; sourceTree = "<group>"; };
 		459B5FA91D03132A0081D8FF /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		459B5FAB1D0319860081D8FF /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
-		459B5FAD1D03198E0081D8FF /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		459B5FAF1D0319960081D8FF /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		459B5FB11D0319A00081D8FF /* CrateDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateDetailViewController.swift; sourceTree = "<group>"; };
 		459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BoltsSwift.xcodeproj; path = "../submodules/Bolts-Swift/BoltsSwift.xcodeproj"; sourceTree = "<group>"; };
@@ -286,7 +284,6 @@
 				459B5F9B1D03109F0081D8FF /* Renderer.swift */,
 				451C93BA1D03202F00C5F640 /* MainWindowController.swift */,
 				459B5FAB1D0319860081D8FF /* RootViewController.swift */,
-				459B5FAD1D03198E0081D8FF /* HomeViewController.swift */,
 				458EE5BC1D12E6AE004A1942 /* HomeViewController2.swift */,
 				459B5FAF1D0319960081D8FF /* SearchViewController.swift */,
 				459B5FB11D0319A00081D8FF /* CrateDetailViewController.swift */,
@@ -555,7 +552,6 @@
 				451C94BB1D047CB900C5F640 /* ImplicitImports.swift in Sources */,
 				459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */,
 				458EE5BD1D12E6AE004A1942 /* HomeViewController2.swift in Sources */,
-				459B5FAE1D03198E0081D8FF /* HomeViewController.swift in Sources */,
 				451C93E71D0359FE00C5F640 /* DTOSummary.swift in Sources */,
 				451C93B21D031D9200C5F640 /* UserInteractionState.swift in Sources */,
 				451C94B01D045F4600C5F640 /* HTTPService.swift in Sources */,
