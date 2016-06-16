@@ -10,7 +10,7 @@ import UIKit
 import EonilToolbox
 
 final class RootViewController: UINavigationController, DriverAccessible, Renderable {
-    private let home = HomeViewController()
+    private let home = HomeViewController2()
     private let search = SearchViewController()
     private var installer = ViewInstaller()
     private var inTransition = false

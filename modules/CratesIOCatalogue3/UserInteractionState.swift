@@ -17,7 +17,7 @@ extension UserInteractionState {
     mutating func reloadHome(dtoSummary: DTOSummary) {
         navigation.home.justUpdatedItems = dtoSummary.just_updated.map { database.appendOrUpdateCrate($0) }
         navigation.home.newItems = dtoSummary.new_crates.map { database.appendOrUpdateCrate($0) }
-        navigation.home.popularItems = dtoSummary.most_downloaded.map { database.appendOrUpdateCrate($0) }
+        navigation.home.mostDownloadedItems = dtoSummary.most_downloaded.map { database.appendOrUpdateCrate($0) }
     }
 }
 
@@ -33,8 +33,11 @@ struct DatabaseState {
         }
         else {
             let newCrateID = CrateID()
+            let newCrateSummary = CrateSummaryState(name: dto.name,
+                                                    version: dto.max_version,
+                                                    description: dto.description)
             crateServersideIDMapping[dto.id] = newCrateID
-            crates[newCrateID] = CrateState(serversideID: dto.id, summary: nil, detail: nil)
+            crates[newCrateID] = CrateState(serversideID: dto.id, summary: newCrateSummary, detail: nil)
             return newCrateID
         }
     }
@@ -73,7 +76,7 @@ struct HomeState {
     var newItems = [CrateID]() {
         didSet { version.revise() }
     }
-    var popularItems = [CrateID]() {
+    var mostDownloadedItems = [CrateID]() {
         didSet { version.revise() }
     }
     var justUpdatedItems = [CrateID]() {

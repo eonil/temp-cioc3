@@ -13,7 +13,7 @@ func MARK_unimplemented() {
 
 func debugLog<T>(value: T) {
     assert({
-        print("\(value)")
+        debugPrint("\(value)")
         return true
     }())
 }

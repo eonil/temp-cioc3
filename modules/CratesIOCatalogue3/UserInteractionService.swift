@@ -68,7 +68,7 @@ final class UserInteractionService: DriverAccessible {
             do {
                 try step(command)
                 completion.trySetResult(())
-                debugPrint(state.navigation.detailStack)
+                debugLog(state.navigation.detailStack)
             }
             catch let error {
                 completion.trySetError(error)
@@ -77,7 +77,7 @@ final class UserInteractionService: DriverAccessible {
         renderer.render()
     }
     private func step(command: UserInteractionCommand) throws {
-        debugPrint("Processing command: `\(command)`")
+        debugLog("Processing command: `\(command)`")
         switch command {
         default:
             MARK_unimplemented()

@@ -29,6 +29,8 @@
 		4526FE721D118C0E004495FD /* OperationCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4526FE711D118C0E004495FD /* OperationCommand.swift */; };
 		4526FE751D118D96004495FD /* UserInteractionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4526FE741D118D96004495FD /* UserInteractionService.swift */; };
 		4526FE791D118E1B004495FD /* UserInteractionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4526FE781D118E1B004495FD /* UserInteractionCommand.swift */; };
+		458EE5BD1D12E6AE004A1942 /* HomeViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EE5BC1D12E6AE004A1942 /* HomeViewController2.swift */; };
+		458EE5DF1D12EF2E004A1942 /* Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EE5DE1D12EF2E004A1942 /* Styling.swift */; };
 		459B5F881D0310740081D8FF /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F871D0310740081D8FF /* ApplicationController.swift */; };
 		459B5F8F1D0310740081D8FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F8E1D0310740081D8FF /* Assets.xcassets */; };
 		459B5F921D0310740081D8FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F901D0310740081D8FF /* LaunchScreen.storyboard */; };
@@ -202,6 +204,8 @@
 		4526FE711D118C0E004495FD /* OperationCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationCommand.swift; sourceTree = "<group>"; };
 		4526FE741D118D96004495FD /* UserInteractionService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInteractionService.swift; sourceTree = "<group>"; };
 		4526FE781D118E1B004495FD /* UserInteractionCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInteractionCommand.swift; sourceTree = "<group>"; };
+		458EE5BC1D12E6AE004A1942 /* HomeViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController2.swift; sourceTree = "<group>"; };
+		458EE5DE1D12EF2E004A1942 /* Styling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Styling.swift; sourceTree = "<group>"; };
 		459B5F841D0310740081D8FF /* CratesIOCatalogue3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CratesIOCatalogue3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		459B5F871D0310740081D8FF /* ApplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationController.swift; sourceTree = "<group>"; };
 		459B5F8E1D0310740081D8FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -264,16 +268,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4526FE641D118BAE004495FD /* (operation) */ = {
+		4526FE641D118BAE004495FD /* (operation service) */ = {
 			isa = PBXGroup;
 			children = (
 				4526FE711D118C0E004495FD /* OperationCommand.swift */,
 				4526FE6F1D118BB9004495FD /* OperationService.swift */,
 			);
-			name = "(operation)";
+			name = "(operation service)";
 			sourceTree = "<group>";
 		};
-		4526FE731D118D82004495FD /* (user interaction) */ = {
+		4526FE731D118D82004495FD /* (user interaction service) */ = {
 			isa = PBXGroup;
 			children = (
 				451C93B11D031D9200C5F640 /* UserInteractionState.swift */,
@@ -283,11 +287,13 @@
 				451C93BA1D03202F00C5F640 /* MainWindowController.swift */,
 				459B5FAB1D0319860081D8FF /* RootViewController.swift */,
 				459B5FAD1D03198E0081D8FF /* HomeViewController.swift */,
+				458EE5BC1D12E6AE004A1942 /* HomeViewController2.swift */,
 				459B5FAF1D0319960081D8FF /* SearchViewController.swift */,
 				459B5FB11D0319A00081D8FF /* CrateDetailViewController.swift */,
+				458EE5DE1D12EF2E004A1942 /* Styling.swift */,
 				459B5F871D0310740081D8FF /* ApplicationController.swift */,
 			);
-			name = "(user interaction)";
+			name = "(user interaction service)";
 			sourceTree = "<group>";
 		};
 		459B5F7B1D0310730081D8FF = {
@@ -316,8 +322,8 @@
 			children = (
 				459B5F991D03107C0081D8FF /* Driver.swift */,
 				459B5FA51D0310E30081D8FF /* DriverCommand.swift */,
-				4526FE641D118BAE004495FD /* (operation) */,
-				4526FE731D118D82004495FD /* (user interaction) */,
+				4526FE641D118BAE004495FD /* (operation service) */,
+				4526FE731D118D82004495FD /* (user interaction service) */,
 				451C93DE1D03598100C5F640 /* (API service) */,
 				451C94AF1D045F4600C5F640 /* HTTPService.swift */,
 				459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */,
@@ -548,10 +554,12 @@
 				451C94D71D05096C00C5F640 /* DTOID.swift in Sources */,
 				451C94BB1D047CB900C5F640 /* ImplicitImports.swift in Sources */,
 				459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */,
+				458EE5BD1D12E6AE004A1942 /* HomeViewController2.swift in Sources */,
 				459B5FAE1D03198E0081D8FF /* HomeViewController.swift in Sources */,
 				451C93E71D0359FE00C5F640 /* DTOSummary.swift in Sources */,
 				451C93B21D031D9200C5F640 /* UserInteractionState.swift in Sources */,
 				451C94B01D045F4600C5F640 /* HTTPService.swift in Sources */,
+				458EE5DF1D12EF2E004A1942 /* Styling.swift in Sources */,
 				451C93BF1D033B0000C5F640 /* UtilityExtensions.swift in Sources */,
 				4526FE751D118D96004495FD /* UserInteractionService.swift in Sources */,
 				4526FE791D118E1B004495FD /* UserInteractionCommand.swift in Sources */,
