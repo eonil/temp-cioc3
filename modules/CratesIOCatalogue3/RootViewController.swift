@@ -12,14 +12,15 @@ import EonilToolbox
 final class RootViewController: UINavigationController, DriverAccessible, Renderable {
     private let home = HomeViewController2()
     private let search = SearchViewController()
+    private var crateInspectors = [CrateInspectorViewController]()
     private var installer = ViewInstaller()
     private var inTransition = false
-    private var crateDetailStack = [CrateDetailViewController]()
-    private var currentState: NavigationState?
+    private var renderedState: NavigationState?
 
     func render() {
         installer.installIfNeeded { 
-            self.delegate = self
+            delegate = self
+            viewControllers = [home]
         }
         let needsAnimation = (view.window != nil)
         renderNaivgationStateOnlyAnimated(needsAnimation)
@@ -30,27 +31,32 @@ final class RootViewController: UINavigationController, DriverAccessible, Render
 //        case .Browse:
 //        case .Search:
 //        }
-
-        if state.navigation.detailStack == [] {
-            setViewControllers([home], animated: animated)
-        }
-        else {
-            if state.navigation.detailStack != (currentState?.detailStack ?? []) {
-                func makeCrateDetailVC(crateID: CrateID) -> CrateDetailViewController {
-                    let vc = CrateDetailViewController()
-                    vc.crateID = crateID
-                    return vc
-                }
-                crateDetailStack = state.navigation.detailStack.map({ makeCrateDetailVC($0) })
-                setViewControllers([home] + crateDetailStack, animated: animated)
+        guard state.navigation.version != renderedState?.version else { return }
+        let crateInspectionStack = state.navigation.crateInspectorStack
+        if crateInspectors.count != crateInspectionStack.count {
+            while crateInspectors.count < crateInspectionStack.count {
+                let vc = CrateInspectorViewController()
+                vc.indexInCrateInspectionStateStack = crateInspectors.count
+                crateInspectors.append(vc)
             }
+            while crateInspectors.count > crateInspectionStack.count {
+                crateInspectors.removeLast()
+            }
+            setViewControllers([home] + crateInspectors, animated: animated)
         }
-        currentState = state.navigation
+        renderedState = state.navigation
     }
     private func scanNavigationStateOnly() {
-        let newStack = viewControllers[1..<viewControllers.count].flatMap({ $0 as? CrateDetailViewController }).flatMap({ $0.crateID })
+        // `UINavigationController` can pop a view-controller only by user-interaction.
+        // Anyway popping-only, no pushing.
+        let crateInspectorCount = max(0, viewControllers.count - 1)
+        while crateInspectors.count > crateInspectorCount {
+            crateInspectors.removeLast()
+        }
         driver.userInteraction.dispatchTransaction { state in
-            state.navigation.resetDetailStack(newStack)
+            while state.navigation.crateInspectorStack.count > crateInspectorCount {
+                state.navigation.popTopCrateInspector()
+            }
         }
     }
 }
@@ -61,19 +67,19 @@ extension RootViewController: UINavigationControllerDelegate {
     }
     func navigationController(navigationController: UINavigationController, didShowViewController viewController: UIViewController, animated: Bool) {
         inTransition = false
-
-        if state.navigation.detailStack == (currentState?.detailStack ?? []) {
-            // Navigation has not been changed.
-            // Whatever user did, it need to be reflected.
-            // Follow view state.
-            scanNavigationStateOnly()
-        }
-        else {
-            // Navigation has been changed while transition.
-            // Whatever user did, it's been invalidated.
-            // Follow new state.
-            renderNaivgationStateOnlyAnimated(animated)
-        }
+        scanNavigationStateOnly()
+//        if state.navigation.detailStack == (renderedState?.crateInspectorStack ?? []) {
+//            // Navigation has not been changed.
+//            // Whatever user did, it need to be reflected.
+//            // Follow view state.
+//            scanNavigationStateOnly()
+//        }
+//        else {
+//            // Navigation has been changed while transition.
+//            // Whatever user did, it's been invalidated.
+//            // Follow new state.
+//            renderNaivgationStateOnlyAnimated(animated)
+//        }
     }
 }
 

@@ -109,7 +109,7 @@ extension HomeViewController2: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let crateID = crateIDFor(section: TableSection.all[indexPath.section], row: indexPath.row)
         driver.userInteraction.dispatchTransaction { state in
-            state.navigation.pushCrateDetail(crateID)
+            state.navigation.pushCrateInspector(crateID)
         }
     }
 }

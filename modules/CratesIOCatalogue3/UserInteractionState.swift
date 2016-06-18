@@ -58,29 +58,52 @@ struct DatabaseState {
 /// 2. modify it using mutator methods.
 /// 3. Dispatch modified state to driver.
 struct NavigationState {
+    private(set) var version = Version()
     private(set) var mode: ModeID = .Browse
     private(set) var home = HomeState()
     private(set) var search: SearchNavigationState?
-    private(set) var detailStack = [CrateID]()
+    private(set) var crateInspectorStack = [CrateInspectionState]()
 
     init() {
     }
-    mutating func resetDetailStack(newDetailStack: [CrateID]) {
-        detailStack = newDetailStack
+    mutating func resetCrateInspectorStack(newCrateInspectorStack: [CrateInspectionState]) {
+        crateInspectorStack = newCrateInspectorStack
+        version.revise()
     }
-    mutating func pushCrateDetail(crateID: CrateID) {
-        mode = .Browse
-        detailStack.append(crateID)
+    mutating func setMode(newMode: DatasheetModeID, ofCrateInspectorAtIndex index: Int) {
+        crateInspectorStack[index].datasheetMode = newMode
     }
-    mutating func popTopCrateDetail() {
+    mutating func pushCrateInspector(crateID: CrateID) {
         mode = .Browse
-        detailStack.removeLast()
+        crateInspectorStack.append(CrateInspectionState(crateID: crateID, datasheetMode: .links))
+        version.revise()
+    }
+    mutating func popTopCrateInspector() {
+        mode = .Browse
+        crateInspectorStack.removeLast()
+        version.revise()
     }
 }
+
+
 enum ModeID {
     case Browse
     case Search
 }
+
+struct CrateInspectionState {
+    var crateID: CrateID
+    var datasheetMode = DatasheetModeID.links
+}
+enum DatasheetModeID {
+    case links
+    case dependencies
+    case versions
+}
+extension DatasheetModeID {
+    static let all: [DatasheetModeID] = [.links, .dependencies, .versions]
+}
+
 struct HomeState {
     private(set) var version = Version()
     var newItems = [CrateID]() {

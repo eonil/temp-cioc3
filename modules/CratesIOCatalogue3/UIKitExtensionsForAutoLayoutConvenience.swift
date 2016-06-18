@@ -39,6 +39,27 @@ extension PinnableViewType where Self: UIView {
 //    func pin() {
 //        prepare()
 //    }
+    func pinCenterAndSize() {
+        pinCenter()
+        pinSize()
+    }
+    func pinSize() {
+        prepare()
+        guard let superview = superview else { fatalError("This view cannot be pinned because there's no superview to pin onto.") }
+        pinSizeTo(superview)
+    }
+    func pinCenter() {
+        pinCenterX()
+        pinCenterY()
+    }
+    func pinCenterX() {
+        prepare()
+        append(NSLayoutConstraint(item: self, attribute: .CenterX, relatedBy: .Equal, toItem: superview, attribute: .CenterX, multiplier: 1, constant: 0))
+    }
+    func pinCenterY() {
+        prepare()
+        append(NSLayoutConstraint(item: self, attribute: .CenterY, relatedBy: .Equal, toItem: superview, attribute: .CenterY, multiplier: 1, constant: 0))
+    }
     /// Pins size to a view.
     /// - Parameter view: Must be one of ancestor views.
     func pinSizeTo(view: UIView) {
@@ -63,10 +84,10 @@ extension PinnableViewType where Self: UIView {
 //    }
     /// Pins width to a view.
     /// - Parameter view: Must be one of ancestor views.
-    func pinHeightTo(view: UIView) {
+    func pinHeightTo(view: UIView, constant: CGFloat = 0) {
         assert(isAncestor(view))
         prepare()
-        append(NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .Equal, toItem: view, attribute: .Height, multiplier: 1, constant: 0))
+        append(NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .Equal, toItem: view, attribute: .Height, multiplier: 1, constant: constant))
     }
 
     /// Pins size to a constant value.
@@ -87,27 +108,7 @@ extension PinnableViewType where Self: UIView {
     }
 }
 extension OutlinePinnableViewType where Self: UIView {
-    func pinCenterAndSize() {
-        pinCenter()
-        pinSize()
-    }
-    func pinSize() {
-        prepare()
-        guard let superview = superview else { fatalError("This view cannot be pinned because there's no superview to pin onto.") }
-        pinSizeTo(superview)
-    }
-    func pinCenter() {
-        pinCenterX()
-        pinCenterY()
-    }
-    func pinCenterX() {
-        prepare()
-        append(NSLayoutConstraint(item: self, attribute: .CenterX, relatedBy: .Equal, toItem: superview, attribute: .CenterX, multiplier: 1, constant: 0))
-    }
-    func pinCenterY() {
-        prepare()
-        append(NSLayoutConstraint(item: self, attribute: .CenterY, relatedBy: .Equal, toItem: superview, attribute: .CenterY, multiplier: 1, constant: 0))
-    }
+
     /// Pins left-side on super-view's left-side.
     func pinLeft(displacement: CGFloat = 0) {
         prepare()

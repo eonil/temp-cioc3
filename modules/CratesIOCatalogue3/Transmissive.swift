@@ -25,11 +25,11 @@ struct Transmissive<T> {
         readyTimepoint = nil
     }
     mutating func setTransferring() {
-        assert(launchTimepoint == nil)
+//        assert(launchTimepoint == nil)
         launchTimepoint = NSDate()
     }
     mutating func setDownloaded(newDownloaded: T) {
-        assert(launchTimepoint != nil)
+//        assert(launchTimepoint != nil)
         result = newDownloaded
         readyTimepoint = NSDate()
     }
