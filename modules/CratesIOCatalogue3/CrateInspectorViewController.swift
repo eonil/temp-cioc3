@@ -67,9 +67,9 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             tableView.registerClass(InfoHeaderView.self, forHeaderFooterViewReuseIdentifier: HeaderTypeID.info.rawValue)
             tableView.registerClass(ModeSelectorHeaderView.self, forHeaderFooterViewReuseIdentifier: HeaderTypeID.modeSelector.rawValue)
             tableView.registerClass(ErrorCell.self, forCellReuseIdentifier: CellTypeID.error.rawValue)
-            tableView.registerClass(LinkCell.self, forCellReuseIdentifier: CellTypeID.link.rawValue)
-            tableView.registerClass(DependencyCell.self, forCellReuseIdentifier: CellTypeID.dependency.rawValue)
-            tableView.registerClass(VersionCell.self, forCellReuseIdentifier: CellTypeID.version.rawValue)
+//            tableView.registerClass(LinkCell.self, forCellReuseIdentifier: CellTypeID.link.rawValue)
+//            tableView.registerClass(DependencyCell.self, forCellReuseIdentifier: CellTypeID.dependency.rawValue)
+//            tableView.registerClass(VersionCell.self, forCellReuseIdentifier: CellTypeID.version.rawValue)
             tableView.tableFooterView = UIView()
             tableView.dataSource = self
             tableView.delegate = self
@@ -158,21 +158,24 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
             fatalError()
 
         case .datasheet:
+            func getCell<T: UITableViewCell>(cellTypeID: CellTypeID, style: UITableViewCellStyle) -> T {
+                return (tableView.dequeueReusableCellWithIdentifier(cellTypeID.rawValue) as? T) ?? T(style: style, reuseIdentifier: cellTypeID.rawValue)
+            }
             guard let mode = crateInspectionState?.datasheetMode else { return getErrorCell() }
             switch mode {
             case .links:
-                guard let cell = tableView.dequeueReusableCellWithIdentifier(CellTypeID.link.rawValue) as? LinkCell else { return getErrorCell() }
-                cell.state = linkDatasheetState[indexPath.row]
+                let cell = getCell(.link, style: .Value1) as LinkCell
+                cell.render(linkDatasheetState[indexPath.row])
                 return cell
 
             case .dependencies:
-                guard let cell = tableView.dequeueReusableCellWithIdentifier(CellTypeID.dependency.rawValue) as? DependencyCell else { return getErrorCell() }
-                cell.state = dependencyDatasheetState[indexPath.row]
+                let cell = getCell(.dependency, style: .Value1) as DependencyCell
+                cell.render(dependencyDatasheetState[indexPath.row])
                 return cell
 
             case .versions:
-                guard let cell = tableView.dequeueReusableCellWithIdentifier(CellTypeID.version.rawValue) as? VersionCell else { return getErrorCell() }
-                cell.state = versionDatasheetState[indexPath.row]
+                let cell = getCell(.version, style: .Value1) as VersionCell
+                cell.render(versionDatasheetState[indexPath.row])
                 return cell
             }
         }
@@ -305,57 +308,21 @@ private final class ErrorCell: UITableViewCell {
 
 
 private final class LinkCell: UITableViewCell {
-    var state: (displayName: String, targetURL: NSURL)? {
-        didSet {
-            render()
-        }
-    }
-    convenience init() {
-        self.init(style: UITableViewCellStyle.Value1, reuseIdentifier: CellTypeID.link.rawValue)
-    }
-    private override func layoutSubviews() {
-        super.layoutSubviews()
-        render()
-    }
-    func render() {
-        textLabel?.text = state?.displayName
-        detailTextLabel?.text = state?.targetURL.host
+    func render(newState: (displayName: String, targetURL: NSURL)) {
+        textLabel?.text = newState.displayName
+        detailTextLabel?.text = newState.targetURL.host
     }
 }
 private final class DependencyCell: UITableViewCell {
-    var state: (displayName: String, crateID: CrateID)? {
-        didSet {
-            render()
-        }
-    }
-    convenience init() {
-        self.init(style: UITableViewCellStyle.Default, reuseIdentifier: CellTypeID.dependency.rawValue)
-    }
-    private override func layoutSubviews() {
-        super.layoutSubviews()
-        render()
-    }
-    func render() {
+    func render(newState: (displayName: String, crateID: CrateID)) {
     }
 }
 private final class VersionCell: UITableViewCell {
     /// - Parameter number: A version number expression.
     /// - Parameter timepoint: A IEEE1394 formatted date-time expression.
-    var state: (number: String, timepoint: String)? {
-        didSet {
-            render()
-        }
-    }
-    convenience init() {
-        self.init(style: UITableViewCellStyle.Value2, reuseIdentifier: CellTypeID.version.rawValue)
-    }
-    private override func layoutSubviews() {
-        super.layoutSubviews()
-        render()
-    }
-    func render() {
-        textLabel?.text = state?.number
-        detailTextLabel?.text = state?.timepoint
+    func render(newState: (number: String, timepoint: String)) {
+        textLabel?.text = newState.number
+        detailTextLabel?.text = newState.timepoint
     }
 }
 
