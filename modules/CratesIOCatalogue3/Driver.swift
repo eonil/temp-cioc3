@@ -63,6 +63,10 @@ final class Driver {
         switch command {
         case .Reset:
             // No-op for now.
+            userInteraction.dispatchTransaction { state in
+                state = UserInteractionState()
+            }
+            
             break
 
         case .Pause:
@@ -73,19 +77,7 @@ final class Driver {
 
         case .WaitForDuration(let duration):
             MARK_unimplemented()
-
-        case .Operation(let message):
-            operation.dispatch(message)
-
-        case .UserInteraction(let message):
-            userInteraction.dispatch(message)
         }
-    }
-}
-
-extension Driver {
-    func dispatch(message: OperationCommand) -> Task<()> {
-        return dispatch(DriverCommand.Operation(message))
     }
 }
 

@@ -60,6 +60,16 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
     }
 }
 
+extension HomeViewController2 {
+    private func crateIDFor(section section: TableSection, row: Int) -> CrateID {
+        switch section {
+        case .newCrates:        return state.navigation.home.newItems[row]
+        case .justUpdated:      return state.navigation.home.justUpdatedItems[row]
+        case .mostDownloaded:   return state.navigation.home.mostDownloadedItems[row]
+        }
+    }
+}
+
 extension HomeViewController2: UITableViewDataSource, UITableViewDelegate {
     @objc
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -90,21 +100,17 @@ extension HomeViewController2: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCellWithIdentifier(TableCell.crate.rawValue, forIndexPath: indexPath) as? CrateCell else {
             return tableView.dequeueReusableCellWithIdentifier(TableCell.error.rawValue, forIndexPath: indexPath)
         }
-        let crateID = { () -> CrateID in
-            switch TableSection.all[indexPath.section] {
-            case .newCrates:        return state.navigation.home.newItems[indexPath.row]
-            case .justUpdated:      return state.navigation.home.justUpdatedItems[indexPath.row]
-            case .mostDownloaded:   return state.navigation.home.mostDownloadedItems[indexPath.row]
-            }
-        }()
+        let crateID = crateIDFor(section: TableSection.all[indexPath.section], row: indexPath.row)
         assert(state.database.crates[crateID] != nil)
-        assert(state.database.crates[crateID]!.summary != nil)
-        cell.state = state.database.crates[crateID]?.summary
+        cell.state = state.database.crates[crateID]?.basics
         return cell
     }
     @objc
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-
+        let crateID = crateIDFor(section: TableSection.all[indexPath.section], row: indexPath.row)
+        driver.userInteraction.dispatchTransaction { state in
+            state.navigation.pushCrateDetail(crateID)
+        }
     }
 }
 
@@ -113,7 +119,7 @@ private final class CrateCell: UITableViewCell {
     private let versionLabel = UILabel()
     private let descriptionLabel = UILabel()
     private var installer = ViewInstaller()
-    var state: CrateSummaryState? {
+    var state: CrateStateBasics? {
         didSet {
             render()
         }

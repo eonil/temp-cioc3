@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class Renderer {
+final class Renderer: Renderable, DriverAccessible {
     private let main = MainWindowController()
     func render() {
         main.render()

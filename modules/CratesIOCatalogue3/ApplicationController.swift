@@ -17,7 +17,7 @@ final class ApplicationController: UIResponder, UIApplicationDelegate, DriverAcc
 //        h.newItems.appendContentsOf(Repeat(count: 4, repeatedValue: CrateID()))
 //        h.popularItems.appendContentsOf(Repeat(count: 4, repeatedValue: CrateID()))
 //        h.justUpdatedItems.appendContentsOf(Repeat(count: 4, repeatedValue: CrateID()))
-        driver.dispatch(OperationCommand.ReloadHome)
+        driver.operation.reloadHome()
 
         return true
     }

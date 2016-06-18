@@ -18,6 +18,7 @@ struct HTTPService {
     private init() {
     }
     static func getJSON(u: NSURL) -> Task<JSON.Value> {
+        debugLog("HTTPService.getJSON(\(u)) RUN")
         let completion = TaskCompletionSource<JSON.Value>()
         let task = NSURLSession.sharedSession().dataTaskWithURL(u) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
             guard error == nil else {
@@ -43,7 +44,10 @@ struct HTTPService {
             }
         }
         task.resume()
-        return completion.task
+        return completion.task.continueWithTask(continuation: { (task: Task<JSON.Value>) -> Task<JSON.Value> in
+            debugLog("HTTPService.getJSON(\(u)) DONE")
+            return task
+        })
     }
 }
 

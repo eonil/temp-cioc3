@@ -49,7 +49,7 @@ final class RootViewController: UINavigationController, DriverAccessible, Render
     }
     private func scanNavigationStateOnly() {
         let newStack = viewControllers[1..<viewControllers.count].flatMap({ $0 as? CrateDetailViewController }).flatMap({ $0.crateID })
-        driver.userInteraction.dispatch { state in
+        driver.userInteraction.dispatchTransaction { state in
             state.navigation.resetDetailStack(newStack)
         }
     }

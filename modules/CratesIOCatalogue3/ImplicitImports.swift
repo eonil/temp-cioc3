@@ -7,6 +7,10 @@
 //
 
 import Foundation.NSURL
+import EonilToolbox
 
 typealias NSURL = Foundation.NSURL
 typealias NSDate = Foundation.NSDate
+typealias NSTimeInterval = Foundation.NSTimeInterval
+
+typealias Version = EonilToolbox.Version

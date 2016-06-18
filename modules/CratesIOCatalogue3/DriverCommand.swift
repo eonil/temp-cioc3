@@ -13,6 +13,4 @@ enum DriverCommand {
     case Pause
     case Resume
     case WaitForDuration(duration: NSTimeInterval)
-    case Operation(OperationCommand)
-    case UserInteraction(UserInteractionCommand)
 }
