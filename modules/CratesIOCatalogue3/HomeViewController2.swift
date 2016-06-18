@@ -129,10 +129,11 @@ private final class CrateCell: UITableViewCell {
             contentView.addSubview(nameLabel)
             contentView.addSubview(versionLabel)
             contentView.addSubview(descriptionLabel)
+            descriptionLabel.numberOfLines = 0
         }
-        nameLabel.attributedText = state?.name.attributed().stylizedSilently(.listCellCrateName)
-        versionLabel.attributedText = state?.version.attributed().stylizedSilently(.listCellCrateVersion)
-        descriptionLabel.attributedText = state?.description?.attributed().stylizedSilently(.listCellCrateDescription)
+        nameLabel.attributedText = state?.name.attributed().stylizedSilently(.crateList(.itemName))
+        versionLabel.attributedText = state?.version.attributed().stylizedSilently(.crateList(.itemVersion))
+        descriptionLabel.attributedText = state?.description?.attributed().stylizedSilently(.crateList(.itemDescription))
         renderLayoutOnly()
     }
     private func renderLayoutOnly() {

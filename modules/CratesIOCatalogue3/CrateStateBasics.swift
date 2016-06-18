@@ -22,6 +22,7 @@ extension CrateStateBasics {
     init(dto: DTOCrate) {
         name = dto.name
         version = dto.max_version
+        description = dto.description
         license = dto.license
         downloads = dto.downloads
         homepage = dto.homepage

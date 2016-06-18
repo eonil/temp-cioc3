@@ -21,6 +21,11 @@ final class RootViewController: UINavigationController, DriverAccessible, Render
         installer.installIfNeeded { 
             delegate = self
             viewControllers = [home]
+
+//            // http://stackoverflow.com/a/18969823/246776
+//            navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+//            navigationBar.shadowImage = UIImage()
+//            navigationBar.translucent = true
         }
         let needsAnimation = (view.window != nil)
         renderNaivgationStateOnlyAnimated(needsAnimation)

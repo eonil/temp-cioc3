@@ -9,7 +9,14 @@
 import UIKit
 
 final class Renderer: Renderable, DriverAccessible {
-    private let main = MainWindowController()
+    private let main: MainWindowController
+    init() {
+//        UIView.appearance().tintColor = Style.defaultTintColor
+        UISegmentedControl.appearance().tintColor = Style.weakTintColor
+
+        // Make sure that any UI components to be instantiated after global appearance set up.
+        main = MainWindowController()
+    }
     func render() {
         main.render()
     }

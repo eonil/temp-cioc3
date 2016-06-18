@@ -34,6 +34,7 @@ private extension DatasheetModeID {
 }
 
 final class CrateInspectorViewController: UIViewController, Renderable, DriverAccessible {
+    private let nameLabel = UILabel()
     private let tableView = UITableView()
     private var installer = ViewInstaller()
     private var renderedCrateState: CrateState?
@@ -58,6 +59,13 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
     }
     func render() {
         installer.installIfNeeded {
+            navigationItem.titleView = {
+                // This container is required to make title content (`nameLabel`) to be resized automatically using Auto Layout.
+                let titleContainerView = UIView()
+                titleContainerView.addSubview(nameLabel)
+                nameLabel.pinCenter()
+                return titleContainerView
+            }()
             view.addSubview(tableView)
             tableView.pinCenterAndSize()
             tableView.rowHeight = UITableViewAutomaticDimension
@@ -74,6 +82,7 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             tableView.dataSource = self
             tableView.delegate = self
         }
+        nameLabel.attributedText = crateState?.basics.name.attributed().stylizedSilently(.crateInspector(.titleName))
         renderDatasheetStates()
     }
     private func renderDatasheetStates() {
@@ -201,14 +210,20 @@ private enum HeaderTypeID: String {
 private final class InfoHeaderView: UITableViewHeaderFooterView {
     private let stackView = UIStackView()
     private let authorLabel = UILabel()
+    private let licenseContainerView = UIView()
     private let licenseLabel = UILabel()
-    private let nameLabel = UILabel()
     private let descriptionLabel = UILabel()
-    private let transmissionAcitivityIndicatorView = UIActivityIndicatorView()
     private let downloadCountLabel = UILabel()
+    private let currentVersionLabel = UILabel()
+    private let transmissionAcitivityIndicatorView = UIActivityIndicatorView()
     private var installer = ViewInstaller()
     func render(crateState: CrateState?) {
         installer.installIfNeeded {
+            func getPaddingView(height: CGFloat) -> UIView {
+                let view = UIView()
+                view.pinHeightTo(height)
+                return view
+            }
             backgroundView = UIView()
             backgroundView?.backgroundColor = UIColor.whiteColor()
 //            contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -217,26 +232,37 @@ private final class InfoHeaderView: UITableViewHeaderFooterView {
             stackView.alignment = .Center
             stackView.layoutMarginsRelativeArrangement = true
             stackView.pinCenterX()
-            stackView.pinWidthTo(contentView)
+            stackView.pinWidthTo(contentView, constant: -20)
             stackView.pinTop()
             stackView.pinBottom()
+            stackView.addArrangedSubview(getPaddingView(10))
             stackView.addArrangedSubview(authorLabel)
-            stackView.addArrangedSubview(licenseLabel)
-            stackView.addArrangedSubview(nameLabel)
+            stackView.addArrangedSubview(getPaddingView(10))
+            stackView.addArrangedSubview(licenseContainerView)
+            licenseContainerView.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0.3, alpha: 1)
+            licenseContainerView.layer.cornerRadius = 3
+            licenseContainerView.addSubview(licenseLabel)
+            licenseLabel.pinCenter()
+            licenseLabel.pinWidthTo(licenseContainerView, constant: -6)
+            licenseLabel.pinHeightTo(licenseContainerView, constant: -6)
+            stackView.addArrangedSubview(getPaddingView(30))
+            stackView.addArrangedSubview(getPaddingView(10))
             stackView.addArrangedSubview(descriptionLabel)
+            stackView.addArrangedSubview(getPaddingView(10))
             stackView.addArrangedSubview(downloadCountLabel)
+            stackView.addArrangedSubview(getPaddingView(10))
+            stackView.addArrangedSubview(currentVersionLabel)
+            stackView.addArrangedSubview(getPaddingView(20))
             stackView.addArrangedSubview(transmissionAcitivityIndicatorView)
-            nameLabel.numberOfLines = 0
-//            nameLabel.backgroundColor = UIColor.blueColor()
+            stackView.addArrangedSubview(getPaddingView(20))
             descriptionLabel.numberOfLines = 0
-//            descriptionLabel.backgroundColor = UIColor.redColor()
             transmissionAcitivityIndicatorView.activityIndicatorViewStyle = .Gray
         }
-        authorLabel.text = (crateState?.extras.authors.result ?? []).joinWithSeparator(", ")
-        licenseLabel.text = crateState?.basics.license
-        nameLabel.text = crateState?.basics.name
-        descriptionLabel.text = crateState?.basics.description
-        downloadCountLabel.text = (crateState?.basics.downloads).flatMap { "Downloaded \($0) time\($0 == 1 ? "" : "s")." }
+        authorLabel.attributedText = (crateState?.extras.authors.result ?? []).joinWithSeparator(", ").attributed().stylizedSilently(.crateInspector(.infoAuthor))
+        licenseLabel.attributedText = crateState?.basics.license?.attributed().stylizedSilently(.crateInspector(.infoLicense))
+        descriptionLabel.attributedText = crateState?.basics.description?.attributed().stylizedSilently(.crateInspector(.infoDescription))
+        downloadCountLabel.attributedText = (crateState?.basics.downloads).flatMap { "Downloaded \($0) time\($0 == 1 ? "" : "s")." }?.attributed().stylizedSilently(.crateInspector(.infoDownloadCount))
+        currentVersionLabel.attributedText = (crateState?.basics.version)?.attributed().stylizedSilently(.crateInspector(.infoCurrentVersion))
 //        let isTrasferringDatasheet = (crateState?.extras.isTransferringAny() ?? false)
 //        let canRenderDatasheet = (crateState?.extras.isReady)
 //        datasheetModeSegmentedControl.hidden = (canRenderDatasheet == false)
