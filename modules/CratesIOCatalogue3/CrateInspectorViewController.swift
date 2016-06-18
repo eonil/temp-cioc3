@@ -33,14 +33,23 @@ private extension DatasheetModeID {
     }
 }
 
+
+private struct LocalState {
+    var linkDatasheetState = [LinkItemState]()
+    var dependencyDatasheetState = [DependencyItemState]()
+    var versionDatasheetState = [VersionItemState]()
+}
+private typealias LinkItemState = (displayName: String, targetURL: NSURL)
+private typealias DependencyItemState = (displayName: String, crateID: CrateID)
+private typealias VersionItemState = (number: String, timepoint: String)
+
+
 final class CrateInspectorViewController: UIViewController, Renderable, DriverAccessible {
     private let nameLabel = UILabel()
     private let tableView = UITableView()
     private var installer = ViewInstaller()
     private var renderedCrateState: CrateState?
-    private var linkDatasheetState = [(displayName: String, targetURL: NSURL)]()
-    private var dependencyDatasheetState = [(displayName: String, crateID: CrateID)]()
-    private var versionDatasheetState = [(number: String, timepoint: String)]()
+    private var localState = LocalState()
 
     /// Address to state.
     var indexInCrateInspectionStateStack: Int? {
@@ -88,7 +97,7 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
     private func renderDatasheetStates() {
         if crateState?.version != renderedCrateState?.version {
             renderedCrateState = crateState
-            linkDatasheetState = [
+            localState.linkDatasheetState = [
                 crateState?.basics.homepage.flatMap({ NSURL(string: $0) }).flatMap({ ("Website", $0) }),
                 crateState?.basics.documentation.flatMap({ NSURL(string: $0) }).flatMap({ ("Documentation", $0) }),
                 crateState?.basics.repository.flatMap({ NSURL(string: $0) }).flatMap({ ("Repository", $0) }),
@@ -118,9 +127,9 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
         case .datasheet:
             guard let mode = crateInspectionState?.datasheetMode else { return 0 }
             switch mode {
-            case .links:        return linkDatasheetState.count
-            case .dependencies: return dependencyDatasheetState.count
-            case .versions:     return versionDatasheetState.count
+            case .links:        return localState.linkDatasheetState.count
+            case .dependencies: return localState.dependencyDatasheetState.count
+            case .versions:     return localState.versionDatasheetState.count
             }
         }
     }
@@ -133,7 +142,7 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
             return view
         case .datasheet:
             guard let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderTypeID.modeSelector.rawValue) as? ModeSelectorHeaderView else { return nil }
-            view.render(crateInspectionState?.datasheetMode)
+            view.render(mode: crateInspectionState?.datasheetMode, localState: localState)
             view.onEvent = { [weak self] in
                 guard let S = self else { return }
                 switch $0 {
@@ -174,17 +183,17 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
             switch mode {
             case .links:
                 let cell = getCell(.link, style: .Value1) as LinkCell
-                cell.render(linkDatasheetState[indexPath.row])
+                cell.render(localState.linkDatasheetState[indexPath.row])
                 return cell
 
             case .dependencies:
                 let cell = getCell(.dependency, style: .Value1) as DependencyCell
-                cell.render(dependencyDatasheetState[indexPath.row])
+                cell.render(localState.dependencyDatasheetState[indexPath.row])
                 return cell
 
             case .versions:
                 let cell = getCell(.version, style: .Value1) as VersionCell
-                cell.render(versionDatasheetState[indexPath.row])
+                cell.render(localState.versionDatasheetState[indexPath.row])
                 return cell
             }
         }
@@ -277,7 +286,7 @@ private final class ModeSelectorHeaderView: UITableViewHeaderFooterView {
     private let modeSegmentedControl = UISegmentedControl()
     private var installer = ViewInstaller()
     var onEvent: (ModeSelectorHeaderViewEvent->())?
-    func render(newMode: DatasheetModeID?) {
+    func render(mode newMode: DatasheetModeID?, localState: LocalState) {
         installer.installIfNeeded {
             backgroundView = UIView()
             backgroundView?.backgroundColor = UIColor.whiteColor()
@@ -298,6 +307,9 @@ private final class ModeSelectorHeaderView: UITableViewHeaderFooterView {
             return newIndex
         }
         modeSegmentedControl.selectedSegmentIndex = getModeIndex()
+        modeSegmentedControl.setEnabled(localState.linkDatasheetState.count > 0, forSegmentAtIndex: 0)
+        modeSegmentedControl.setEnabled(localState.dependencyDatasheetState.count > 0, forSegmentAtIndex: 1)
+        modeSegmentedControl.setEnabled(localState.versionDatasheetState.count > 0, forSegmentAtIndex: 2)
     }
     private func scanDatasheetMode() -> DatasheetModeID? {
         guard DatasheetModeID.all.entireRange.contains(modeSegmentedControl.selectedSegmentIndex) else { return nil }
