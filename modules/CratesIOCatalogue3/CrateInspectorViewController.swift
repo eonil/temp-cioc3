@@ -131,7 +131,6 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
 
         titleLabel.attributedText = crateState?.basics?.name.attributed().stylizedSilently(.crateInspector(.titleName))
         renderDatasheetStates()
-        renderInfoViewLayoutOnly()
         renderModeSelectorLayoutOnly()
         renderedStateVersion = state.version
     }
@@ -151,7 +150,7 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
 
     private func reloadDatasheetWithAnimation() {
         let crateStateToRender = crateState
-        UIView.animateWithDuration(1) {
+        UIView.animateWithDuration(0.3) {
             self.infoView.render(crateStateToRender)
             self.infoView.setNeedsLayout()
             self.infoView.layoutIfNeeded()
@@ -200,10 +199,8 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
         }
         modeSelectorSegmentedControl.selectedSegmentIndex = getModeIndex()
         for (index, enabled) in getSegmentEnabled().enumerate() {
+            // This operation is non-animatable. (I tried with `UIView.animate...`, but this doesn't work)
             modeSelectorSegmentedControl.setEnabled(enabled, forSegmentAtIndex: index)
-            //            if modeSegmentedControl.selectedSegmentIndex == index {
-            //                modeSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment
-            //            }
         }
     }
     private func scanDatasheetMode() -> DatasheetModeID? {
@@ -231,15 +228,8 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
     private func getTopInsetWithoutInfoArea() -> CGFloat {
         return 64
     }
-    private func renderInfoViewLayoutOnly() {
-//        let topInsetWithoutInfoArea = getTopInsetWithoutInfoArea()
-//        let h = getInfoHeight()
-////        infoView.frame = tableView.bounds.toBox().toSilentBox().splitInY(h, 0%, 100%).min.toCGRect()
-//        tableView.contentInset.top = (topInsetWithoutInfoArea + h)
-    }
     private func renderModeSelectorLayoutOnly() {
         print(tableView.contentOffset.y)
-//        let topInsetWithoutInfoArea = getTopInsetWithoutInfoArea()
         let contentOffsetY = tableView.contentOffset.y
         let topInset = tableView.contentInset.top
         let displacementInY = topInset + -contentOffsetY + -topInset + getInfoHeight()
@@ -350,16 +340,12 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
 
 private enum CellTypeID: String {
     case error
-    case info
-    case modeSelector
     case link
     case dependency
     case version
 }
 private final class ErrorCell: UITableViewCell {
 }
-
-
 private final class LinkCell: UITableViewCell {
     private var installer = ViewInstaller()
     func render(newState: (displayName: String, targetURL: NSURL)) {
