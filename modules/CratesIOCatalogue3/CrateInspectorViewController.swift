@@ -322,7 +322,27 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
                 return cell
             }
         }
-
+    }
+    @objc
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        switch TableSection.all[indexPath.section] {
+        case .placeholder:
+            // No-op.
+            return
+        case .datasheet:
+            guard let mode = crateInspectionState?.datasheetMode else { return  }
+            switch mode {
+            case .links:
+                UIApplication.sharedApplication().openURL(localState.linkDatasheetState[indexPath.row].targetURL)
+            case .dependencies:
+                let crateID = localState.dependencyDatasheetState[indexPath.row].crateID
+                driver.operation.pushCrateInspectorFor(crateID)
+                
+            case .versions:
+                // No-op.
+                return
+            }
+        }
     }
 }
 

@@ -47,6 +47,22 @@ final class OperationService: DriverAccessible {
             driver.userInteraction.networkActivityRendering.renderFor($0)
         }
     }
+    func reloadCrateFor(crateID: CrateID) -> Task<()> {
+        enum Error: ErrorType {
+            case MissingCrateStateFor(CrateID)
+        }
+        return driver.userInteraction.dispatchQuery { state in
+            guard let crateServersideID = state.database.crates[crateID]?.serversideID else { throw Error.MissingCrateStateFor(crateID) }
+            return crateServersideID
+        }.continueOnSuccessWithTask { [driver] crateServersideID in
+            return API.Crate.show(crateServersideID).continueOnSuccessWithTask { [driver] result in
+                return driver.userInteraction.dispatchTransaction { state in
+                    state.database.appendOrUpdateCrate(result.crate)
+                    state.database.update(crateID: crateID, dto: result.versions)
+                }
+            }
+        }
+    }
     func reloadCrateExtrasFor(crateID: CrateID) -> Task<()> {
         enum Error: ErrorType {
             case MissingCrateStateFor(CrateID)
@@ -85,6 +101,13 @@ final class OperationService: DriverAccessible {
 
         }.branch {
             driver.userInteraction.networkActivityRendering.renderFor($0)
+        }
+    }
+    func pushCrateInspectorFor(crateID: CrateID) -> Task<()> {
+        return reloadCrateFor(crateID).continueOnSuccessWithTask { [driver] _ in
+            return driver.userInteraction.dispatchTransaction { state in
+                state.navigation.pushCrateInspector(crateID)
+            }
         }
     }
 }
