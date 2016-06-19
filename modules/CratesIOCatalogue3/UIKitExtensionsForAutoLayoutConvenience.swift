@@ -35,10 +35,10 @@ extension PinnableViewType where Self: UIView {
         if superview === view { return true }
         return superview?.isAncestor(view) ?? false
     }
-//    /// Just set `translatesAutoresizingMaskIntoConstraints = false`.
-//    func pin() {
-//        prepare()
-//    }
+    /// Just set `translatesAutoresizingMaskIntoConstraints = false`.
+    func pin() {
+        prepare()
+    }
     func pinCenterAndSize() {
         pinCenter()
         pinSize()

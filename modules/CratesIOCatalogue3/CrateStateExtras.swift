@@ -30,6 +30,11 @@ extension CrateStateExtras {
     mutating func update(dto: [DTOAuthor]) {
         authors.setDownloaded(dto.map { $0.name })
     }
+    /// - Parameter dto: Pair of ID and DTO.
+    ///                     The ID must be already inserted into the database.
+    mutating func update(dto: [(CrateID, DTODependency)]) {
+        dependencies.setDownloaded(dto.map { id, dependency in (id, dependency.crate_id) })
+    }
     mutating func update(dto: [DTOVersion]) {
         versions.setDownloaded(dto.map { ($0.num, $0.created_at) })
     }

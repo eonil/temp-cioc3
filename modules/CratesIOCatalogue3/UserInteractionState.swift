@@ -35,18 +35,31 @@ struct DatabaseState {
     mutating func setCrateExtrasTransferring(crateID: CrateID) {
         crates[crateID]?.setExtrasTransferrings()
     }
-    mutating func appendOrUpdateCrate(dto: DTOCrate) -> CrateID {
-        if let oldCrateID = crateServersideIDMapping[dto.id] {
-            crates[oldCrateID]?.update(dto)
+    private mutating func pushCrate(serversideID serversideID: String) -> CrateID {
+        if let oldCrateID = crateServersideIDMapping[serversideID] {
             return oldCrateID
         }
         else {
             let newCrateID = CrateID()
-            let newCrateStateBasics = CrateStateBasics(dto: dto)
-            crateServersideIDMapping[dto.id] = newCrateID
-            crates[newCrateID] = CrateState(serversideID: dto.id, basics: newCrateStateBasics)
+            crateServersideIDMapping[serversideID] = newCrateID
+            crates[newCrateID] = CrateState(serversideID: serversideID)
             return newCrateID
         }
+    }
+    private mutating func appendOrUpdateCrate(dto: DTODependency) -> CrateID {
+        return pushCrate(serversideID: dto.crate_id)
+    }
+    mutating func appendOrUpdateCrate(dto: DTOCrate) -> CrateID {
+        let crateID = pushCrate(serversideID: dto.id)
+        crates[crateID]?.update(dto)
+        return crateID
+    }
+    mutating func update(crateID crateID: CrateID, dto: [DTOAuthor]) {
+        crates[crateID]?.update(dto)
+    }
+    mutating func update(crateID crateID: CrateID, dto: [DTODependency]) {
+        let dto1 = dto.map({ dtoDependency in (pushCrate(serversideID: dtoDependency.crate_id), dtoDependency) })
+        crates[crateID]?.update(dto1)
     }
     mutating func update(crateID crateID: CrateID, dto: [DTOVersion]) {
         crates[crateID]?.update(dto)
@@ -72,6 +85,7 @@ struct NavigationState {
     }
     mutating func setMode(newMode: DatasheetModeID, ofCrateInspectorAtIndex index: Int) {
         crateInspectorStack[index].datasheetMode = newMode
+        version.revise()
     }
     mutating func pushCrateInspector(crateID: CrateID) {
         mode = .Browse

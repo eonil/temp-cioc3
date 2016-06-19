@@ -8,6 +8,7 @@
 
 struct CrateStateBasics {
     var	name: String
+    /// Crate 패키지의 버전입니다.
     var	version: String
     var	description: String?
 

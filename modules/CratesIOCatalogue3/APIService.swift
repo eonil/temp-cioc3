@@ -111,7 +111,7 @@ struct APIService {
             u.port = 443
             guard let u1 = u.URL else { return Task(error: APIError.CannotMakeRequestURL) }
             return HTTPService.getJSON(u1).continueOnSuccessWith(continuation: { (j: JSON.Value) throws -> [DTOAuthor] in
-                guard let a = try j.object?["dependencies"]?.toAuthorArray() else { throw APIError.UnexpectedResponseContent }
+                let a = try j.toAuthorArray() 
                 return a
             })
         }

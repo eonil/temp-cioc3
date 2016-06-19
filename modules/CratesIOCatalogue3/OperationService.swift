@@ -50,20 +50,37 @@ final class OperationService: DriverAccessible {
             case MissingCrateStateFor(CrateID)
 //            case AlreadyTransferringFor(CrateID)
             case NoNeedToReloadFor(CrateID)
+            case MissingCrateBasicVersionFor(CrateID)
         }
+
         return driver.userInteraction.dispatchTransaction { state in
+            // Get crate-state.
             guard let crateState = state.database.crates[crateID] else { throw Error.MissingCrateStateFor(crateID) }
             guard crateState.extras.needsReloadingAny() else { throw Error.NoNeedToReloadFor(crateID) }
 //            guard crateState.extras.isTransferringAny() == false else { throw Error.AlreadyTransferringFor(crateID) }
             state.database.setCrateExtrasTransferring(crateID)
-            return crateState.serversideID
-        }.continueOnSuccessWithTask(Executor.Queue(gcdq)) { [driver] (serversideID: String) -> Task<()> in
-            return API.Crate.show(serversideID).continueOnSuccessWithTask { result in
+            return crateState
+
+        }.continueOnSuccessWithTask(Executor.Queue(gcdq)) { [driver] (crateState: CrateState) -> Task<()> in
+            guard let crateVersion = crateState.basics?.version else { return Task(error: Error.MissingCrateBasicVersionFor(crateID)) }
+            let downloadAuthorsTask = API.Crate.authors(crateState.serversideID, version: crateVersion).continueOnSuccessWithTask { result in
+                return driver.userInteraction.dispatchTransaction { state in
+                    state.database.update(crateID: crateID, dto: result)
+                }
+            }
+            let downloadDependenciesTask = API.Crate.dependencies(crateState.serversideID, version: crateVersion).continueOnSuccessWithTask { result in
+                return driver.userInteraction.dispatchTransaction { state in
+                    state.database.update(crateID: crateID, dto: result)
+                }
+            }
+            let downloadVersionsTask = API.Crate.show(crateState.serversideID).continueOnSuccessWithTask { result in
                 return driver.userInteraction.dispatchTransaction { state in
                     state.database.appendOrUpdateCrate(result.crate)
                     state.database.update(crateID: crateID, dto: result.versions)
                 }
             }
+            return Task.whenAll([downloadAuthorsTask, downloadDependenciesTask, downloadVersionsTask])
+
         }.branch {
             driver.userInteraction.networkActivityRendering.renderFor($0)
         }

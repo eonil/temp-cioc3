@@ -28,10 +28,11 @@ enum CrateInspectorStyle {
     case infoDescription
     case infoCurrentVersion
     case infoDownloadCount
-//    case linkName
-//    case linkValue
-//    case versionName
-//    case versionValue
+    case linkName
+    case linkValue
+    case dependencyName
+    case versionName
+    case versionValue
 }
 private extension Style {
     private func getForegroundColor() -> UIColor {
@@ -50,6 +51,11 @@ private extension Style {
             case .infoDescription:      return UIColor(hue: 0, saturation: 0, brightness: 0.4, alpha: 1)
             case .infoCurrentVersion:   return UIColor(hue: 0, saturation: 0, brightness: 0.4, alpha: 1)
             case .infoDownloadCount:    return UIColor(hue: 0, saturation: 0, brightness: 0.4, alpha: 1)
+            case .linkName:             return UIColor(hue: 0, saturation: 0, brightness: 0.3, alpha: 1)
+            case .linkValue:            return Style.defaultTintColor
+            case .dependencyName:       return UIColor(hue: 0, saturation: 0, brightness: 0.3, alpha: 1)
+            case .versionName:          return UIColor(hue: 0, saturation: 0, brightness: 0.3, alpha: 1)
+            case .versionValue:         return UIColor(hue: 0, saturation: 0, brightness: 0.4, alpha: 1)
             }
         }
     }
@@ -61,21 +67,27 @@ private extension Style {
             guard let font = UIFont(name: name, size: size) else { throw Error.missingFontFor(name: name, size: size) }
             return font
         }
+        let CRATE_NAME_FONT_NAME = "DINCondensed-Bold"
         switch self {
         case let .crateList(substyle):
             switch substyle {
-            case .itemName:             return try getFont(name: "DINCondensed-Bold", size: 22)
+            case .itemName:             return try getFont(name: CRATE_NAME_FONT_NAME, size: 22)
             case .itemVersion:          return try getFont(name: "HelveticaNeue-Light", size: 12)
             case .itemDescription:      return try getFont(name: "HelveticaNeue", size: 12)
             }
         case let .crateInspector(substyle):
             switch substyle {
-            case .titleName:            return try getFont(name: "DINCondensed-Bold", size: 24)
+            case .titleName:            return try getFont(name: CRATE_NAME_FONT_NAME, size: 24)
             case .infoAuthor:           return try getFont(name: "HelveticaNeue-Light", size: 12)
             case .infoLicense:          return try getFont(name: "HelveticaNeue-Bold", size: 8)
             case .infoDescription:      return try getFont(name: "HelveticaNeue-Light", size: 16)
             case .infoCurrentVersion:   return try getFont(name: "HelveticaNeue-Light", size: 12)
             case .infoDownloadCount:    return try getFont(name: "HelveticaNeue-Light", size: 12)
+            case .linkName:             return try getFont(name: "HelveticaNeue-Light", size: 16)
+            case .linkValue:            return UIFont.systemFontOfSize(UIFont.labelFontSize())
+            case .dependencyName:       return try getFont(name: CRATE_NAME_FONT_NAME, size: 16)
+            case .versionName:          return try getFont(name: "HelveticaNeue-Light", size: 16)
+            case .versionValue:         return try getFont(name: "HelveticaNeue-Light", size: 16)
             }
         }
     }
@@ -95,26 +107,22 @@ private extension Style {
             case .infoDescription:      return .Center
             case .infoCurrentVersion:   return .Center
             case .infoDownloadCount:    return .Center
+            case .linkName:             return .Left
+            case .linkValue:            return .Right
+            case .dependencyName:       return .Left
+            case .versionName:          return .Left
+            case .versionValue:         return .Right
             }
         }
     }
     private func getLineBreakMode() -> NSLineBreakMode {
         switch self {
-        case let .crateList(substyle):
-            switch substyle {
-            case .itemName:             return .ByTruncatingTail
-            case .itemVersion:          return .ByTruncatingTail
-            case .itemDescription:      return .ByTruncatingTail
-            }
         case let .crateInspector(substyle):
             switch substyle {
-            case .titleName:            return .ByTruncatingTail
-            case .infoAuthor:           return .ByTruncatingTail
-            case .infoLicense:          return .ByTruncatingTail
-            case .infoDescription:      return .ByTruncatingTail
-            case .infoCurrentVersion:   return .ByTruncatingTail
-            case .infoDownloadCount:    return .ByTruncatingTail
+            case .infoDescription:      return .ByCharWrapping
+            default:                    return .ByTruncatingTail
             }
+        default:                        return .ByTruncatingTail
         }
     }
 }

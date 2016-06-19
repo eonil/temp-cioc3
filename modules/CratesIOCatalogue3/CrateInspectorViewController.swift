@@ -11,6 +11,7 @@ import EonilToolbox
 
 private enum TableSection {
     case dummyForInfoHeader
+//    case dummyForModeSelectorHeader
     case datasheet
 
     static let all: [TableSection] = [.dummyForInfoHeader, .datasheet]
@@ -48,7 +49,7 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
     private let nameLabel = UILabel()
     private let tableView = UITableView()
     private var installer = ViewInstaller()
-    private var renderedCrateState: CrateState?
+    private var renderedStateVersion: Version?
     private var localState = LocalState()
 
     /// Address to state.
@@ -81,8 +82,8 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             tableView.estimatedRowHeight = 44
             tableView.sectionHeaderHeight = UITableViewAutomaticDimension
             tableView.estimatedSectionHeaderHeight = 44
-            tableView.registerClass(InfoHeaderView.self, forHeaderFooterViewReuseIdentifier: HeaderTypeID.info.rawValue)
-            tableView.registerClass(ModeSelectorHeaderView.self, forHeaderFooterViewReuseIdentifier: HeaderTypeID.modeSelector.rawValue)
+            tableView.registerClass(InfoHeaderView.self, forHeaderFooterViewReuseIdentifier: HeaderFooterTypeID.info.rawValue)
+            tableView.registerClass(ModeSelectorHeaderView.self, forHeaderFooterViewReuseIdentifier: HeaderFooterTypeID.modeSelector.rawValue)
             tableView.registerClass(ErrorCell.self, forCellReuseIdentifier: CellTypeID.error.rawValue)
 //            tableView.registerClass(LinkCell.self, forCellReuseIdentifier: CellTypeID.link.rawValue)
 //            tableView.registerClass(DependencyCell.self, forCellReuseIdentifier: CellTypeID.dependency.rawValue)
@@ -90,26 +91,61 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             tableView.tableFooterView = UIView()
             tableView.dataSource = self
             tableView.delegate = self
+            tableView.reloadData()
         }
-        nameLabel.attributedText = crateState?.basics.name.attributed().stylizedSilently(.crateInspector(.titleName))
+        nameLabel.attributedText = crateState?.basics?.name.attributed().stylizedSilently(.crateInspector(.titleName))
         renderDatasheetStates()
+        renderedStateVersion = state.version
     }
     private func renderDatasheetStates() {
-        if crateState?.version != renderedCrateState?.version {
-            renderedCrateState = crateState
+        if state.version != renderedStateVersion {
             localState.linkDatasheetState = [
-                crateState?.basics.homepage.flatMap({ NSURL(string: $0) }).flatMap({ ("Website", $0) }),
-                crateState?.basics.documentation.flatMap({ NSURL(string: $0) }).flatMap({ ("Documentation", $0) }),
-                crateState?.basics.repository.flatMap({ NSURL(string: $0) }).flatMap({ ("Repository", $0) }),
+                crateState?.basics?.homepage.flatMap({ NSURL(string: $0) }).flatMap({ ("Website", $0) }),
+                crateState?.basics?.documentation.flatMap({ NSURL(string: $0) }).flatMap({ ("Documentation", $0) }),
+                crateState?.basics?.repository.flatMap({ NSURL(string: $0) }).flatMap({ ("Repository", $0) }),
             ].flatMap({ $0 })
+            localState.dependencyDatasheetState = (crateState?.extras.dependencies.result ?? []).map { DependencyItemState($0.name, $0.id) }
+            localState.versionDatasheetState = (crateState?.extras.versions.result ?? []).map { VersionItemState($0.0, $0.1) }
+            if let modeSelector = tableView.headerViewForSection(1) as? ModeSelectorHeaderView {
+                modeSelector.render(mode: crateInspectionState?.datasheetMode ?? .links, localState: localState)
+            }
+            reloadDatasheetWithAnimation()
         }
-        tableView.reloadData()
+    }
+
+    private func reloadDatasheetWithAnimation() {
+        tableView.beginUpdates()
+        if let info = tableView.headerViewForSection(0) as? InfoHeaderView {
+            info.render(crateState)
+        }
+        tableView.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Fade)
+        tableView.endUpdates()
+//        if let mode = crateInspectionState?.datasheetMode {
+//            switch mode {
+//            case .links:
+//                let rows = (0..<tableView.numberOfRowsInSection(1)).map { NSIndexPath(forRow: $0, inSection: 1) }
+//                if rows.count > 0 {
+//                    tableView.reloadSections(NSIndexSet(index: 1), withRowAnimation: .None)
+//                }
+//            case .dependencies, .versions:
+////                let oldRow
+//                let rowsToDelete = (0..<tableView.numberOfRowsInSection(1)).map { NSIndexPath(forRow: $0, inSection: 1) }
+//                let rowsToInsert = (0..<tableView(tableView, numberOfRowsInSection: 1)).map { NSIndexPath(forRow: $0, inSection: 1) }
+//                tableView.beginUpdates()
+//                tableView.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: .Fade)
+//                tableView.insertRowsAtIndexPaths(rowsToInsert, withRowAnimation: .Fade)
+//                //        tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .Fade)
+//                tableView.endUpdates()
+//            }
+//        }
+//        else {
+//        }
     }
 }
 
 extension CrateInspectorViewController {
     override func viewWillAppear(animated: Bool) {
-         super.viewWillAppear(animated)
+        super.viewWillAppear(animated)
         (crateInspectionState?.crateID).applyOptionally { driver.operation.reloadCrateExtrasFor($0) }
     }
 }
@@ -137,11 +173,11 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch TableSection.all[section] {
         case .dummyForInfoHeader:
-            guard let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderTypeID.info.rawValue) as? InfoHeaderView else { return nil }
+            guard let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterTypeID.info.rawValue) as? InfoHeaderView else { return nil }
             view.render(crateState)
             return view
         case .datasheet:
-            guard let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderTypeID.modeSelector.rawValue) as? ModeSelectorHeaderView else { return nil }
+            guard let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterTypeID.modeSelector.rawValue) as? ModeSelectorHeaderView else { return nil }
             view.render(mode: crateInspectionState?.datasheetMode, localState: localState)
             view.onEvent = { [weak self] in
                 guard let S = self else { return }
@@ -174,7 +210,6 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
         switch TableSection.all[indexPath.section] {
         case .dummyForInfoHeader:
             fatalError()
-
         case .datasheet:
             func getCell<T: UITableViewCell>(cellTypeID: CellTypeID, style: UITableViewCellStyle) -> T {
                 return (tableView.dequeueReusableCellWithIdentifier(cellTypeID.rawValue) as? T) ?? T(style: style, reuseIdentifier: cellTypeID.rawValue)
@@ -212,7 +247,7 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
 // MARK: -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-private enum HeaderTypeID: String {
+private enum HeaderFooterTypeID: String {
     case info
     case modeSelector
 }
@@ -221,12 +256,14 @@ private final class InfoHeaderView: UITableViewHeaderFooterView {
     private let authorLabel = UILabel()
     private let licenseContainerView = UIView()
     private let licenseLabel = UILabel()
-    private let descriptionLabel = UILabel()
+//    private let descriptionLabel = UILabel()
+    private let descriptionTextView = UITextView()
     private let downloadCountLabel = UILabel()
     private let currentVersionLabel = UILabel()
     private let transmissionAcitivityIndicatorView = UIActivityIndicatorView()
     private var installer = ViewInstaller()
     func render(crateState: CrateState?) {
+        assert(NSThread.isMainThread())
         installer.installIfNeeded {
             func getPaddingView(height: CGFloat) -> UIView {
                 let view = UIView()
@@ -246,32 +283,74 @@ private final class InfoHeaderView: UITableViewHeaderFooterView {
             stackView.pinBottom()
             stackView.addArrangedSubview(getPaddingView(10))
             stackView.addArrangedSubview(authorLabel)
+
             stackView.addArrangedSubview(getPaddingView(10))
             stackView.addArrangedSubview(licenseContainerView)
+            stackView.addArrangedSubview(getPaddingView(30))
+            stackView.addArrangedSubview(getPaddingView(10))
+//            stackView.addArrangedSubview(descriptionLabel)
+            stackView.addArrangedSubview(descriptionTextView)
+            stackView.addArrangedSubview(getPaddingView(10))
+            stackView.addArrangedSubview(downloadCountLabel)
+            stackView.addArrangedSubview(getPaddingView(10))
+            stackView.addArrangedSubview(currentVersionLabel)
+            stackView.addArrangedSubview(getPaddingView(20))
+//            stackView.addArrangedSubview(transmissionAcitivityIndicatorView)
+            stackView.addArrangedSubview(UIView())
             licenseContainerView.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0.3, alpha: 1)
             licenseContainerView.layer.cornerRadius = 3
             licenseContainerView.addSubview(licenseLabel)
             licenseLabel.pinCenter()
             licenseLabel.pinWidthTo(licenseContainerView, constant: -6)
             licenseLabel.pinHeightTo(licenseContainerView, constant: -6)
-            stackView.addArrangedSubview(getPaddingView(30))
-            stackView.addArrangedSubview(getPaddingView(10))
-            stackView.addArrangedSubview(descriptionLabel)
-            stackView.addArrangedSubview(getPaddingView(10))
-            stackView.addArrangedSubview(downloadCountLabel)
-            stackView.addArrangedSubview(getPaddingView(10))
-            stackView.addArrangedSubview(currentVersionLabel)
-            stackView.addArrangedSubview(getPaddingView(20))
-            stackView.addArrangedSubview(transmissionAcitivityIndicatorView)
-            stackView.addArrangedSubview(getPaddingView(20))
-            descriptionLabel.numberOfLines = 0
-            transmissionAcitivityIndicatorView.activityIndicatorViewStyle = .Gray
+//            descriptionLabel.numberOfLines = 0
+            descriptionTextView.scrollEnabled = false
+            descriptionTextView.textContainer.heightTracksTextView = true
+            descriptionTextView.editable = false
+
+//            downloadCountLabel.pinWidthTo(contentView)
+//            transmissionAcitivityIndicatorView.activityIndicatorViewStyle = .Gray
         }
-        authorLabel.attributedText = (crateState?.extras.authors.result ?? []).joinWithSeparator(", ").attributed().stylizedSilently(.crateInspector(.infoAuthor))
-        licenseLabel.attributedText = crateState?.basics.license?.attributed().stylizedSilently(.crateInspector(.infoLicense))
-        descriptionLabel.attributedText = crateState?.basics.description?.attributed().stylizedSilently(.crateInspector(.infoDescription))
-        downloadCountLabel.attributedText = (crateState?.basics.downloads).flatMap { "Downloaded \($0) time\($0 == 1 ? "" : "s")." }?.attributed().stylizedSilently(.crateInspector(.infoDownloadCount))
-        currentVersionLabel.attributedText = (crateState?.basics.version)?.attributed().stylizedSilently(.crateInspector(.infoCurrentVersion))
+
+//        let authorsText = crateState?.extras.authors.result?.joinWithSeparator(", ").attributed().stylizedSilently(.crateInspector(.infoAuthor))
+//        authorLabel.attributedText = authorsText
+//        authorLabel.hidden = (authorsText == nil)
+//        if authorsText == nil {
+//            authorLabel.alpha = 0
+//        }
+//        else {
+//            authorLabel.alpha = 1
+//        }
+//
+
+
+        func animate() {
+            authorLabel.attributedText = crateState?.extras.authors.result?.joinWithSeparator(", ").attributed().stylizedSilently(.crateInspector(.infoAuthor))
+            authorLabel.hidden = (authorLabel.attributedText == nil)
+
+            licenseLabel.attributedText = crateState?.basics?.license?.attributed().stylizedSilently(.crateInspector(.infoLicense))
+            licenseLabel.hidden = (licenseLabel.attributedText == nil)
+
+//            descriptionLabel.attributedText = crateState?.basics?.description?.attributed().stylizedSilently(.crateInspector(.infoDescription))
+//            descriptionLabel.hidden = (descriptionLabel.attributedText == nil)
+            descriptionTextView.attributedText = crateState?.basics?.description?.attributed().stylizedSilently(.crateInspector(.infoDescription))
+            descriptionTextView.hidden = (descriptionTextView.attributedText == nil)
+
+            downloadCountLabel.attributedText = (crateState?.basics?.downloads).flatMap { "Downloaded \($0) time\($0 == 1 ? "" : "s")." }?.attributed().stylizedSilently(.crateInspector(.infoDownloadCount))
+            downloadCountLabel.hidden = (downloadCountLabel.attributedText == nil)
+
+            currentVersionLabel.attributedText = (crateState?.basics?.version)?.attributed().stylizedSilently(.crateInspector(.infoCurrentVersion))
+            currentVersionLabel.hidden = (currentVersionLabel.attributedText == nil)
+
+            stackView.layoutIfNeeded()
+//            authorLabel.layer.removeAllAnimations()
+//            authorLabel.alpha = 1
+        }
+        UIView.animateWithDuration(1) {
+            animate()
+        }
+
+
 //        let isTrasferringDatasheet = (crateState?.extras.isTransferringAny() ?? false)
 //        let canRenderDatasheet = (crateState?.extras.isReady)
 //        datasheetModeSegmentedControl.hidden = (canRenderDatasheet == false)
@@ -301,15 +380,25 @@ private final class ModeSelectorHeaderView: UITableViewHeaderFooterView {
             }
             modeSegmentedControl.addTarget(self, action: #selector(EONIL_modeDidChangeValue(_:)), forControlEvents: .ValueChanged)
         }
+        func getSegmentEnabled() -> [Bool] {
+            return [
+                localState.linkDatasheetState.count > 0,
+                localState.dependencyDatasheetState.count > 0,
+                localState.versionDatasheetState.count > 0,
+            ]
+        }
         func getModeIndex() -> Int {
             guard let newMode = newMode else { return UISegmentedControlNoSegment }
             guard let newIndex = DatasheetModeID.all.indexOf(newMode) else { return UISegmentedControlNoSegment }
             return newIndex
         }
         modeSegmentedControl.selectedSegmentIndex = getModeIndex()
-        modeSegmentedControl.setEnabled(localState.linkDatasheetState.count > 0, forSegmentAtIndex: 0)
-        modeSegmentedControl.setEnabled(localState.dependencyDatasheetState.count > 0, forSegmentAtIndex: 1)
-        modeSegmentedControl.setEnabled(localState.versionDatasheetState.count > 0, forSegmentAtIndex: 2)
+        for (index, enabled) in getSegmentEnabled().enumerate() {
+            modeSegmentedControl.setEnabled(enabled, forSegmentAtIndex: index)
+//            if modeSegmentedControl.selectedSegmentIndex == index {
+//                modeSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment
+//            }
+        }
     }
     private func scanDatasheetMode() -> DatasheetModeID? {
         guard DatasheetModeID.all.entireRange.contains(modeSegmentedControl.selectedSegmentIndex) else { return nil }
@@ -346,21 +435,24 @@ private final class ErrorCell: UITableViewCell {
 
 
 private final class LinkCell: UITableViewCell {
+    private var installer = ViewInstaller()
     func render(newState: (displayName: String, targetURL: NSURL)) {
-        textLabel?.text = newState.displayName
-        detailTextLabel?.text = newState.targetURL.host
+        textLabel?.attributedText = newState.displayName.attributed().stylizedSilently(.crateInspector(.linkName))
+        detailTextLabel?.attributedText = newState.targetURL.host?.attributed().stylizedSilently(.crateInspector(.linkValue))
     }
 }
 private final class DependencyCell: UITableViewCell {
     func render(newState: (displayName: String, crateID: CrateID)) {
+        textLabel?.attributedText = newState.displayName.attributed().stylizedSilently(.crateInspector(.dependencyName))
+        accessoryType = .DisclosureIndicator
     }
 }
 private final class VersionCell: UITableViewCell {
     /// - Parameter number: A version number expression.
     /// - Parameter timepoint: A IEEE1394 formatted date-time expression.
     func render(newState: (number: String, timepoint: String)) {
-        textLabel?.text = newState.number
-        detailTextLabel?.text = newState.timepoint
+        textLabel?.attributedText = newState.number.attributed().stylizedSilently(.crateInspector(.versionName))
+        detailTextLabel?.attributedText = newState.timepoint.attributed().stylizedSilently(.crateInspector(.versionValue))
     }
 }
 

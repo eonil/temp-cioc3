@@ -11,12 +11,12 @@ struct CrateState {
     /// Only server manages crate key, so server-side ID
     /// always exists.
     private(set) var serversideID: String
-    private(set) var basics: CrateStateBasics
+    /// Can be missing if the Crate information is retrieved from dependency query or etc..
+    private(set) var basics: CrateStateBasics?
     private(set) var extras = CrateStateExtras()
 
-    init(serversideID: String, basics: CrateStateBasics) {
+    init(serversideID: String) {
         self.serversideID = serversideID
-        self.basics = basics
     }
     mutating func setExtrasTransferrings() {
         extras.setTransferring()
@@ -24,6 +24,14 @@ struct CrateState {
     }
     mutating func update(dto: DTOCrate) {
         basics = CrateStateBasics(dto: dto)
+        version.revise()
+    }
+    mutating func update(dto: [(CrateID, DTODependency)]) {
+        extras.update(dto)
+        version.revise()
+    }
+    mutating func update(dto: [DTOAuthor]) {
+        extras.update(dto)
         version.revise()
     }
     mutating func update(dto: [DTOVersion]) {
