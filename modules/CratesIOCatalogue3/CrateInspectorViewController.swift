@@ -229,7 +229,6 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
         return 64
     }
     private func renderModeSelectorLayoutOnly() {
-        print(tableView.contentOffset.y)
         let contentOffsetY = tableView.contentOffset.y
         let topInset = tableView.contentInset.top
         let displacementInY = topInset + -contentOffsetY + -topInset + getInfoHeight()
