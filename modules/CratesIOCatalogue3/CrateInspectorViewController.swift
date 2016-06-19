@@ -80,6 +80,7 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
         return (crateInspectionState?.crateID).flatMap({ state.database.crates[$0] })
     }
     func render() {
+        assertMainThread()
         installer.installIfNeeded {
             navigationItem.titleView = {
                 // This container is required to make title content (`nameLabel`) to be resized automatically using Auto Layout.
@@ -181,7 +182,6 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             tableView.endUpdates()
         }
         CATransaction.commit()
-
     }
 
     private func renderModeSelector(mode newMode: DatasheetModeID?, localState: LocalState) {

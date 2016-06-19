@@ -54,7 +54,7 @@ final class OperationService: DriverAccessible {
         return driver.userInteraction.dispatchQuery { state in
             guard let crateServersideID = state.database.crates[crateID]?.serversideID else { throw Error.MissingCrateStateFor(crateID) }
             return crateServersideID
-        }.continueOnSuccessWithTask { [driver] crateServersideID in
+        }.continueOnSuccessWithTask(Executor.Queue(gcdq)) { [driver] crateServersideID in
             return API.Crate.show(crateServersideID).continueOnSuccessWithTask { [driver] result in
                 return driver.userInteraction.dispatchTransaction { state in
                     state.database.appendOrUpdateCrate(result.crate)
@@ -104,11 +104,12 @@ final class OperationService: DriverAccessible {
         }
     }
     func pushCrateInspectorFor(crateID: CrateID) -> Task<()> {
-        return reloadCrateFor(crateID).continueOnSuccessWithTask { [driver] _ in
-            return driver.userInteraction.dispatchTransaction { state in
-                state.navigation.pushCrateInspector(crateID)
-            }
+        let performUI = driver.userInteraction.dispatchTransaction { state in
+            // Perform UI first to provide better UX.
+            state.navigation.pushCrateInspector(crateID)
         }
+        let loadData = driver.operation.reloadCrateFor(crateID)
+        return Task.whenAll([performUI, loadData])
     }
 }
 

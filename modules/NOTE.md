@@ -1,5 +1,8 @@
 
 
+Known Issues
+============
+Sometimes extra loading does not cause rendering and update info-view.
 
 
 

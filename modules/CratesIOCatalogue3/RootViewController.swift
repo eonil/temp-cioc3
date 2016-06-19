@@ -73,18 +73,6 @@ extension RootViewController: UINavigationControllerDelegate {
     func navigationController(navigationController: UINavigationController, didShowViewController viewController: UIViewController, animated: Bool) {
         inTransition = false
         scanNavigationStateOnly()
-//        if state.navigation.detailStack == (renderedState?.crateInspectorStack ?? []) {
-//            // Navigation has not been changed.
-//            // Whatever user did, it need to be reflected.
-//            // Follow view state.
-//            scanNavigationStateOnly()
-//        }
-//        else {
-//            // Navigation has been changed while transition.
-//            // Whatever user did, it's been invalidated.
-//            // Follow new state.
-//            renderNaivgationStateOnlyAnimated(animated)
-//        }
     }
 }
 

@@ -23,7 +23,7 @@ final class CrateInspectorInfoView: UIView, DriverAccessible {
     private var installer = ViewInstaller()
 
     func render(crateState: CrateState?) {
-        assert(NSThread.isMainThread())
+        assertMainThread()
         installer.installIfNeeded {
             func getPaddingView(height: CGFloat) -> UIView {
                 let view = UIView()
@@ -75,7 +75,6 @@ final class CrateInspectorInfoView: UIView, DriverAccessible {
             descriptionTextView.scrollEnabled = false
             descriptionTextView.textContainer.heightTracksTextView = true
             descriptionTextView.editable = false
-
         }
 
         renderValuesOnly(crateState)
@@ -95,8 +94,7 @@ final class CrateInspectorInfoView: UIView, DriverAccessible {
             transmissionAcitivityIndicatorView.alpha = (isTransferring ? 1 : 0)
         }
         authorLabel.alpha = (authorLabel.attributedText == nil) ? 0 : 1
-
-        licenseLabel.hidden = (licenseLabel.attributedText == nil)
+        licenseContainerView.hidden = (licenseLabel.attributedText == nil)
         descriptionTextView.hidden = (descriptionTextView.attributedText == nil)
         downloadCountLabel.hidden = (downloadCountLabel.attributedText == nil)
         currentVersionLabel.hidden = (currentVersionLabel.attributedText == nil)

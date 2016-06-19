@@ -27,6 +27,7 @@ struct APIService {
     struct Home {
         /// Gets summary for home screen.
         static func summary() -> Task<DTOSummary> {
+            assertNonMainThread()
             let u = NSURLComponents()
             u.scheme = "https"
             u.host = "crates.io"
@@ -47,6 +48,7 @@ struct APIService {
         /// - Parameter page:
         ///     0-based page index.
         static func index(query: String?, page: Int, per_page: Int, sort: Sort) -> Task<[DTOCrate]> {
+            assertNonMainThread()
             assert(query == nil || query != "", "Query text must be `nil` or non-zero length string.")
             let	ps = [
                 "page"		:	(page+1).description,
@@ -72,6 +74,7 @@ struct APIService {
     struct Crate {
         typealias ShowResult = (crate:DTOCrate, versions:[DTOVersion], keywords:[DTOKeyword])
         static func show(id: String) -> Task<ShowResult> {
+            assertNonMainThread()
             let u = NSURLComponents()
             u.scheme = "https"
             u.host = "crates.io"
@@ -89,6 +92,7 @@ struct APIService {
         /// - Parameter version:
         ///     Semantic versioning expression. (ex: `0.0.1`)
         static func dependencies(crate_id:String, version:String) -> Task<[DTODependency]> {
+            assertNonMainThread()
             let u = NSURLComponents()
             u.scheme = "https"
             u.host = "crates.io"
@@ -104,6 +108,7 @@ struct APIService {
         /// - Parameter version:
         ///     Semantic versioning expression. (ex: `0.0.1`)
         static func authors(crate_id:String, version:String) -> Task<[DTOAuthor]> {
+            assertNonMainThread()
             let u = NSURLComponents()
             u.scheme = "https"
             u.host = "crates.io"

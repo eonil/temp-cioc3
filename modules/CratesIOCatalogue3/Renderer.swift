@@ -10,6 +10,8 @@ import UIKit
 
 final class Renderer: Renderable, DriverAccessible {
     private let main: MainWindowController
+    private var renderCount = 0
+
     init() {
 //        UIView.appearance().tintColor = Style.defaultTintColor
         UISegmentedControl.appearance().tintColor = Style.weakTintColor
@@ -27,6 +29,8 @@ final class Renderer: Renderable, DriverAccessible {
         main = MainWindowController()
     }
     func render() {
+        renderCount += 1
+        debugLog("renderCount = \(renderCount)")
         main.render()
     }
 }
