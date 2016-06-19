@@ -39,6 +39,7 @@
 		458EE6561D15232F004A1942 /* CrateStateBasics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EE6551D15232F004A1942 /* CrateStateBasics.swift */; };
 		458EE6591D152889004A1942 /* NetworkActivityRenderingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EE6581D152889004A1942 /* NetworkActivityRenderingService.swift */; };
 		458EE65B1D152AC0004A1942 /* BoltsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EE65A1D152AC0004A1942 /* BoltsExtensions.swift */; };
+		458EE67B1D168AAA004A1942 /* CrateInspectorInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EE67A1D168AAA004A1942 /* CrateInspectorInfoView.swift */; };
 		459B5F881D0310740081D8FF /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F871D0310740081D8FF /* ApplicationController.swift */; };
 		459B5F8F1D0310740081D8FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F8E1D0310740081D8FF /* Assets.xcassets */; };
 		459B5F921D0310740081D8FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F901D0310740081D8FF /* LaunchScreen.storyboard */; };
@@ -221,6 +222,7 @@
 		458EE6551D15232F004A1942 /* CrateStateBasics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateStateBasics.swift; sourceTree = "<group>"; };
 		458EE6581D152889004A1942 /* NetworkActivityRenderingService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivityRenderingService.swift; sourceTree = "<group>"; };
 		458EE65A1D152AC0004A1942 /* BoltsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoltsExtensions.swift; sourceTree = "<group>"; };
+		458EE67A1D168AAA004A1942 /* CrateInspectorInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateInspectorInfoView.swift; sourceTree = "<group>"; };
 		459B5F841D0310740081D8FF /* CratesIOCatalogue3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CratesIOCatalogue3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		459B5F871D0310740081D8FF /* ApplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationController.swift; sourceTree = "<group>"; };
 		459B5F8E1D0310740081D8FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 				458EE5BC1D12E6AE004A1942 /* HomeViewController2.swift */,
 				459B5FAF1D0319960081D8FF /* SearchViewController.swift */,
 				459B5FB11D0319A00081D8FF /* CrateInspectorViewController.swift */,
+				458EE67A1D168AAA004A1942 /* CrateInspectorInfoView.swift */,
 				458EE5DE1D12EF2E004A1942 /* Styling.swift */,
 				459B5F871D0310740081D8FF /* ApplicationController.swift */,
 				458EE6571D152879004A1942 /* (network activity rendering service) */,
@@ -609,6 +612,7 @@
 				459B5FAC1D0319860081D8FF /* RootViewController.swift in Sources */,
 				459B5FA61D0310E30081D8FF /* DriverCommand.swift in Sources */,
 				451C93EC1D0359FE00C5F640 /* DTOKeyword.swift in Sources */,
+				458EE67B1D168AAA004A1942 /* CrateInspectorInfoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

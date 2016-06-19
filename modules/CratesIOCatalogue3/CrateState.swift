@@ -13,7 +13,7 @@ struct CrateState {
     private(set) var serversideID: String
     /// Can be missing if the Crate information is retrieved from dependency query or etc..
     private(set) var basics: CrateStateBasics?
-    private(set) var extras = CrateStateExtras()
+    var extras = CrateStateExtras()
 
     init(serversideID: String) {
         self.serversideID = serversideID

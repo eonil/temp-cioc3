@@ -49,6 +49,13 @@ final class UserInteractionService: DriverAccessible {
         DisplayLinkUtility.deinstallMainScreenHandler(ObjectIdentifier(self))
     }
 
+    func pause() {
+        dispatch_suspend(gcdq)
+    }
+    func resume() {
+        dispatch_resume(gcdq)
+    }
+
 //    /// Read state in UI service's GCDQ.
 //    func dispatch(access: (UserInteractionState) -> ()) -> Task<()> {
 //        return Task(()).continueWithTask(Executor.Queue(gcdq)) { [weak self] _ in

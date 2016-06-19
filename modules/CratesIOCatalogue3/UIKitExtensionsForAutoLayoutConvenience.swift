@@ -27,14 +27,19 @@ extension PinnableViewType where Self: UIView {
     private func prepare() {
         translatesAutoresizingMaskIntoConstraints = false
     }
-    private func append(c: NSLayoutConstraint) {
-        c.priority = UILayoutPriorityDefaultHigh
+    private func append(c: NSLayoutConstraint, weakly: Bool = false) {
+        c.priority = weakly ?  UILayoutPriorityDefaultLow : UILayoutPriorityDefaultHigh
         c.active = true
     }
     private func isAncestor(view: UIView) -> Bool {
         if superview === view { return true }
         return superview?.isAncestor(view) ?? false
     }
+    private func getSuperviewWithPrecondition() -> UIView {
+        guard let superview = superview else { fatalError("You can call this method only after adding this view onto another view.") }
+        return superview
+    }
+
     /// Just set `translatesAutoresizingMaskIntoConstraints = false`.
     func pin() {
         prepare()
@@ -45,8 +50,7 @@ extension PinnableViewType where Self: UIView {
     }
     func pinSize() {
         prepare()
-        guard let superview = superview else { fatalError("This view cannot be pinned because there's no superview to pin onto.") }
-        pinSizeTo(superview)
+        pinSizeTo(getSuperviewWithPrecondition())
     }
     func pinCenter() {
         pinCenterX()
@@ -70,10 +74,10 @@ extension PinnableViewType where Self: UIView {
     }
     /// Pins width to a view.
     /// - Parameter view: Must be one of ancestor views.
-    func pinWidthTo(view: UIView, constant: CGFloat = 0) {
+    func pinWidthTo(view: UIView, constant: CGFloat = 0, weakly: Bool = false) {
         assert(isAncestor(view))
         prepare()
-        append(NSLayoutConstraint(item: self, attribute: .Width, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 1, constant: constant))
+        append(NSLayoutConstraint(item: self, attribute: .Width, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 1, constant: constant), weakly: weakly)
     }
 //    /// Pins width to be less than or equal to width of a view.
 //    /// - Parameter view: Must be one of ancestor views.
@@ -96,18 +100,44 @@ extension PinnableViewType where Self: UIView {
         pinWidthTo(width)
         pinHeightTo(height)
     }
+//    func pinSizeAtLeast(view: UIView) {
+//        assert(isAncestor(view))
+//        prepare()
+//        append(NSLayoutConstraint(item: self, attribute: .Width, relatedBy: .GreaterThanOrEqual, toItem: view, attribute: .Width, multiplier: 1, constant: 0))
+//        append(NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: view, attribute: .Height, multiplier: 1, constant: 0))
+//    }
+
     /// Pins width to a constant value.
     func pinWidthTo(value: CGFloat) {
         prepare()
         append(NSLayoutConstraint(item: self, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: value))
     }
-    /// Pins height to a constant value.
-    func pinHeightTo(value: CGFloat) {
-        prepare()
-        append(NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: value))
+    func pinWidth() {
+        pinWidthTo(getSuperviewWithPrecondition())
     }
-}
-extension OutlinePinnableViewType where Self: UIView {
+
+    /// Pins height to a constant value.
+    func pinHeightTo(value: CGFloat, weakly: Bool = false) {
+        prepare()
+        append(NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: value), weakly: weakly)
+    }
+    func pinHeightTo(lineHeightOf font: UIFont, weakly: Bool = false) {
+        pinHeightTo(font.lineHeight, weakly: weakly)
+    }
+    func pinHeight() {
+        pinHeightTo(getSuperviewWithPrecondition())
+    }
+
+
+    func pinHeightAtLeast(value: CGFloat, weakly: Bool = false) {
+        prepare()
+        append(NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: value), weakly: weakly)
+    }
+    func pinHeightAtLeast(lineHeightOf font: UIFont, weakly: Bool = false) {
+        pinHeightAtLeast(font.lineHeight, weakly: weakly)
+    }
+//}
+//extension OutlinePinnableViewType where Self: UIView {
 
     /// Pins left-side on super-view's left-side.
     func pinLeft(displacement: CGFloat = 0) {
@@ -120,14 +150,14 @@ extension OutlinePinnableViewType where Self: UIView {
         append(NSLayoutConstraint(item: self, attribute: .Right, relatedBy: .Equal, toItem: superview, attribute: .Right, multiplier: 1, constant: displacement))
     }
     /// Pins top-side on super-view's top-side.
-    func pinTop(displacement: CGFloat = 0) {
+    func pinTop(displacement: CGFloat = 0, weakly: Bool = false) {
         prepare()
-        append(NSLayoutConstraint(item: self, attribute: .Top, relatedBy: .Equal, toItem: superview, attribute: .Top, multiplier: 1, constant: displacement))
+        append(NSLayoutConstraint(item: self, attribute: .Top, relatedBy: .Equal, toItem: superview, attribute: .Top, multiplier: 1, constant: displacement), weakly: weakly)
     }
     /// Pins bottom-side on super-view's bottom-side.
-    func pinBottom(displacement: CGFloat = 0) {
+    func pinBottom(displacement: CGFloat = 0, weakly: Bool = false) {
         prepare()
-        append(NSLayoutConstraint(item: self, attribute: .Bottom, relatedBy: .Equal, toItem: superview, attribute: .Bottom, multiplier: 1, constant: displacement))
+        append(NSLayoutConstraint(item: self, attribute: .Bottom, relatedBy: .Equal, toItem: superview, attribute: .Bottom, multiplier: 1, constant: displacement), weakly: weakly)
     }
 }
 

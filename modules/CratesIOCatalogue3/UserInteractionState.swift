@@ -54,6 +54,11 @@ struct DatabaseState {
         crates[crateID]?.update(dto)
         return crateID
     }
+    mutating func clearExtrasOf(crateID: CrateID) {
+        crates[crateID]?.extras.authors.reset()
+        crates[crateID]?.extras.dependencies.reset()
+        crates[crateID]?.extras.versions.reset()
+    }
     mutating func update(crateID crateID: CrateID, dto: [DTOAuthor]) {
         crates[crateID]?.update(dto)
     }

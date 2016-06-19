@@ -43,6 +43,8 @@ final class OperationService: DriverAccessible {
             return API.Home.summary().dispatchTo(driver.userInteraction) { summary, state in
                 state.reloadHome(summary)
             }
+        }.branch {
+            driver.userInteraction.networkActivityRendering.renderFor($0)
         }
     }
     func reloadCrateExtrasFor(crateID: CrateID) -> Task<()> {

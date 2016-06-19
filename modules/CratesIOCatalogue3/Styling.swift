@@ -34,6 +34,11 @@ enum CrateInspectorStyle {
     case versionName
     case versionValue
 }
+extension Style {
+    func getFontSilently() -> UIFont {
+        return (try? getFont()) ?? UIFont.systemFontOfSize(UIFont.systemFontSize())
+    }
+}
 private extension Style {
     private func getForegroundColor() -> UIColor {
         switch self {
@@ -119,7 +124,9 @@ private extension Style {
         switch self {
         case let .crateInspector(substyle):
             switch substyle {
-            case .infoDescription:      return .ByCharWrapping
+            // `.ByCharWrapping` does not make any hyphens.
+            // `.ByWordWrapping` with `hypenationFactor = 1` looks best.
+            case .infoDescription:      return .ByWordWrapping
             default:                    return .ByTruncatingTail
             }
         default:                        return .ByTruncatingTail

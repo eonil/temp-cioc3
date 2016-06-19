@@ -7,9 +7,9 @@
 //
 
 struct CrateStateExtras {
-    private(set) var authors = Transmissive<[String]>()
-    private(set) var dependencies = Transmissive<[(id: CrateID, name: String)]>()
-    private(set) var versions = Transmissive<[(name: String, date: String)]>()
+    var authors = Transmissive<[String]>()
+    var dependencies = Transmissive<[(id: CrateID, name: String)]>()
+    var versions = Transmissive<[(name: String, date: String)]>()
 }
 extension CrateStateExtras {
     var isReady: Bool {

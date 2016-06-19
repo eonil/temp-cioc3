@@ -8,13 +8,12 @@
 
 import UIKit
 import EonilToolbox
+import BoltsSwift
 
 private enum TableSection {
-    case dummyForInfoHeader
-//    case dummyForModeSelectorHeader
+    case placeholder
     case datasheet
-
-    static let all: [TableSection] = [.dummyForInfoHeader, .datasheet]
+    static let all: [TableSection] = [.placeholder, .datasheet]
 }
 
 private extension DatasheetModeID {
@@ -45,9 +44,22 @@ private typealias DependencyItemState = (displayName: String, crateID: CrateID)
 private typealias VersionItemState = (number: String, timepoint: String)
 
 
+/// CAUTION!!!
+/// ----------
+/// - DO NOT try to make table header, section headers to be dyanamically resizable.
+///     I tried it for 8 hours in a summer of 2016, but all failed. `UITableView` has
+///     shows numerous bugs if I try to resize them, and prevent that in every possible ways.
+///
+/// - There's no way to remove separator lines from table-view.
+///
+/// So I finally settled on just plain-old view that places on table-view.
+///
 final class CrateInspectorViewController: UIViewController, Renderable, DriverAccessible {
-    private let nameLabel = UILabel()
+    private let titleLabel = UILabel()
     private let tableView = UITableView()
+    private let infoView = CrateInspectorInfoView()
+    private let modeSelectorContainerView = UIView()
+    private let modeSelectorSegmentedControl = UISegmentedControl()
     private var installer = ViewInstaller()
     private var renderedStateVersion: Version?
     private var localState = LocalState()
@@ -72,19 +84,20 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             navigationItem.titleView = {
                 // This container is required to make title content (`nameLabel`) to be resized automatically using Auto Layout.
                 let titleContainerView = UIView()
-                titleContainerView.addSubview(nameLabel)
-                nameLabel.pinCenter()
+                titleContainerView.addSubview(titleLabel)
+                titleLabel.pinCenter()
                 return titleContainerView
             }()
             view.addSubview(tableView)
             tableView.pinCenterAndSize()
-            tableView.rowHeight = UITableViewAutomaticDimension
-            tableView.estimatedRowHeight = 44
-            tableView.sectionHeaderHeight = UITableViewAutomaticDimension
-            tableView.estimatedSectionHeaderHeight = 44
-            tableView.registerClass(InfoHeaderView.self, forHeaderFooterViewReuseIdentifier: HeaderFooterTypeID.info.rawValue)
-            tableView.registerClass(ModeSelectorHeaderView.self, forHeaderFooterViewReuseIdentifier: HeaderFooterTypeID.modeSelector.rawValue)
+            // DO NOT use Self-Sizing Cells. That makes table-view cells jumps, 
+            // and that jump causes unwanted animation.
+//            tableView.rowHeight = UITableViewAutomaticDimension
+//            tableView.estimatedRowHeight = 44
+//            tableView.sectionHeaderHeight = UITableViewAutomaticDimension
+//            tableView.estimatedSectionHeaderHeight = 44
             tableView.registerClass(ErrorCell.self, forCellReuseIdentifier: CellTypeID.error.rawValue)
+            // We need to instantiate table-cell ourselfves to make a proper style.
 //            tableView.registerClass(LinkCell.self, forCellReuseIdentifier: CellTypeID.link.rawValue)
 //            tableView.registerClass(DependencyCell.self, forCellReuseIdentifier: CellTypeID.dependency.rawValue)
 //            tableView.registerClass(VersionCell.self, forCellReuseIdentifier: CellTypeID.version.rawValue)
@@ -92,9 +105,34 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             tableView.dataSource = self
             tableView.delegate = self
             tableView.reloadData()
+            tableView.addSubview(infoView)
+            tableView.addSubview(modeSelectorContainerView)
+            infoView.pinTop()
+            infoView.pinCenterX()
+            infoView.pinWidthTo(view)
+            // `modeSelectorContainerView` will be laid out manually. Because it has to consider
+            // scrolling offset and info-area length.
+            modeSelectorContainerView.backgroundColor = UIColor.whiteColor()
+            modeSelectorContainerView.addSubview(modeSelectorSegmentedControl)
+            modeSelectorSegmentedControl.pinCenter()
+            modeSelectorSegmentedControl.pinWidthTo(modeSelectorContainerView, constant: -20)
+            modeSelectorSegmentedControl.pinHeightTo(modeSelectorContainerView, constant: -10)
+            for i in DatasheetModeID.all.entireRange {
+                let mode = DatasheetModeID.all[i]
+                let label = mode.getLabel()
+                modeSelectorSegmentedControl.insertSegmentWithTitle(label, atIndex: i, animated: false)
+            }
+            modeSelectorSegmentedControl.addTarget(self, action: #selector(EONIL_modeDidChangeValue(_:)), forControlEvents: .ValueChanged)
+            if let crateState = crateState {
+                infoView.render(crateState)
+                infoView.layoutIfNeeded()
+            }
         }
-        nameLabel.attributedText = crateState?.basics?.name.attributed().stylizedSilently(.crateInspector(.titleName))
+
+        titleLabel.attributedText = crateState?.basics?.name.attributed().stylizedSilently(.crateInspector(.titleName))
         renderDatasheetStates()
+        renderInfoViewLayoutOnly()
+        renderModeSelectorLayoutOnly()
         renderedStateVersion = state.version
     }
     private func renderDatasheetStates() {
@@ -106,40 +144,108 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             ].flatMap({ $0 })
             localState.dependencyDatasheetState = (crateState?.extras.dependencies.result ?? []).map { DependencyItemState($0.name, $0.id) }
             localState.versionDatasheetState = (crateState?.extras.versions.result ?? []).map { VersionItemState($0.0, $0.1) }
-            if let modeSelector = tableView.headerViewForSection(1) as? ModeSelectorHeaderView {
-                modeSelector.render(mode: crateInspectionState?.datasheetMode ?? .links, localState: localState)
-            }
+            renderModeSelector(mode: crateInspectionState?.datasheetMode ?? .links, localState: localState)
             reloadDatasheetWithAnimation()
         }
     }
 
     private func reloadDatasheetWithAnimation() {
-        tableView.beginUpdates()
-        if let info = tableView.headerViewForSection(0) as? InfoHeaderView {
-            info.render(crateState)
+        let crateStateToRender = crateState
+        UIView.animateWithDuration(1) {
+            self.infoView.render(crateStateToRender)
+            self.infoView.setNeedsLayout()
+            self.infoView.layoutIfNeeded()
         }
-        tableView.reloadSections(NSIndexSet(index: 1), withRowAnimation: .Fade)
-        tableView.endUpdates()
-//        if let mode = crateInspectionState?.datasheetMode {
-//            switch mode {
-//            case .links:
-//                let rows = (0..<tableView.numberOfRowsInSection(1)).map { NSIndexPath(forRow: $0, inSection: 1) }
-//                if rows.count > 0 {
-//                    tableView.reloadSections(NSIndexSet(index: 1), withRowAnimation: .None)
-//                }
-//            case .dependencies, .versions:
-////                let oldRow
-//                let rowsToDelete = (0..<tableView.numberOfRowsInSection(1)).map { NSIndexPath(forRow: $0, inSection: 1) }
-//                let rowsToInsert = (0..<tableView(tableView, numberOfRowsInSection: 1)).map { NSIndexPath(forRow: $0, inSection: 1) }
-//                tableView.beginUpdates()
-//                tableView.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: .Fade)
-//                tableView.insertRowsAtIndexPaths(rowsToInsert, withRowAnimation: .Fade)
-//                //        tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .Fade)
-//                tableView.endUpdates()
+        if let datasheetSectionIndex = TableSection.all.indexOf(.datasheet) {
+            CATransaction.begin()
+            CATransaction.setAnimationDuration(1)
+            tableView.beginUpdates()
+//            CATransaction.setCompletionBlock { [weak self] in
+//                guard let S = self else { return }
+//                S.infoView.render(crateStateToRender, animated: true)
+//                S.reloadDatasheetWithAnimation()
 //            }
-//        }
-//        else {
-//        }
+
+            let oldRowCount = tableView.numberOfRowsInSection(datasheetSectionIndex)
+            let newRowCount = tableView(tableView, numberOfRowsInSection: datasheetSectionIndex)
+            let sharedRowCount = min(oldRowCount, newRowCount)
+            let rowsToDelete = (sharedRowCount..<max(sharedRowCount, oldRowCount)).map { NSIndexPath(forRow: $0, inSection: datasheetSectionIndex) }
+            let rowsToReload = (0..<sharedRowCount).map { NSIndexPath(forRow: $0, inSection: datasheetSectionIndex) }
+            let rowsToInsert = (sharedRowCount..<max(sharedRowCount, newRowCount)).map { NSIndexPath(forRow: $0, inSection: datasheetSectionIndex) }
+            if rowsToDelete.count > 0 {
+                tableView.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: .Fade)
+            }
+            tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Fade)
+            if rowsToInsert.count > 0 {
+                tableView.insertRowsAtIndexPaths(rowsToInsert, withRowAnimation: .Fade)
+            }
+            tableView.endUpdates()
+        }
+        CATransaction.commit()
+
+    }
+
+    private func renderModeSelector(mode newMode: DatasheetModeID?, localState: LocalState) {
+        func getSegmentEnabled() -> [Bool] {
+            return [
+                localState.linkDatasheetState.count > 0,
+                localState.dependencyDatasheetState.count > 0,
+                localState.versionDatasheetState.count > 0,
+            ]
+        }
+        func getModeIndex() -> Int {
+            guard let newMode = newMode else { return UISegmentedControlNoSegment }
+            guard let newIndex = DatasheetModeID.all.indexOf(newMode) else { return UISegmentedControlNoSegment }
+            return newIndex
+        }
+        modeSelectorSegmentedControl.selectedSegmentIndex = getModeIndex()
+        for (index, enabled) in getSegmentEnabled().enumerate() {
+            modeSelectorSegmentedControl.setEnabled(enabled, forSegmentAtIndex: index)
+            //            if modeSegmentedControl.selectedSegmentIndex == index {
+            //                modeSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment
+            //            }
+        }
+    }
+    private func scanDatasheetMode() -> DatasheetModeID? {
+        guard DatasheetModeID.all.entireRange.contains(modeSelectorSegmentedControl.selectedSegmentIndex) else { return nil }
+        return DatasheetModeID.all[modeSelectorSegmentedControl.selectedSegmentIndex]
+    }
+    @objc
+    private func EONIL_modeDidChangeValue(_: AnyObject?) {
+        guard let index = indexInCrateInspectionStateStack else { return }
+        let newMode = scanDatasheetMode()
+        driver.userInteraction.dispatchTransaction { state in
+            state.navigation.setMode((newMode ?? .links), ofCrateInspectorAtIndex: index)
+        }
+    }
+
+
+    private func getInfoHeight() -> CGFloat {
+        let fit = CGSize(width: tableView.bounds.width, height: 0)
+        return infoView.systemLayoutSizeFittingSize(fit, withHorizontalFittingPriority: UILayoutPriorityRequired, verticalFittingPriority: UILayoutPriorityFittingSizeLevel).height
+    }
+    private func getPlaceholderHeight() -> CGFloat {
+        return getInfoHeight() + 44
+    }
+    // TODO: How can I get this value properly...?
+    private func getTopInsetWithoutInfoArea() -> CGFloat {
+        return 64
+    }
+    private func renderInfoViewLayoutOnly() {
+//        let topInsetWithoutInfoArea = getTopInsetWithoutInfoArea()
+//        let h = getInfoHeight()
+////        infoView.frame = tableView.bounds.toBox().toSilentBox().splitInY(h, 0%, 100%).min.toCGRect()
+//        tableView.contentInset.top = (topInsetWithoutInfoArea + h)
+    }
+    private func renderModeSelectorLayoutOnly() {
+        print(tableView.contentOffset.y)
+//        let topInsetWithoutInfoArea = getTopInsetWithoutInfoArea()
+        let contentOffsetY = tableView.contentOffset.y
+        let topInset = tableView.contentInset.top
+        let displacementInY = topInset + -contentOffsetY + -topInset + getInfoHeight()
+        let filteredDisplacementInY = max(topInset, displacementInY)
+        let modeBox = tableView.bounds.toBox().toSilentBox().splitInY(44, 0%, 100%).min.translatedBy((0, filteredDisplacementInY))
+        modeSelectorContainerView.frame = modeBox.toCGRect()
     }
 }
 
@@ -148,9 +254,17 @@ extension CrateInspectorViewController {
         super.viewWillAppear(animated)
         (crateInspectionState?.crateID).applyOptionally { driver.operation.reloadCrateExtrasFor($0) }
     }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        render()
+    }
 }
 
 extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelegate {
+    @objc
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        renderModeSelectorLayoutOnly()
+    }
     @objc
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return TableSection.all.count
@@ -158,8 +272,8 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
     @objc
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch TableSection.all[section] {
-        case .dummyForInfoHeader:
-            return 0
+        case .placeholder:
+            return 1
         case .datasheet:
             guard let mode = crateInspectionState?.datasheetMode else { return 0 }
             switch mode {
@@ -170,26 +284,12 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
         }
     }
     @objc
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        switch TableSection.all[section] {
-        case .dummyForInfoHeader:
-            guard let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterTypeID.info.rawValue) as? InfoHeaderView else { return nil }
-            view.render(crateState)
-            return view
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        switch TableSection.all[indexPath.section] {
+        case .placeholder:
+            return getPlaceholderHeight()
         case .datasheet:
-            guard let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(HeaderFooterTypeID.modeSelector.rawValue) as? ModeSelectorHeaderView else { return nil }
-            view.render(mode: crateInspectionState?.datasheetMode, localState: localState)
-            view.onEvent = { [weak self] in
-                guard let S = self else { return }
-                switch $0 {
-                case let .didSelectMode(newMode):
-                    guard let index = S.indexInCrateInspectionStateStack else { return }
-                    S.driver.userInteraction.dispatchTransaction { state in
-                        state.navigation.setMode((newMode ?? .links), ofCrateInspectorAtIndex: index)
-                    }
-                }
-            }
-            return view
+            return 44
         }
     }
     @objc
@@ -208,8 +308,8 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
         }
 
         switch TableSection.all[indexPath.section] {
-        case .dummyForInfoHeader:
-            fatalError()
+        case .placeholder:
+            return UITableViewCell()
         case .datasheet:
             func getCell<T: UITableViewCell>(cellTypeID: CellTypeID, style: UITableViewCellStyle) -> T {
                 return (tableView.dequeueReusableCellWithIdentifier(cellTypeID.rawValue) as? T) ?? T(style: style, reuseIdentifier: cellTypeID.rawValue)
@@ -239,180 +339,6 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
 
 
 
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// MARK: -
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-private enum HeaderFooterTypeID: String {
-    case info
-    case modeSelector
-}
-private final class InfoHeaderView: UITableViewHeaderFooterView {
-    private let stackView = UIStackView()
-    private let authorLabel = UILabel()
-    private let licenseContainerView = UIView()
-    private let licenseLabel = UILabel()
-//    private let descriptionLabel = UILabel()
-    private let descriptionTextView = UITextView()
-    private let downloadCountLabel = UILabel()
-    private let currentVersionLabel = UILabel()
-    private let transmissionAcitivityIndicatorView = UIActivityIndicatorView()
-    private var installer = ViewInstaller()
-    func render(crateState: CrateState?) {
-        assert(NSThread.isMainThread())
-        installer.installIfNeeded {
-            func getPaddingView(height: CGFloat) -> UIView {
-                let view = UIView()
-                view.pinHeightTo(height)
-                return view
-            }
-            backgroundView = UIView()
-            backgroundView?.backgroundColor = UIColor.whiteColor()
-//            contentView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview(stackView)
-            stackView.axis = .Vertical
-            stackView.alignment = .Center
-            stackView.layoutMarginsRelativeArrangement = true
-            stackView.pinCenterX()
-            stackView.pinWidthTo(contentView, constant: -20)
-            stackView.pinTop()
-            stackView.pinBottom()
-            stackView.addArrangedSubview(getPaddingView(10))
-            stackView.addArrangedSubview(authorLabel)
-
-            stackView.addArrangedSubview(getPaddingView(10))
-            stackView.addArrangedSubview(licenseContainerView)
-            stackView.addArrangedSubview(getPaddingView(30))
-            stackView.addArrangedSubview(getPaddingView(10))
-//            stackView.addArrangedSubview(descriptionLabel)
-            stackView.addArrangedSubview(descriptionTextView)
-            stackView.addArrangedSubview(getPaddingView(10))
-            stackView.addArrangedSubview(downloadCountLabel)
-            stackView.addArrangedSubview(getPaddingView(10))
-            stackView.addArrangedSubview(currentVersionLabel)
-            stackView.addArrangedSubview(getPaddingView(20))
-//            stackView.addArrangedSubview(transmissionAcitivityIndicatorView)
-            stackView.addArrangedSubview(UIView())
-            licenseContainerView.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0.3, alpha: 1)
-            licenseContainerView.layer.cornerRadius = 3
-            licenseContainerView.addSubview(licenseLabel)
-            licenseLabel.pinCenter()
-            licenseLabel.pinWidthTo(licenseContainerView, constant: -6)
-            licenseLabel.pinHeightTo(licenseContainerView, constant: -6)
-//            descriptionLabel.numberOfLines = 0
-            descriptionTextView.scrollEnabled = false
-            descriptionTextView.textContainer.heightTracksTextView = true
-            descriptionTextView.editable = false
-
-//            downloadCountLabel.pinWidthTo(contentView)
-//            transmissionAcitivityIndicatorView.activityIndicatorViewStyle = .Gray
-        }
-
-//        let authorsText = crateState?.extras.authors.result?.joinWithSeparator(", ").attributed().stylizedSilently(.crateInspector(.infoAuthor))
-//        authorLabel.attributedText = authorsText
-//        authorLabel.hidden = (authorsText == nil)
-//        if authorsText == nil {
-//            authorLabel.alpha = 0
-//        }
-//        else {
-//            authorLabel.alpha = 1
-//        }
-//
-
-
-        func animate() {
-            authorLabel.attributedText = crateState?.extras.authors.result?.joinWithSeparator(", ").attributed().stylizedSilently(.crateInspector(.infoAuthor))
-            authorLabel.hidden = (authorLabel.attributedText == nil)
-
-            licenseLabel.attributedText = crateState?.basics?.license?.attributed().stylizedSilently(.crateInspector(.infoLicense))
-            licenseLabel.hidden = (licenseLabel.attributedText == nil)
-
-//            descriptionLabel.attributedText = crateState?.basics?.description?.attributed().stylizedSilently(.crateInspector(.infoDescription))
-//            descriptionLabel.hidden = (descriptionLabel.attributedText == nil)
-            descriptionTextView.attributedText = crateState?.basics?.description?.attributed().stylizedSilently(.crateInspector(.infoDescription))
-            descriptionTextView.hidden = (descriptionTextView.attributedText == nil)
-
-            downloadCountLabel.attributedText = (crateState?.basics?.downloads).flatMap { "Downloaded \($0) time\($0 == 1 ? "" : "s")." }?.attributed().stylizedSilently(.crateInspector(.infoDownloadCount))
-            downloadCountLabel.hidden = (downloadCountLabel.attributedText == nil)
-
-            currentVersionLabel.attributedText = (crateState?.basics?.version)?.attributed().stylizedSilently(.crateInspector(.infoCurrentVersion))
-            currentVersionLabel.hidden = (currentVersionLabel.attributedText == nil)
-
-            stackView.layoutIfNeeded()
-//            authorLabel.layer.removeAllAnimations()
-//            authorLabel.alpha = 1
-        }
-        UIView.animateWithDuration(1) {
-            animate()
-        }
-
-
-//        let isTrasferringDatasheet = (crateState?.extras.isTransferringAny() ?? false)
-//        let canRenderDatasheet = (crateState?.extras.isReady)
-//        datasheetModeSegmentedControl.hidden = (canRenderDatasheet == false)
-//        datasheetTableView.hidden = (canRenderDatasheet == false)
-//        isTrasferringDatasheet ? transmissionAcitivityIndicatorView.startAnimating() : transmissionAcitivityIndicatorView.stopAnimating()
-    }
-    override class func requiresConstraintBasedLayout() -> Bool {
-        return true
-    }
-}
-private final class ModeSelectorHeaderView: UITableViewHeaderFooterView {
-    private let modeSegmentedControl = UISegmentedControl()
-    private var installer = ViewInstaller()
-    var onEvent: (ModeSelectorHeaderViewEvent->())?
-    func render(mode newMode: DatasheetModeID?, localState: LocalState) {
-        installer.installIfNeeded {
-            backgroundView = UIView()
-            backgroundView?.backgroundColor = UIColor.whiteColor()
-            contentView.addSubview(modeSegmentedControl)
-            modeSegmentedControl.pinCenter()
-            modeSegmentedControl.pinWidthTo(contentView, constant: -20)
-            modeSegmentedControl.pinHeightTo(contentView, constant: -10)
-            for i in DatasheetModeID.all.entireRange {
-                let mode = DatasheetModeID.all[i]
-                let label = mode.getLabel()
-                modeSegmentedControl.insertSegmentWithTitle(label, atIndex: i, animated: false)
-            }
-            modeSegmentedControl.addTarget(self, action: #selector(EONIL_modeDidChangeValue(_:)), forControlEvents: .ValueChanged)
-        }
-        func getSegmentEnabled() -> [Bool] {
-            return [
-                localState.linkDatasheetState.count > 0,
-                localState.dependencyDatasheetState.count > 0,
-                localState.versionDatasheetState.count > 0,
-            ]
-        }
-        func getModeIndex() -> Int {
-            guard let newMode = newMode else { return UISegmentedControlNoSegment }
-            guard let newIndex = DatasheetModeID.all.indexOf(newMode) else { return UISegmentedControlNoSegment }
-            return newIndex
-        }
-        modeSegmentedControl.selectedSegmentIndex = getModeIndex()
-        for (index, enabled) in getSegmentEnabled().enumerate() {
-            modeSegmentedControl.setEnabled(enabled, forSegmentAtIndex: index)
-//            if modeSegmentedControl.selectedSegmentIndex == index {
-//                modeSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment
-//            }
-        }
-    }
-    private func scanDatasheetMode() -> DatasheetModeID? {
-        guard DatasheetModeID.all.entireRange.contains(modeSegmentedControl.selectedSegmentIndex) else { return nil }
-        return DatasheetModeID.all[modeSegmentedControl.selectedSegmentIndex]
-    }
-    @objc
-    private func EONIL_modeDidChangeValue(_: AnyObject?) {
-        let newMode = scanDatasheetMode()
-        onEvent?(.didSelectMode(newMode))
-    }
-}
-private enum ModeSelectorHeaderViewEvent {
-    case didSelectMode(DatasheetModeID?)
-}
 
 
 
