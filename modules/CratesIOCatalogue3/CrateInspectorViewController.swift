@@ -35,11 +35,19 @@ private extension DatasheetModeID {
 
 
 private struct LocalState {
-    var linkDatasheetState = VersioningContainer<[LinkItemState]>(version: Version(), content: [])
+    var crateInspectionState: CrateInspectionState?
+    var crateState: CrateState?
+    var linkDatasheetState = [LinkItemState]()
     var dependencyDatasheetState = VersioningContainer<[DependencyItemState]>(version: Version(), content: [])
     var versionDatasheetState = VersioningContainer<[VersionItemState]>(version: Version(), content: [])
 }
-private typealias LinkItemState = (displayName: String, targetURL: NSURL)
+private struct LinkItemState: Equatable {
+    var displayName: String
+    var targetURL: NSURL
+}
+private func == (a: LinkItemState, b: LinkItemState) -> Bool {
+    return a.displayName == b.displayName && a.targetURL == b.targetURL
+}
 private typealias DependencyItemState = (displayName: String, crateID: CrateID)
 private typealias VersionItemState = (number: String, timepoint: String)
 
@@ -61,7 +69,6 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
     private let modeSelectorContainerView = UIView()
     private let modeSelectorSegmentedControl = UISegmentedControl()
     private var installer = ViewInstaller()
-    private var renderedStateVersion: Version?
     private var localState = LocalState()
 
     /// Address to state.
@@ -70,14 +77,6 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             guard indexInCrateInspectionStateStack != oldValue else { return }
             render()
         }
-    }
-    /// Convenient getter to state.
-    private var crateInspectionState: CrateInspectionState? {
-        guard let index = indexInCrateInspectionStateStack else { return nil }
-        return state.navigation.crateInspectorStack[index]
-    }
-    private var crateState: CrateState? {
-        return (crateInspectionState?.crateID).flatMap({ state.database.crates[$0] })
     }
     func render() {
         assertMainThread()
@@ -91,7 +90,7 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             }()
             view.addSubview(tableView)
             tableView.pinCenterAndSize()
-            // DO NOT use Self-Sizing Cells. That makes table-view cells jumps, 
+            // DO NOT use Self-Sizing Cells. That makes table-view cells jumps,
             // and that jump causes unwanted animation.
 //            tableView.rowHeight = UITableViewAutomaticDimension
 //            tableView.estimatedRowHeight = 44
@@ -112,7 +111,7 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             infoView.pinCenterX()
             infoView.pinWidthTo(view)
             // `modeSelectorContainerView` will be laid out manually. Because it has to consider
-            // scrolling offset and info-area length.
+// scrolling offset and info-area length.
             modeSelectorContainerView.backgroundColor = UIColor.whiteColor()
             modeSelectorContainerView.addSubview(modeSelectorSegmentedControl)
             modeSelectorSegmentedControl.pinCenter()
@@ -124,33 +123,84 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
                 modeSelectorSegmentedControl.insertSegmentWithTitle(label, atIndex: i, animated: false)
             }
             modeSelectorSegmentedControl.addTarget(self, action: #selector(EONIL_modeDidChangeValue(_:)), forControlEvents: .ValueChanged)
-            if let crateState = crateState {
-                infoView.render(crateState)
-                infoView.layoutIfNeeded()
+//            if let crateState = crateState {
+//                infoView.render(crateState)
+//                infoView.layoutIfNeeded()
+//            }
+        }
+        downloadData()
+        renderData()
+        renderLayout()
+    }
+    private func downloadData() {
+        var needsReloadingDatasheetMode = false
+        localState.crateInspectionState = {
+            guard let index = indexInCrateInspectionStateStack else { return nil }
+            let newCrateInspectionState = state.navigation.crateInspectorStack[index]
+            if newCrateInspectionState.datasheetMode != localState.crateInspectionState?.datasheetMode {
+                needsReloadingDatasheetMode = true
             }
+            return newCrateInspectionState
+        }()
+        if needsReloadingDatasheetMode {
+            reloadDatasheetOf(localState.crateInspectionState?.datasheetMode)
         }
+        localState.crateState = (localState.crateInspectionState?.crateID).flatMap({ state.database.crates[$0] })
 
-        titleLabel.attributedText = crateState?.basics?.name.attributed().stylizedSilently(.crateInspector(.titleName))
-        renderDatasheetStates()
-        renderModeSelectorLayoutOnly()
-        renderedStateVersion = state.version
+        func toLinkItemState(name: String, _ address: String?) -> LinkItemState? {
+            guard let a = address else { return nil }
+            guard let u = NSURL(string: a) else { return nil }
+            return LinkItemState(displayName: name, targetURL: u)
+        }
+        let newLinkDatasheetState = [
+            toLinkItemState("Website", localState.crateState?.basics?.homepage),
+            toLinkItemState("Documentation", localState.crateState?.basics?.documentation),
+            toLinkItemState("Repository", localState.crateState?.basics?.repository),
+            ].flatMap({ $0 }) as [LinkItemState]
+        if !(localState.linkDatasheetState == newLinkDatasheetState) {
+            localState.linkDatasheetState = newLinkDatasheetState
+            reloadDatasheetOf(.links)
+        }
+        if localState.dependencyDatasheetState.version != localState.crateState?.extras.dependencies.version {
+            localState.dependencyDatasheetState.version = localState.crateState?.extras.dependencies.version ?? Version()
+            localState.dependencyDatasheetState.content = (localState.crateState?.extras.dependencies.result ?? []).map { DependencyItemState($0.name, $0.id) }
+            reloadDatasheetOf(.dependencies)
+        }
+        if localState.versionDatasheetState.version != localState.crateState?.extras.versions.version {
+            localState.versionDatasheetState.version = localState.crateState?.extras.versions.version ?? Version()
+            localState.versionDatasheetState.content = (localState.crateState?.extras.versions.result ?? []).map { VersionItemState($0.0, $0.1) }
+            reloadDatasheetOf(.versions)
+        }
     }
-    private func renderDatasheetStates() {
-        if state.version != renderedStateVersion {
-            localState.linkDatasheetState.content = [
-                crateState?.basics?.homepage.flatMap({ NSURL(string: $0) }).flatMap({ ("Website", $0) }),
-                crateState?.basics?.documentation.flatMap({ NSURL(string: $0) }).flatMap({ ("Documentation", $0) }),
-                crateState?.basics?.repository.flatMap({ NSURL(string: $0) }).flatMap({ ("Repository", $0) }),
-            ].flatMap({ $0 })
-            localState.dependencyDatasheetState.content = (crateState?.extras.dependencies.result ?? []).map { DependencyItemState($0.name, $0.id) }
-            localState.versionDatasheetState.content = (crateState?.extras.versions.result ?? []).map { VersionItemState($0.0, $0.1) }
-            renderModeSelector(mode: crateInspectionState?.datasheetMode ?? .links, localState: localState)
-            reloadDatasheetWithAnimation()
+    private func renderData() {
+        titleLabel.attributedText = localState.crateState?.basics?.name.attributed().stylizedSilently(.crateInspector(.titleName))
+        infoView.render(localState.crateState)
+        infoView.layoutIfNeeded()
+        renderDatasheetModeSelector()
+    }
+    private func renderDatasheetModeSelector() {
+        func getSegmentEnabled() -> [Bool] {
+            return [
+                localState.linkDatasheetState.count > 0,
+                localState.dependencyDatasheetState.content.count > 0,
+                localState.versionDatasheetState.content.count > 0,
+            ]
+        }
+        func getModeIndex() -> Int {
+            guard let newMode = localState.crateInspectionState?.datasheetMode else { return UISegmentedControlNoSegment }
+            guard let newIndex = DatasheetModeID.all.indexOf(newMode) else { return UISegmentedControlNoSegment }
+            return newIndex
+        }
+        modeSelectorSegmentedControl.selectedSegmentIndex = getModeIndex()
+        for (index, enabled) in getSegmentEnabled().enumerate() {
+            // This operation is non-animatable. (I tried with `UIView.animate...`, but this doesn't work)
+            modeSelectorSegmentedControl.setEnabled(enabled, forSegmentAtIndex: index)
         }
     }
 
-    private func reloadDatasheetWithAnimation() {
-        let crateStateToRender = crateState
+    private func reloadDatasheetOf(datasheetMode: DatasheetModeID?) {
+        guard localState.crateInspectionState?.datasheetMode == datasheetMode else { return }
+        let crateStateToRender = localState.crateState
         UIView.animateWithDuration(0.3) {
             self.infoView.render(crateStateToRender)
             self.infoView.setNeedsLayout()
@@ -184,37 +234,8 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
         CATransaction.commit()
     }
 
-    private func renderModeSelector(mode newMode: DatasheetModeID?, localState: LocalState) {
-        func getSegmentEnabled() -> [Bool] {
-            return [
-                localState.linkDatasheetState.content.count > 0,
-                localState.dependencyDatasheetState.content.count > 0,
-                localState.versionDatasheetState.content.count > 0,
-            ]
-        }
-        func getModeIndex() -> Int {
-            guard let newMode = newMode else { return UISegmentedControlNoSegment }
-            guard let newIndex = DatasheetModeID.all.indexOf(newMode) else { return UISegmentedControlNoSegment }
-            return newIndex
-        }
-        modeSelectorSegmentedControl.selectedSegmentIndex = getModeIndex()
-        for (index, enabled) in getSegmentEnabled().enumerate() {
-            // This operation is non-animatable. (I tried with `UIView.animate...`, but this doesn't work)
-            modeSelectorSegmentedControl.setEnabled(enabled, forSegmentAtIndex: index)
-        }
-    }
-    private func scanDatasheetMode() -> DatasheetModeID? {
-        guard DatasheetModeID.all.entireRange.contains(modeSelectorSegmentedControl.selectedSegmentIndex) else { return nil }
-        return DatasheetModeID.all[modeSelectorSegmentedControl.selectedSegmentIndex]
-    }
-    @objc
-    private func EONIL_modeDidChangeValue(_: AnyObject?) {
-        guard let index = indexInCrateInspectionStateStack else { return }
-        let newMode = scanDatasheetMode()
-        driver.userInteraction.dispatchTransaction { state in
-            state.navigation.setMode((newMode ?? .links), ofCrateInspectorAtIndex: index)
-        }
-    }
+
+
 
 
     private func getInfoHeight() -> CGFloat {
@@ -228,6 +249,10 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
     private func getTopInsetWithoutInfoArea() -> CGFloat {
         return 64
     }
+
+    private func renderLayout() {
+
+    }
     private func renderModeSelectorLayoutOnly() {
         let contentOffsetY = tableView.contentOffset.y
         let topInset = tableView.contentInset.top
@@ -236,12 +261,29 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
         let modeBox = tableView.bounds.toBox().toSilentBox().splitInY(44, 0%, 100%).min.translatedBy((0, filteredDisplacementInY))
         modeSelectorContainerView.frame = modeBox.toCGRect()
     }
+
+
+
+
+    private func scanDatasheetMode() -> DatasheetModeID? {
+        guard DatasheetModeID.all.entireRange.contains(modeSelectorSegmentedControl.selectedSegmentIndex) else { return nil }
+        return DatasheetModeID.all[modeSelectorSegmentedControl.selectedSegmentIndex]
+    }
+    @objc
+    private func EONIL_modeDidChangeValue(_: AnyObject?) {
+        guard let index = indexInCrateInspectionStateStack else { return }
+        let newMode = scanDatasheetMode()
+        driver.userInteraction.dispatchTransaction { state in
+            state.navigation.setMode((newMode ?? .links), ofCrateInspectorAtIndex: index)
+        }
+    }
+
 }
 
 extension CrateInspectorViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        (crateInspectionState?.crateID).applyOptionally { driver.operation.reloadCrateExtrasFor($0) }
+        (localState.crateInspectionState?.crateID).applyOptionally { driver.operation.reloadCrateExtrasFor($0) }
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -264,9 +306,9 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
         case .placeholder:
             return 1
         case .datasheet:
-            guard let mode = crateInspectionState?.datasheetMode else { return 0 }
+            guard let mode = localState.crateInspectionState?.datasheetMode else { return 0 }
             switch mode {
-            case .links:        return localState.linkDatasheetState.content.count
+            case .links:        return localState.linkDatasheetState.count
             case .dependencies: return localState.dependencyDatasheetState.content.count
             case .versions:     return localState.versionDatasheetState.content.count
             }
@@ -303,11 +345,11 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
             func getCell<T: UITableViewCell>(cellTypeID: CellTypeID, style: UITableViewCellStyle) -> T {
                 return (tableView.dequeueReusableCellWithIdentifier(cellTypeID.rawValue) as? T) ?? T(style: style, reuseIdentifier: cellTypeID.rawValue)
             }
-            guard let mode = crateInspectionState?.datasheetMode else { return getErrorCell() }
+            guard let mode = localState.crateInspectionState?.datasheetMode else { return getErrorCell() }
             switch mode {
             case .links:
                 let cell = getCell(.link, style: .Value1) as LinkCell
-                cell.render(localState.linkDatasheetState.content[indexPath.row])
+                cell.render(localState.linkDatasheetState[indexPath.row])
                 return cell
 
             case .dependencies:
@@ -329,10 +371,10 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
             // No-op.
             return
         case .datasheet:
-            guard let mode = crateInspectionState?.datasheetMode else { return  }
+            guard let mode = localState.crateInspectionState?.datasheetMode else { return  }
             switch mode {
             case .links:
-                UIApplication.sharedApplication().openURL(localState.linkDatasheetState.content[indexPath.row].targetURL)
+                UIApplication.sharedApplication().openURL(localState.linkDatasheetState[indexPath.row].targetURL)
             case .dependencies:
                 let crateID = localState.dependencyDatasheetState.content[indexPath.row].crateID
                 driver.operation.pushCrateInspectorFor(crateID)
@@ -367,7 +409,7 @@ private final class ErrorCell: UITableViewCell {
 }
 private final class LinkCell: UITableViewCell {
     private var installer = ViewInstaller()
-    func render(newState: (displayName: String, targetURL: NSURL)) {
+    func render(newState: LinkItemState) {
         textLabel?.attributedText = newState.displayName.attributed().stylizedSilently(.crateInspector(.linkName))
         detailTextLabel?.attributedText = newState.targetURL.host?.attributed().stylizedSilently(.crateInspector(.linkValue))
     }

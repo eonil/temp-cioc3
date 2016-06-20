@@ -112,7 +112,7 @@ enum ModeID {
 
 struct CrateInspectionState {
     var crateID: CrateID
-    var datasheetMode = DatasheetModeID.links
+    var datasheetMode: DatasheetModeID?
 }
 enum DatasheetModeID {
     case links
