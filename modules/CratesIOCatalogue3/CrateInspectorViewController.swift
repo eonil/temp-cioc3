@@ -340,7 +340,9 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
 
         switch TableSection.all[indexPath.section] {
         case .placeholder:
-            return UITableViewCell()
+            let cell = UITableViewCell()
+            cell.selectionStyle = .None
+            return cell
         case .datasheet:
             func getCell<T: UITableViewCell>(cellTypeID: CellTypeID, style: UITableViewCellStyle) -> T {
                 return (tableView.dequeueReusableCellWithIdentifier(cellTypeID.rawValue) as? T) ?? T(style: style, reuseIdentifier: cellTypeID.rawValue)
