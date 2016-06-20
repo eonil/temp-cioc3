@@ -36,18 +36,26 @@ private extension TableCell {
     }
 }
 
+/// The first screen.
 final class HomeViewController2: UIViewController, Renderable, DriverAccessible {
     private let tableView = UITableView(frame: CGRect.zero, style: .Grouped)
+    private let searchController = UISearchController(searchResultsController: HomeSearchResultViewController())
     private var installer = ViewInstaller()
     private var currentStateVersion: Version?
 
     func render() {
         installer.installIfNeeded {
-            tableView.registerClass(CrateCell.self, forCellReuseIdentifier: TableCell.crate.rawValue)
+            view.addSubview(tableView)
+            tableView.registerClass(CrateSummaryCell.self, forCellReuseIdentifier: TableCell.crate.rawValue)
             tableView.registerClass(ErrorCell.self, forCellReuseIdentifier: TableCell.error.rawValue)
             tableView.dataSource = self
             tableView.delegate = self
-            view.addSubview(tableView)
+//            tableView.tableHeaderView = searchController.searchBar
+            navigationItem.titleView = searchController.searchBar
+            searchController.hidesNavigationBarDuringPresentation = false
+            searchController.searchBar.placeholder = "crates.io"
+            searchController.searchResultsUpdater = self
+            definesPresentationContext = true
         }
         if currentStateVersion != state.navigation.home.version {
             tableView.reloadData()
@@ -97,7 +105,7 @@ extension HomeViewController2: UITableViewDataSource, UITableViewDelegate {
     }
     @objc
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCellWithIdentifier(TableCell.crate.rawValue, forIndexPath: indexPath) as? CrateCell else {
+        guard let cell = tableView.dequeueReusableCellWithIdentifier(TableCell.crate.rawValue, forIndexPath: indexPath) as? CrateSummaryCell else {
             return tableView.dequeueReusableCellWithIdentifier(TableCell.error.rawValue, forIndexPath: indexPath)
         }
         let crateID = crateIDFor(section: TableSection.all[indexPath.section], row: indexPath.row)
@@ -111,56 +119,15 @@ extension HomeViewController2: UITableViewDataSource, UITableViewDelegate {
         driver.operation.pushCrateInspectorFor(crateID)
     }
 }
-
-private final class CrateCell: UITableViewCell {
-    private let nameLabel = UILabel()
-    private let versionLabel = UILabel()
-    private let descriptionLabel = UILabel()
-    private var installer = ViewInstaller()
-    var state: CrateStateBasics? {
-        didSet {
-            render()
-        }
-    }
-    func render() {
-        installer.installIfNeeded {
-            contentView.addSubview(nameLabel)
-            contentView.addSubview(versionLabel)
-            contentView.addSubview(descriptionLabel)
-            descriptionLabel.numberOfLines = 0
-        }
-        nameLabel.attributedText = state?.name.attributed().stylizedSilently(.crateList(.itemName))
-        versionLabel.attributedText = state?.version.attributed().stylizedSilently(.crateList(.itemVersion))
-        descriptionLabel.attributedText = state?.description?.attributed().stylizedSilently(.crateList(.itemDescription))
-        renderLayoutOnly()
-    }
-    private func renderLayoutOnly() {
-        let	LARGE_GAP = CGFloat(20)
-        let	SMALL_GAP = CGFloat(10)
-
-        let nameSize = nameLabel.sizeThatFits(CGSize.zero)
-        let versionSize = versionLabel.sizeThatFits(CGSize.zero)
-        let box = contentView.bounds.toBox().toSilentBox()
-        let (_, contentBox, _) = box.splitInX(LARGE_GAP, 100%, LARGE_GAP).center.splitInY(SMALL_GAP, 100%, SMALL_GAP)
-        let (topBox, _, bottomBox) = contentBox.splitInY(max(nameSize.height, versionSize.height), SMALL_GAP, 100%)
-        let (nameBox, _, versionBox) = topBox.splitInX(100%, SMALL_GAP, versionSize.width)
-
-        let descriptionSize = descriptionLabel.sizeThatFits(bottomBox.toCGRect().size)
-        let (descriptionBox, _, _) = bottomBox.splitInY(descriptionSize.height, 0%, 0%)
-
-        nameLabel.frame = nameBox.toCGRect()
-        versionLabel.frame = versionBox.toCGRect()
-        descriptionLabel.frame = descriptionBox.toCGRect()
-    }
-    private override func layoutSubviews() {
-        super.layoutSubviews()
-        render()
-    }
-}
-
 private final class ErrorCell: UITableViewCell {
 }
 
+extension HomeViewController2: UISearchResultsUpdating {
+    @objc
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        
+    }
+}
 
 
 

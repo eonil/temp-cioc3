@@ -6,7 +6,12 @@
 //  Copyright © 2016 Eonil. All rights reserved.
 //
 
-struct Transmissive<T> {
+protocol TransmissiveType: VersioningState {
+    associatedtype Result
+    var result: Result? { get }
+}
+struct Transmissive<T>: TransmissiveType {
+    private(set) var version = Version()
     private(set) var result: T?
     private(set) var launchTimepoint: NSDate?
     private(set) var readyTimepoint: NSDate?
@@ -19,26 +24,39 @@ struct Transmissive<T> {
     var isTransferring: Bool {
         return launchTimepoint != nil && readyTimepoint == nil
     }
-    mutating func reset() {
-        result = nil
-        launchTimepoint = nil
-        readyTimepoint = nil
-    }
-    mutating func setTransferring() {
-//        assert(launchTimepoint == nil)
-        launchTimepoint = NSDate()
-    }
-    mutating func setDownloaded(newDownloaded: T) {
-//        assert(launchTimepoint != nil)
-        result = newDownloaded
-        readyTimepoint = NSDate()
-    }
 }
 extension Transmissive {
     func needsReloading(timeout: NSTimeInterval) -> Bool {
         guard isTransferring == false else { return false }
         guard let readyTimepoint = readyTimepoint else { return true }
         return NSDate().timeIntervalSinceDate(readyTimepoint) < timeout
+    }
+}
+extension Transmissive {
+    mutating func reset() {
+        result = nil
+        launchTimepoint = nil
+        readyTimepoint = nil
+        version.revise()
+    }
+    mutating func setTransferring() {
+//        assert(launchTimepoint == nil)
+        launchTimepoint = NSDate()
+        version.revise()
+    }
+    mutating func setDownloaded(newDownloaded: T) {
+//        assert(launchTimepoint != nil)
+        result = newDownloaded
+        readyTimepoint = NSDate()
+        version.revise()
+    }
+}
+extension Transmissive where T: Equatable {
+    mutating func setDownloaded(newDownloaded: T) {
+        guard result != newDownloaded else { return }
+        result = newDownloaded
+        readyTimepoint = NSDate()
+        version.revise()
     }
 }
 

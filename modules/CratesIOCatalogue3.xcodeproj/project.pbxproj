@@ -55,6 +55,9 @@
 		459B5FD91D031C8D0081D8FF /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FBE1D031C780081D8FF /* BoltsSwift.framework */; };
 		459B5FDA1D031C8D0081D8FF /* BoltsSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FBE1D031C780081D8FF /* BoltsSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		459B5FDE1D031D140081D8FF /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */; };
+		45D1B99D1D170B4100B9F7C3 /* CrateSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */; };
+		45D1B9AC1D171A5400B9F7C3 /* HomeSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */; };
+		45D1B9AE1D18305E00B9F7C3 /* VersioningContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -170,6 +173,13 @@
 			remoteGlobalIDString = 87FEF3651A9085FA00C60678;
 			remoteInfo = "BoltsSwift-iOS";
 		};
+		45D1B9A91D170B4200B9F7C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45D1B98E1D16CF0300B9F7C3;
+			remoteInfo = "EonilToolboxTests-macOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -238,6 +248,9 @@
 		459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BoltsSwift.xcodeproj; path = "../submodules/Bolts-Swift/BoltsSwift.xcodeproj"; sourceTree = "<group>"; };
 		459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EonilToolbox.xcodeproj; path = ../submodules/toolbox.swift/EonilToolbox.xcodeproj; sourceTree = "<group>"; };
 		459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
+		45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateSummaryCell.swift; sourceTree = "<group>"; };
+		45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSearchResultViewController.swift; sourceTree = "<group>"; };
+		45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersioningContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +319,8 @@
 				451C93BA1D03202F00C5F640 /* MainWindowController.swift */,
 				459B5FAB1D0319860081D8FF /* RootViewController.swift */,
 				458EE5BC1D12E6AE004A1942 /* HomeViewController2.swift */,
+				45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */,
+				45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */,
 				459B5FAF1D0319960081D8FF /* SearchViewController.swift */,
 				459B5FB11D0319A00081D8FF /* CrateInspectorViewController.swift */,
 				458EE67A1D168AAA004A1942 /* CrateInspectorInfoView.swift */,
@@ -358,6 +373,7 @@
 				451C93BE1D033B0000C5F640 /* UtilityExtensions.swift */,
 				458EE60A1D144DA4004A1942 /* UIKitExtensionsForAutoLayoutConvenience.swift */,
 				458EE64C1D14D5AA004A1942 /* Transmissive.swift */,
+				45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */,
 				458EE6511D15097A004A1942 /* SwiftExtensions.swift */,
 				458EE65A1D152AC0004A1942 /* BoltsExtensions.swift */,
 				451C94BA1D047CB900C5F640 /* ImplicitImports.swift */,
@@ -387,6 +403,7 @@
 			children = (
 				459B5FD11D031C7C0081D8FF /* EonilToolbox.framework */,
 				459B5FD31D031C7C0081D8FF /* EonilToolbox.framework */,
+				45D1B9AA1D170B4200B9F7C3 /* EonilToolboxTests-macOS.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -554,6 +571,13 @@
 			remoteRef = 459B5FD21D031C7C0081D8FF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		45D1B9AA1D170B4200B9F7C3 /* EonilToolboxTests-macOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "EonilToolboxTests-macOS.xctest";
+			remoteRef = 45D1B9A91D170B4200B9F7C3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -573,6 +597,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45D1B99D1D170B4100B9F7C3 /* CrateSummaryCell.swift in Sources */,
 				459B5FB01D0319960081D8FF /* SearchViewController.swift in Sources */,
 				459B5FB21D0319A00081D8FF /* CrateInspectorViewController.swift in Sources */,
 				451C93BB1D03202F00C5F640 /* MainWindowController.swift in Sources */,
@@ -586,6 +611,7 @@
 				459B5FDE1D031D140081D8FF /* UtilityFunctions.swift in Sources */,
 				451C94D71D05096C00C5F640 /* DTOID.swift in Sources */,
 				451C94BB1D047CB900C5F640 /* ImplicitImports.swift in Sources */,
+				45D1B9AE1D18305E00B9F7C3 /* VersioningContainer.swift in Sources */,
 				459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */,
 				458EE5BD1D12E6AE004A1942 /* HomeViewController2.swift in Sources */,
 				451C93E71D0359FE00C5F640 /* DTOSummary.swift in Sources */,
@@ -612,6 +638,7 @@
 				459B5FAC1D0319860081D8FF /* RootViewController.swift in Sources */,
 				459B5FA61D0310E30081D8FF /* DriverCommand.swift in Sources */,
 				451C93EC1D0359FE00C5F640 /* DTOKeyword.swift in Sources */,
+				45D1B9AC1D171A5400B9F7C3 /* HomeSearchResultViewController.swift in Sources */,
 				458EE67B1D168AAA004A1942 /* CrateInspectorInfoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

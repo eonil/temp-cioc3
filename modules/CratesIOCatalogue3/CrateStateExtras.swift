@@ -16,7 +16,7 @@ extension CrateStateExtras {
         return authors.isReady && dependencies.isReady && versions.isReady
     }
     func needsReloadingAny() -> Bool {
-        let timeout = NSTimeInterval(3)
+        let timeout = NSTimeInterval(5)
         return authors.needsReloading(timeout) || dependencies.needsReloading(timeout) || versions.needsReloading(timeout)
     }
     //    func isTransferringAny() -> Bool {

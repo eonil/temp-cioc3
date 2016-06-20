@@ -108,7 +108,10 @@ final class OperationService: DriverAccessible {
             // Perform UI first to provide better UX.
             state.navigation.pushCrateInspector(crateID)
         }
-        let loadData = driver.operation.reloadCrateFor(crateID)
+        let loadData = driver.operation.reloadCrateFor(crateID).continueOnSuccessWithTask { [driver] in
+            // Extra data requires basic data (crate ID and version) to work properly.
+            return driver.operation.reloadCrateExtrasFor(crateID)
+        }
         return Task.whenAll([performUI, loadData])
     }
 }

@@ -6,7 +6,7 @@
 //  Copyright © 2016 Eonil. All rights reserved.
 //
 
-struct CrateState {
+struct CrateState: VersioningState {
     private(set) var version = Version()
     /// Only server manages crate key, so server-side ID
     /// always exists.

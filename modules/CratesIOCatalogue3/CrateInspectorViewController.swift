@@ -35,9 +35,9 @@ private extension DatasheetModeID {
 
 
 private struct LocalState {
-    var linkDatasheetState = [LinkItemState]()
-    var dependencyDatasheetState = [DependencyItemState]()
-    var versionDatasheetState = [VersionItemState]()
+    var linkDatasheetState = VersioningContainer<[LinkItemState]>(version: Version(), content: [])
+    var dependencyDatasheetState = VersioningContainer<[DependencyItemState]>(version: Version(), content: [])
+    var versionDatasheetState = VersioningContainer<[VersionItemState]>(version: Version(), content: [])
 }
 private typealias LinkItemState = (displayName: String, targetURL: NSURL)
 private typealias DependencyItemState = (displayName: String, crateID: CrateID)
@@ -137,13 +137,13 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
     }
     private func renderDatasheetStates() {
         if state.version != renderedStateVersion {
-            localState.linkDatasheetState = [
+            localState.linkDatasheetState.content = [
                 crateState?.basics?.homepage.flatMap({ NSURL(string: $0) }).flatMap({ ("Website", $0) }),
                 crateState?.basics?.documentation.flatMap({ NSURL(string: $0) }).flatMap({ ("Documentation", $0) }),
                 crateState?.basics?.repository.flatMap({ NSURL(string: $0) }).flatMap({ ("Repository", $0) }),
             ].flatMap({ $0 })
-            localState.dependencyDatasheetState = (crateState?.extras.dependencies.result ?? []).map { DependencyItemState($0.name, $0.id) }
-            localState.versionDatasheetState = (crateState?.extras.versions.result ?? []).map { VersionItemState($0.0, $0.1) }
+            localState.dependencyDatasheetState.content = (crateState?.extras.dependencies.result ?? []).map { DependencyItemState($0.name, $0.id) }
+            localState.versionDatasheetState.content = (crateState?.extras.versions.result ?? []).map { VersionItemState($0.0, $0.1) }
             renderModeSelector(mode: crateInspectionState?.datasheetMode ?? .links, localState: localState)
             reloadDatasheetWithAnimation()
         }
@@ -187,9 +187,9 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
     private func renderModeSelector(mode newMode: DatasheetModeID?, localState: LocalState) {
         func getSegmentEnabled() -> [Bool] {
             return [
-                localState.linkDatasheetState.count > 0,
-                localState.dependencyDatasheetState.count > 0,
-                localState.versionDatasheetState.count > 0,
+                localState.linkDatasheetState.content.count > 0,
+                localState.dependencyDatasheetState.content.count > 0,
+                localState.versionDatasheetState.content.count > 0,
             ]
         }
         func getModeIndex() -> Int {
@@ -266,9 +266,9 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
         case .datasheet:
             guard let mode = crateInspectionState?.datasheetMode else { return 0 }
             switch mode {
-            case .links:        return localState.linkDatasheetState.count
-            case .dependencies: return localState.dependencyDatasheetState.count
-            case .versions:     return localState.versionDatasheetState.count
+            case .links:        return localState.linkDatasheetState.content.count
+            case .dependencies: return localState.dependencyDatasheetState.content.count
+            case .versions:     return localState.versionDatasheetState.content.count
             }
         }
     }
@@ -307,17 +307,17 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
             switch mode {
             case .links:
                 let cell = getCell(.link, style: .Value1) as LinkCell
-                cell.render(localState.linkDatasheetState[indexPath.row])
+                cell.render(localState.linkDatasheetState.content[indexPath.row])
                 return cell
 
             case .dependencies:
                 let cell = getCell(.dependency, style: .Value1) as DependencyCell
-                cell.render(localState.dependencyDatasheetState[indexPath.row])
+                cell.render(localState.dependencyDatasheetState.content[indexPath.row])
                 return cell
 
             case .versions:
                 let cell = getCell(.version, style: .Value1) as VersionCell
-                cell.render(localState.versionDatasheetState[indexPath.row])
+                cell.render(localState.versionDatasheetState.content[indexPath.row])
                 return cell
             }
         }
@@ -332,9 +332,9 @@ extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelega
             guard let mode = crateInspectionState?.datasheetMode else { return  }
             switch mode {
             case .links:
-                UIApplication.sharedApplication().openURL(localState.linkDatasheetState[indexPath.row].targetURL)
+                UIApplication.sharedApplication().openURL(localState.linkDatasheetState.content[indexPath.row].targetURL)
             case .dependencies:
-                let crateID = localState.dependencyDatasheetState[indexPath.row].crateID
+                let crateID = localState.dependencyDatasheetState.content[indexPath.row].crateID
                 driver.operation.pushCrateInspectorFor(crateID)
                 
             case .versions:
