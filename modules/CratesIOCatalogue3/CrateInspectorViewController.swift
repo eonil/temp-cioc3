@@ -237,7 +237,17 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
 
 
 
-
+    private func renderLayout() {
+        renderModeSelectorLayoutOnly()
+    }
+    private func renderModeSelectorLayoutOnly() {
+        let contentOffsetY = tableView.contentOffset.y
+        let topInset = tableView.contentInset.top
+        let displacementInY = topInset + -contentOffsetY + -topInset + getInfoHeight()
+        let filteredDisplacementInY = max(topInset, displacementInY)
+        let modeBox = tableView.bounds.toBox().toSilentBox().splitInY(44, 0%, 100%).min.translatedBy((0, filteredDisplacementInY))
+        modeSelectorContainerView.frame = modeBox.toCGRect()
+    }
     private func getInfoHeight() -> CGFloat {
         let fit = CGSize(width: tableView.bounds.width, height: 0)
         return infoView.systemLayoutSizeFittingSize(fit, withHorizontalFittingPriority: UILayoutPriorityRequired, verticalFittingPriority: UILayoutPriorityFittingSizeLevel).height
@@ -249,19 +259,6 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
     private func getTopInsetWithoutInfoArea() -> CGFloat {
         return 64
     }
-
-    private func renderLayout() {
-
-    }
-    private func renderModeSelectorLayoutOnly() {
-        let contentOffsetY = tableView.contentOffset.y
-        let topInset = tableView.contentInset.top
-        let displacementInY = topInset + -contentOffsetY + -topInset + getInfoHeight()
-        let filteredDisplacementInY = max(topInset, displacementInY)
-        let modeBox = tableView.bounds.toBox().toSilentBox().splitInY(44, 0%, 100%).min.translatedBy((0, filteredDisplacementInY))
-        modeSelectorContainerView.frame = modeBox.toCGRect()
-    }
-
 
 
 
