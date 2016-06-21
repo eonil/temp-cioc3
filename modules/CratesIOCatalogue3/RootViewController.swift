@@ -12,7 +12,7 @@ import EonilToolbox
 final class RootViewController: UINavigationController, DriverAccessible, Renderable {
     private let home = HomeViewController2()
     private let search = SearchViewController()
-    private var crateInspectors = [CrateInspectorViewController]()
+    private var crateInspectors = [CrateInspectorViewController2]()
     private var installer = ViewInstaller()
     private var inTransition = false
     private var renderedState: NavigationState?
@@ -40,7 +40,7 @@ final class RootViewController: UINavigationController, DriverAccessible, Render
         let crateInspectionStack = state.navigation.crateInspectorStack
         if crateInspectors.count != crateInspectionStack.count {
             while crateInspectors.count < crateInspectionStack.count {
-                let vc = CrateInspectorViewController()
+                let vc = CrateInspectorViewController2()
                 vc.indexInCrateInspectionStateStack = crateInspectors.count
                 crateInspectors.append(vc)
             }

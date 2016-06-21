@@ -1,5 +1,5 @@
 //
-//  CrateInspectorViewController.swift
+//  CrateInspectorViewController2.swift
 //  CratesIOCatalogue3
 //
 //  Created by Hoon H. on 2016/06/04.
@@ -63,10 +63,10 @@ private typealias VersionItemState = (number: String, timepoint: String)
 ///
 /// So I finally settled on just plain-old view that places on table-view.
 ///
-final class CrateInspectorViewController: UIViewController, Renderable, DriverAccessible {
+final class CrateInspectorViewController2: UIViewController, Renderable, DriverAccessible {
     private let titleLabel = UILabel()
     private let tableView = UITableView()
-    private let infoView = CrateInspectorInfoView()
+    private let infoView = CrateInspectorInfoView2()
     private let modeSelectorContainerView = UIView()
     private let modeSelectorSegmentedControl = UISegmentedControl()
     private var installer = ViewInstaller()
@@ -108,9 +108,6 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
             tableView.reloadData()
             tableView.addSubview(infoView)
             tableView.addSubview(modeSelectorContainerView)
-            infoView.pinTop()
-            infoView.pinCenterX()
-            infoView.pinWidthTo(view)
             // `modeSelectorContainerView` will be laid out manually. Because it has to consider
 // scrolling offset and info-area length.
             modeSelectorContainerView.backgroundColor = UIColor.whiteColor()
@@ -233,6 +230,9 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
 
 
     private func renderLayout() {
+        let h = getInfoHeight()
+        let w = view.bounds.width
+        infoView.frame.size = CGSize(width: w, height: h)
         renderModeSelectorLayoutOnly()
     }
     private func renderModeSelectorLayoutOnly() {
@@ -244,8 +244,9 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
         modeSelectorContainerView.frame = modeBox.toCGRect()
     }
     private func getInfoHeight() -> CGFloat {
-        let fit = CGSize(width: tableView.bounds.width, height: 0)
-        return infoView.systemLayoutSizeFittingSize(fit, withHorizontalFittingPriority: UILayoutPriorityRequired, verticalFittingPriority: UILayoutPriorityFittingSizeLevel).height
+        let fit = CGSize(width: tableView.bounds.width, height: CGFloat.max)
+        let size = infoView.sizeThatFits(fit)
+        return size.height
     }
     private func getPlaceholderHeight() -> CGFloat {
         return getInfoHeight() + 44
@@ -272,7 +273,7 @@ final class CrateInspectorViewController: UIViewController, Renderable, DriverAc
 
 }
 
-extension CrateInspectorViewController {
+extension CrateInspectorViewController2 {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         (localState.crateInspectionState?.crateID).applyOptionally { driver.operation.reloadCrateExtrasFor($0) }
@@ -283,7 +284,7 @@ extension CrateInspectorViewController {
     }
 }
 
-extension CrateInspectorViewController: UITableViewDataSource, UITableViewDelegate {
+extension CrateInspectorViewController2: UITableViewDataSource, UITableViewDelegate {
     @objc
     func scrollViewDidScroll(scrollView: UIScrollView) {
         renderModeSelectorLayoutOnly()

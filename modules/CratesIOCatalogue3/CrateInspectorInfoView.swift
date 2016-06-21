@@ -46,9 +46,11 @@ final class CrateInspectorInfoView: UIView, DriverAccessible {
             // label and activity-indicator.
             authorConatinerView.addSubview(authorLabel)
             authorConatinerView.addSubview(transmissionAcitivityIndicatorView)
-            authorConatinerView.pinWidthTo(stackView)
+//            authorConatinerView.pinWidthTo(self, constant: -20)
             authorConatinerView.pinHeightAtLeast(lineHeightOf: Style.crateInspector(.infoAuthor).getFontSilently())
-            authorLabel.pinCenterAndSize()
+//            authorLabel.pinCenterAndSize()
+            authorLabel.pinWidthTo(stackView)
+            authorLabel.pinCenterX()
             authorLabel.numberOfLines = 0
             transmissionAcitivityIndicatorView.pinCenter()
             transmissionAcitivityIndicatorView.activityIndicatorViewStyle = .Gray
@@ -70,8 +72,7 @@ final class CrateInspectorInfoView: UIView, DriverAccessible {
             licenseLabel.pinCenter()
             licenseLabel.pinWidthTo(licenseContainerView, constant: -6)
             licenseLabel.pinHeightTo(licenseContainerView, constant: -6)
-            descriptionTextView.pinLeft()
-            descriptionTextView.pinRight()
+//            descriptionTextView.pinWidthTo(self, constant: -20)
             descriptionTextView.scrollEnabled = false
             descriptionTextView.textContainer.heightTracksTextView = true
             descriptionTextView.editable = false
@@ -81,8 +82,8 @@ final class CrateInspectorInfoView: UIView, DriverAccessible {
         renderLayoutOnly(crateState)
     }
     private func renderValuesOnly(crateState: CrateState?) {
-//        authorLabel.attributedText = (crateState?.extras.authors.result != nil ? "a\na\na\na" : "aa").attributed().stylizedSilently(.crateInspector(.infoAuthor))
-        authorLabel.attributedText = crateState?.extras.authors.result?.joinWithSeparator(", ").attributed().stylizedSilently(.crateInspector(.infoAuthor))
+        authorLabel.attributedText = (crateState?.extras.authors.result != nil ? "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab\na\na\na" : "aa").attributed().stylizedSilently(.crateInspector(.infoAuthor))
+//        authorLabel.attributedText = crateState?.extras.authors.result?.joinWithSeparator(", ").attributed().stylizedSilently(.crateInspector(.infoAuthor))
         licenseLabel.attributedText = crateState?.basics?.license?.attributed().stylizedSilently(.crateInspector(.infoLicense))
         descriptionTextView.attributedText = crateState?.basics?.description?.attributed().stylizedSilently(.crateInspector(.infoDescription))
         downloadCountLabel.attributedText = (crateState?.basics?.downloads).flatMap { "Downloaded \($0) time\($0 == 1 ? "" : "s")." }?.attributed().stylizedSilently(.crateInspector(.infoDownloadCount))

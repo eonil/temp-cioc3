@@ -58,6 +58,8 @@
 		45D1B99D1D170B4100B9F7C3 /* CrateSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */; };
 		45D1B9AC1D171A5400B9F7C3 /* HomeSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */; };
 		45D1B9AE1D18305E00B9F7C3 /* VersioningContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */; };
+		45D1B9D01D1879F700B9F7C3 /* CrateInspectorInfoView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9CF1D1879F700B9F7C3 /* CrateInspectorInfoView2.swift */; };
+		45D1B9DF1D196EE100B9F7C3 /* CrateInspectorViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9DE1D196EE100B9F7C3 /* CrateInspectorViewController2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -251,6 +253,8 @@
 		45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateSummaryCell.swift; sourceTree = "<group>"; };
 		45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSearchResultViewController.swift; sourceTree = "<group>"; };
 		45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersioningContainer.swift; sourceTree = "<group>"; };
+		45D1B9CF1D1879F700B9F7C3 /* CrateInspectorInfoView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateInspectorInfoView2.swift; sourceTree = "<group>"; };
+		45D1B9DE1D196EE100B9F7C3 /* CrateInspectorViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateInspectorViewController2.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -323,7 +327,9 @@
 				45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */,
 				459B5FAF1D0319960081D8FF /* SearchViewController.swift */,
 				459B5FB11D0319A00081D8FF /* CrateInspectorViewController.swift */,
+				45D1B9DE1D196EE100B9F7C3 /* CrateInspectorViewController2.swift */,
 				458EE67A1D168AAA004A1942 /* CrateInspectorInfoView.swift */,
+				45D1B9CF1D1879F700B9F7C3 /* CrateInspectorInfoView2.swift */,
 				458EE5DE1D12EF2E004A1942 /* Styling.swift */,
 				459B5F871D0310740081D8FF /* ApplicationController.swift */,
 				458EE6571D152879004A1942 /* (network activity rendering service) */,
@@ -628,7 +634,9 @@
 				458EE6541D152317004A1942 /* CrateStateExtras.swift in Sources */,
 				451C93EA1D0359FE00C5F640 /* DTODependency.swift in Sources */,
 				451C93F21D035A0900C5F640 /* JSONParsing.swift in Sources */,
+				45D1B9D01D1879F700B9F7C3 /* CrateInspectorInfoView2.swift in Sources */,
 				459B5F881D0310740081D8FF /* ApplicationController.swift in Sources */,
+				45D1B9DF1D196EE100B9F7C3 /* CrateInspectorViewController2.swift in Sources */,
 				458EE6521D15097A004A1942 /* SwiftExtensions.swift in Sources */,
 				458EE60B1D144DA4004A1942 /* UIKitExtensionsForAutoLayoutConvenience.swift in Sources */,
 				4526FE701D118BB9004495FD /* OperationService.swift in Sources */,

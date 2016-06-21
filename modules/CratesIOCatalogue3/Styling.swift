@@ -124,6 +124,7 @@ private extension Style {
         switch self {
         case let .crateInspector(substyle):
             switch substyle {
+            case .infoAuthor:           return .ByCharWrapping
             // `.ByCharWrapping` does not make any hyphens.
             // `.ByWordWrapping` with `hypenationFactor = 1` looks best.
             case .infoDescription:      return .ByWordWrapping
