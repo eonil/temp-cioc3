@@ -71,6 +71,7 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
     private let modeSelectorSegmentedControl = UISegmentedControl()
     private var installer = ViewInstaller()
     private var localState = LocalState()
+    private var isAppeared = false
 
     /// Address to state.
     var indexInCrateInspectionStateStack: Int? {
@@ -80,6 +81,9 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
         }
     }
     func render() {
+        renderLocalState()
+    }
+    func renderLocalState() {
         assertMainThread()
         installer.installIfNeeded {
             navigationItem.titleView = {
@@ -90,7 +94,6 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
                 return titleContainerView
             }()
             view.addSubview(tableView)
-            tableView.pinCenterAndSize()
             // DO NOT use Self-Sizing Cells. That makes table-view cells jumps,
             // and that jump causes unwanted animation.
 //            tableView.rowHeight = UITableViewAutomaticDimension
@@ -109,7 +112,7 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
             tableView.addSubview(infoView)
             tableView.addSubview(modeSelectorContainerView)
             // `modeSelectorContainerView` will be laid out manually. Because it has to consider
-// scrolling offset and info-area length.
+            // scrolling offset and info-area length.
             modeSelectorContainerView.backgroundColor = UIColor.whiteColor()
             modeSelectorContainerView.addSubview(modeSelectorSegmentedControl)
             modeSelectorSegmentedControl.pinCenter()
@@ -120,15 +123,38 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
                 let label = mode.getLabel()
                 modeSelectorSegmentedControl.insertSegmentWithTitle(label, atIndex: i, animated: false)
             }
+            modeSelectorSegmentedControl.layoutIfNeeded()
             modeSelectorSegmentedControl.addTarget(self, action: #selector(EONIL_modeDidChangeValue(_:)), forControlEvents: .ValueChanged)
-//            if let crateState = crateState {
-//                infoView.render(crateState)
-//                infoView.layoutIfNeeded()
-//            }
+            renderInfoViewLayoutOnly()
         }
+        infoView.render(localState.crateState, animated: isAppeared)
+        renderInfoViewLayoutOnly()
         downloadData()
         renderData()
-        renderLayout()
+        renderLayoutAnimated(isAppeared)
+    }
+    private func renderInfoViewLayoutOnly() {
+        tableView.frame = view.bounds
+        let h = getInfoHeight()
+        let w = view.bounds.width
+        if infoView.frame.height != h {
+            func a() {
+                infoView.frame.size = CGSize(width: w, height: h)
+                infoView.setNeedsLayout()
+                infoView.layoutIfNeeded()
+                renderModeSelectorLayoutOnly()
+                tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+            }
+            if isAppeared {
+                UIView.animateWithDuration(0.5) { a() }
+            }
+            else {
+                a()
+            }
+        }
+        else {
+            renderModeSelectorLayoutOnly()
+        }
     }
     private func downloadData() {
         var needsReloadingDatasheetMode = false
@@ -172,7 +198,6 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
     }
     private func renderData() {
         titleLabel.attributedText = localState.crateState?.basics?.name.attributed().stylizedSilently(.crateInspector(.titleName))
-        infoView.render(localState.crateState)
         infoView.layoutIfNeeded()
         renderDatasheetModeSelector()
     }
@@ -229,11 +254,8 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
 
 
 
-    private func renderLayout() {
-        let h = getInfoHeight()
-        let w = view.bounds.width
-        infoView.frame.size = CGSize(width: w, height: h)
-        renderModeSelectorLayoutOnly()
+    private func renderLayoutAnimated(animated: Bool) {
+
     }
     private func renderModeSelectorLayoutOnly() {
         let contentOffsetY = tableView.contentOffset.y
@@ -277,10 +299,17 @@ extension CrateInspectorViewController2 {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         (localState.crateInspectionState?.crateID).applyOptionally { driver.operation.reloadCrateExtrasFor($0) }
+        isAppeared = true
+        renderLocalState()
+    }
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        isAppeared = false
+        renderLocalState()
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        render()
+        renderLocalState()
     }
 }
 

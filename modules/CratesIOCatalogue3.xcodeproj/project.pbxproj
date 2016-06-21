@@ -60,6 +60,8 @@
 		45D1B9AE1D18305E00B9F7C3 /* VersioningContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */; };
 		45D1B9D01D1879F700B9F7C3 /* CrateInspectorInfoView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9CF1D1879F700B9F7C3 /* CrateInspectorInfoView2.swift */; };
 		45D1B9DF1D196EE100B9F7C3 /* CrateInspectorViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9DE1D196EE100B9F7C3 /* CrateInspectorViewController2.swift */; };
+		45D1B9E61D19835500B9F7C3 /* LocalStateContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9E51D19835500B9F7C3 /* LocalStateContainer.swift */; };
+		45D1B9F31D198A2600B9F7C3 /* PriorityContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9F21D198A2600B9F7C3 /* PriorityContainer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -255,6 +257,8 @@
 		45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersioningContainer.swift; sourceTree = "<group>"; };
 		45D1B9CF1D1879F700B9F7C3 /* CrateInspectorInfoView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateInspectorInfoView2.swift; sourceTree = "<group>"; };
 		45D1B9DE1D196EE100B9F7C3 /* CrateInspectorViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateInspectorViewController2.swift; sourceTree = "<group>"; };
+		45D1B9E51D19835500B9F7C3 /* LocalStateContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalStateContainer.swift; sourceTree = "<group>"; };
+		45D1B9F21D198A2600B9F7C3 /* PriorityContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriorityContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -330,6 +334,7 @@
 				45D1B9DE1D196EE100B9F7C3 /* CrateInspectorViewController2.swift */,
 				458EE67A1D168AAA004A1942 /* CrateInspectorInfoView.swift */,
 				45D1B9CF1D1879F700B9F7C3 /* CrateInspectorInfoView2.swift */,
+				45D1B9E51D19835500B9F7C3 /* LocalStateContainer.swift */,
 				458EE5DE1D12EF2E004A1942 /* Styling.swift */,
 				459B5F871D0310740081D8FF /* ApplicationController.swift */,
 				458EE6571D152879004A1942 /* (network activity rendering service) */,
@@ -380,6 +385,7 @@
 				458EE60A1D144DA4004A1942 /* UIKitExtensionsForAutoLayoutConvenience.swift */,
 				458EE64C1D14D5AA004A1942 /* Transmissive.swift */,
 				45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */,
+				45D1B9F21D198A2600B9F7C3 /* PriorityContainer.swift */,
 				458EE6511D15097A004A1942 /* SwiftExtensions.swift */,
 				458EE65A1D152AC0004A1942 /* BoltsExtensions.swift */,
 				451C94BA1D047CB900C5F640 /* ImplicitImports.swift */,
@@ -620,6 +626,7 @@
 				45D1B9AE1D18305E00B9F7C3 /* VersioningContainer.swift in Sources */,
 				459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */,
 				458EE5BD1D12E6AE004A1942 /* HomeViewController2.swift in Sources */,
+				45D1B9E61D19835500B9F7C3 /* LocalStateContainer.swift in Sources */,
 				451C93E71D0359FE00C5F640 /* DTOSummary.swift in Sources */,
 				451C93B21D031D9200C5F640 /* UserInteractionState.swift in Sources */,
 				451C94B01D045F4600C5F640 /* HTTPService.swift in Sources */,
@@ -647,6 +654,7 @@
 				459B5FA61D0310E30081D8FF /* DriverCommand.swift in Sources */,
 				451C93EC1D0359FE00C5F640 /* DTOKeyword.swift in Sources */,
 				45D1B9AC1D171A5400B9F7C3 /* HomeSearchResultViewController.swift in Sources */,
+				45D1B9F31D198A2600B9F7C3 /* PriorityContainer.swift in Sources */,
 				458EE67B1D168AAA004A1942 /* CrateInspectorInfoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
