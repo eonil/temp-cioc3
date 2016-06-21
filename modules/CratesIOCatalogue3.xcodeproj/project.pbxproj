@@ -39,7 +39,6 @@
 		458EE6561D15232F004A1942 /* CrateStateBasics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EE6551D15232F004A1942 /* CrateStateBasics.swift */; };
 		458EE6591D152889004A1942 /* NetworkActivityRenderingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EE6581D152889004A1942 /* NetworkActivityRenderingService.swift */; };
 		458EE65B1D152AC0004A1942 /* BoltsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EE65A1D152AC0004A1942 /* BoltsExtensions.swift */; };
-		458EE67B1D168AAA004A1942 /* CrateInspectorInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EE67A1D168AAA004A1942 /* CrateInspectorInfoView.swift */; };
 		459B5F881D0310740081D8FF /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F871D0310740081D8FF /* ApplicationController.swift */; };
 		459B5F8F1D0310740081D8FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F8E1D0310740081D8FF /* Assets.xcassets */; };
 		459B5F921D0310740081D8FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F901D0310740081D8FF /* LaunchScreen.storyboard */; };
@@ -49,7 +48,6 @@
 		459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FA91D03132A0081D8FF /* APIService.swift */; };
 		459B5FAC1D0319860081D8FF /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FAB1D0319860081D8FF /* RootViewController.swift */; };
 		459B5FB01D0319960081D8FF /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FAF1D0319960081D8FF /* SearchViewController.swift */; };
-		459B5FB21D0319A00081D8FF /* CrateInspectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FB11D0319A00081D8FF /* CrateInspectorViewController.swift */; };
 		459B5FD41D031C870081D8FF /* EonilToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FD11D031C7C0081D8FF /* EonilToolbox.framework */; };
 		459B5FD51D031C870081D8FF /* EonilToolbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FD11D031C7C0081D8FF /* EonilToolbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		459B5FD91D031C8D0081D8FF /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FBE1D031C780081D8FF /* BoltsSwift.framework */; };
@@ -236,7 +234,6 @@
 		458EE6551D15232F004A1942 /* CrateStateBasics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateStateBasics.swift; sourceTree = "<group>"; };
 		458EE6581D152889004A1942 /* NetworkActivityRenderingService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivityRenderingService.swift; sourceTree = "<group>"; };
 		458EE65A1D152AC0004A1942 /* BoltsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoltsExtensions.swift; sourceTree = "<group>"; };
-		458EE67A1D168AAA004A1942 /* CrateInspectorInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateInspectorInfoView.swift; sourceTree = "<group>"; };
 		459B5F841D0310740081D8FF /* CratesIOCatalogue3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CratesIOCatalogue3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		459B5F871D0310740081D8FF /* ApplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationController.swift; sourceTree = "<group>"; };
 		459B5F8E1D0310740081D8FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -248,7 +245,6 @@
 		459B5FA91D03132A0081D8FF /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		459B5FAB1D0319860081D8FF /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		459B5FAF1D0319960081D8FF /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
-		459B5FB11D0319A00081D8FF /* CrateInspectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateInspectorViewController.swift; sourceTree = "<group>"; };
 		459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BoltsSwift.xcodeproj; path = "../submodules/Bolts-Swift/BoltsSwift.xcodeproj"; sourceTree = "<group>"; };
 		459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EonilToolbox.xcodeproj; path = ../submodules/toolbox.swift/EonilToolbox.xcodeproj; sourceTree = "<group>"; };
 		459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
@@ -330,9 +326,7 @@
 				45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */,
 				45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */,
 				459B5FAF1D0319960081D8FF /* SearchViewController.swift */,
-				459B5FB11D0319A00081D8FF /* CrateInspectorViewController.swift */,
 				45D1B9DE1D196EE100B9F7C3 /* CrateInspectorViewController2.swift */,
-				458EE67A1D168AAA004A1942 /* CrateInspectorInfoView.swift */,
 				45D1B9CF1D1879F700B9F7C3 /* CrateInspectorInfoView2.swift */,
 				45D1B9E51D19835500B9F7C3 /* LocalStateContainer.swift */,
 				458EE5DE1D12EF2E004A1942 /* Styling.swift */,
@@ -611,7 +605,6 @@
 			files = (
 				45D1B99D1D170B4100B9F7C3 /* CrateSummaryCell.swift in Sources */,
 				459B5FB01D0319960081D8FF /* SearchViewController.swift in Sources */,
-				459B5FB21D0319A00081D8FF /* CrateInspectorViewController.swift in Sources */,
 				451C93BB1D03202F00C5F640 /* MainWindowController.swift in Sources */,
 				451C93EB1D0359FE00C5F640 /* DTODownload.swift in Sources */,
 				451C93F11D035A0900C5F640 /* JSONParsingExtensions.swift in Sources */,
@@ -655,7 +648,6 @@
 				451C93EC1D0359FE00C5F640 /* DTOKeyword.swift in Sources */,
 				45D1B9AC1D171A5400B9F7C3 /* HomeSearchResultViewController.swift in Sources */,
 				45D1B9F31D198A2600B9F7C3 /* PriorityContainer.swift in Sources */,
-				458EE67B1D168AAA004A1942 /* CrateInspectorInfoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
