@@ -115,9 +115,6 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
             // scrolling offset and info-area length.
             modeSelectorContainerView.backgroundColor = UIColor.whiteColor()
             modeSelectorContainerView.addSubview(modeSelectorSegmentedControl)
-            modeSelectorSegmentedControl.pinCenter()
-            modeSelectorSegmentedControl.pinWidthTo(modeSelectorContainerView, constant: -20)
-            modeSelectorSegmentedControl.pinHeightTo(modeSelectorContainerView, constant: -10)
             for i in DatasheetModeID.all.entireRange {
                 let mode = DatasheetModeID.all[i]
                 let label = mode.getLabel()
@@ -264,6 +261,7 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
         let filteredDisplacementInY = max(topInset, displacementInY)
         let modeBox = tableView.bounds.toBox().toSilentBox().splitInY(44, 0%, 100%).min.translatedBy((0, filteredDisplacementInY))
         modeSelectorContainerView.frame = modeBox.toCGRect()
+        modeSelectorSegmentedControl.frame = modeSelectorContainerView.bounds.insetBy(dx: 20, dy: 10)
     }
     private func getInfoHeight() -> CGFloat {
         let fit = CGSize(width: tableView.bounds.width, height: CGFloat.max)

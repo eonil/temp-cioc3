@@ -50,7 +50,6 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
             tableView.registerClass(ErrorCell.self, forCellReuseIdentifier: TableCell.error.rawValue)
             tableView.dataSource = self
             tableView.delegate = self
-//            tableView.tableHeaderView = searchController.searchBar
             navigationItem.titleView = searchController.searchBar
             searchController.hidesNavigationBarDuringPresentation = false
             searchController.searchBar.placeholder = "crates.io"
@@ -65,6 +64,10 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
     }
     func renderLayoutOnly() {
         tableView.frame = view.bounds
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        renderLayoutOnly()
     }
 }
 
