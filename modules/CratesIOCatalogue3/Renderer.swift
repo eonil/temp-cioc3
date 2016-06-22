@@ -28,12 +28,12 @@ final class Renderer: Renderable, DriverAccessible {
         // Make sure that any UI components to be instantiated after global appearance set up.
         main = MainWindowController()
     }
-    func render() {
+    func render(state: UserInteractionState) {
         renderCount += 1
         debugLog("renderCount = \(renderCount)")
-        main.render()
+        main.render(state)
     }
 }
 protocol Renderable {
-    func render()
+    func render(state: UserInteractionState)
 }

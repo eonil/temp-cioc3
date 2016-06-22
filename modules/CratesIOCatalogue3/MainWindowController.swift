@@ -13,22 +13,22 @@ final class MainWindowController: Renderable {
     private let root = RootViewController()
     init() {
     }
-    func render() {
+    func render(state: UserInteractionState) {
         mainWindow.screen = UIScreen.mainScreen()
         mainWindow.frame = UIScreen.mainScreen().bounds
         mainWindow.rootViewController = root
         mainWindow.makeKeyAndVisible()
-        root.renderRecursively()
+        root.renderRecursively(state)
     }
 }
 
 private extension UIViewController {
-    func renderRecursively() {
+    func renderRecursively(state: UserInteractionState) {
         if let renderable = self as? Renderable {
-            renderable.render()
+            renderable.render(state)
         }
         for child in childViewControllers {
-            child.renderRecursively()
+            child.renderRecursively(state)
         }
     }
 }

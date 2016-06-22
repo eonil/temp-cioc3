@@ -9,15 +9,19 @@
 import UIKit
 import EonilToolbox
 
+private struct LocalState {
+    var navigation = NavigationState()
+}
+
 final class RootViewController: UINavigationController, DriverAccessible, Renderable {
     private let home = HomeViewController2()
     private let search = SearchViewController()
     private var crateInspectors = [CrateInspectorViewController2]()
     private var installer = ViewInstaller()
     private var inTransition = false
-    private var renderedState: NavigationState?
+    private var localState = LocalState()
 
-    func render() {
+    func render(state: UserInteractionState) {
         installer.installIfNeeded { 
             delegate = self
             viewControllers = [home]
@@ -28,15 +32,15 @@ final class RootViewController: UINavigationController, DriverAccessible, Render
 //            navigationBar.translucent = true
         }
         let needsAnimation = (view.window != nil)
-        renderNaivgationStateOnlyAnimated(needsAnimation)
+        renderNaivgationStateOnlyAnimated(state, animated: needsAnimation)
     }
-    private func renderNaivgationStateOnlyAnimated(animated: Bool) {
+    private func renderNaivgationStateOnlyAnimated(state: UserInteractionState, animated: Bool) {
         guard inTransition == false else { return }
 //        switch driver.state.navigation.mode {
 //        case .Browse:
 //        case .Search:
 //        }
-        guard state.navigation.version != renderedState?.version else { return }
+        guard state.navigation.version != localState.navigation.version else { return }
         let crateInspectionStack = state.navigation.crateInspectorStack
         if crateInspectors.count != crateInspectionStack.count {
             while crateInspectors.count < crateInspectionStack.count {
@@ -49,7 +53,7 @@ final class RootViewController: UINavigationController, DriverAccessible, Render
             }
             setViewControllers([home] + crateInspectors, animated: animated)
         }
-        renderedState = state.navigation
+        localState.navigation = state.navigation
     }
     private func scanNavigationStateOnly() {
         // `UINavigationController` can pop a view-controller only by user-interaction.

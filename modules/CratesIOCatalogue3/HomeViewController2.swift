@@ -25,6 +25,10 @@ private extension TableSection {
         }
     }
 }
+private struct LocalState {
+    var homeState = HomeState()
+    var database = DatabaseState()
+}
 
 private enum TableCell: String {
     case crate
@@ -41,9 +45,9 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
     private let tableView = UITableView(frame: CGRect.zero, style: .Grouped)
     private let searchController = UISearchController(searchResultsController: HomeSearchResultViewController())
     private var installer = ViewInstaller()
-    private var currentStateVersion: Version?
+    private var localState = LocalState()
 
-    func render() {
+    func render(state: UserInteractionState) {
         installer.installIfNeeded {
             view.addSubview(tableView)
             tableView.registerClass(CrateSummaryCell.self, forCellReuseIdentifier: TableCell.crate.rawValue)
@@ -56,9 +60,12 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
             searchController.searchResultsUpdater = self
             definesPresentationContext = true
         }
-        if currentStateVersion != state.navigation.home.version {
+        if localState.homeState.version != state.navigation.home.version {
+            localState.homeState = state.navigation.home
             tableView.reloadData()
-            currentStateVersion = state.navigation.home.version
+        }
+        if localState.database.version != state.database.version {
+            localState.database = state.database
         }
         renderLayoutOnly()
     }
@@ -74,9 +81,9 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
 extension HomeViewController2 {
     private func crateIDFor(section section: TableSection, row: Int) -> CrateID {
         switch section {
-        case .newCrates:        return state.navigation.home.newItems[row]
-        case .justUpdated:      return state.navigation.home.justUpdatedItems[row]
-        case .mostDownloaded:   return state.navigation.home.mostDownloadedItems[row]
+        case .newCrates:        return localState.homeState.newItems[row]
+        case .justUpdated:      return localState.homeState.justUpdatedItems[row]
+        case .mostDownloaded:   return localState.homeState.mostDownloadedItems[row]
         }
     }
 }
@@ -89,9 +96,9 @@ extension HomeViewController2: UITableViewDataSource, UITableViewDelegate {
     @objc
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch TableSection.all[section] {
-        case .newCrates:        return state.navigation.home.newItems.count
-        case .justUpdated:      return state.navigation.home.justUpdatedItems.count
-        case .mostDownloaded:   return state.navigation.home.mostDownloadedItems.count
+        case .newCrates:        return localState.homeState.newItems.count
+        case .justUpdated:      return localState.homeState.justUpdatedItems.count
+        case .mostDownloaded:   return localState.homeState.mostDownloadedItems.count
         }
     }
     @objc
@@ -112,8 +119,8 @@ extension HomeViewController2: UITableViewDataSource, UITableViewDelegate {
             return tableView.dequeueReusableCellWithIdentifier(TableCell.error.rawValue, forIndexPath: indexPath)
         }
         let crateID = crateIDFor(section: TableSection.all[indexPath.section], row: indexPath.row)
-        assert(state.database.crates[crateID] != nil)
-        cell.state = state.database.crates[crateID]?.basics
+        assert(localState.database.crates[crateID] != nil)
+        cell.state = localState.database.crates[crateID]?.basics
         return cell
     }
     @objc

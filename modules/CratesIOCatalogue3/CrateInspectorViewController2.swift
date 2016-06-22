@@ -52,6 +52,13 @@ private func == (a: LinkItemState, b: LinkItemState) -> Bool {
 private typealias DependencyItemState = (displayName: String, crateID: CrateID)
 private typealias VersionItemState = (number: String, timepoint: String)
 
+private struct InvalidationTable {
+    var info = false
+    var mode = false
+    var linksSection = false
+    var dependenciesSection = false
+    var versionsSection = false
+}
 
 /// CAUTION!!!
 /// ----------
@@ -77,13 +84,61 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
     var indexInCrateInspectionStateStack: Int? {
         didSet {
             guard indexInCrateInspectionStateStack != oldValue else { return }
-            render()
+            renderWithCurrentUserInteractionServiceState()
         }
     }
-    func render() {
-        renderLocalState()
+    func render(state: UserInteractionState) {
+        let invalidations = downloadAndReduce(state)
+        renderLocalState(invalidations)
     }
-    func renderLocalState() {
+    private func downloadAndReduce(state: UserInteractionState) -> InvalidationTable {
+        var flags = InvalidationTable()
+        localState.crateInspectionState = {
+            guard let index = indexInCrateInspectionStateStack else { return nil }
+            let newCrateInspectionState = state.navigation.crateInspectorStack[index]
+            if newCrateInspectionState.datasheetMode != localState.crateInspectionState?.datasheetMode {
+                flags.mode = true
+            }
+            return newCrateInspectionState
+        }()
+
+        let newCrateState = (localState.crateInspectionState?.crateID).flatMap({ state.database.crates[$0] })
+        if localState.crateState?.version != newCrateState?.version {
+            localState.crateState = newCrateState
+            flags.info = true
+            flags.mode = true
+            flags.linksSection = true
+            flags.dependenciesSection = true
+            flags.versionsSection = true
+        }
+
+        func toLinkItemState(name: String, _ address: String?) -> LinkItemState? {
+            guard let a = address else { return nil }
+            guard let u = NSURL(string: a) else { return nil }
+            return LinkItemState(displayName: name, targetURL: u)
+        }
+        let newLinkDatasheetState = [
+            toLinkItemState("Website", localState.crateState?.basics?.homepage),
+            toLinkItemState("Documentation", localState.crateState?.basics?.documentation),
+            toLinkItemState("Repository", localState.crateState?.basics?.repository),
+            ].flatMap({ $0 }) as [LinkItemState]
+        if !(localState.linkDatasheetState == newLinkDatasheetState) {
+            localState.linkDatasheetState = newLinkDatasheetState
+            flags.linksSection = true
+        }
+        if localState.dependencyDatasheetState.version != localState.crateState?.extras.dependencies.version {
+            localState.dependencyDatasheetState.version = localState.crateState?.extras.dependencies.version ?? Version()
+            localState.dependencyDatasheetState.content = (localState.crateState?.extras.dependencies.result ?? []).map { DependencyItemState($0.name, $0.id) }
+            flags.dependenciesSection = true
+        }
+        if localState.versionDatasheetState.version != localState.crateState?.extras.versions.version {
+            localState.versionDatasheetState.version = localState.crateState?.extras.versions.version ?? Version()
+            localState.versionDatasheetState.content = (localState.crateState?.extras.versions.result ?? []).map { VersionItemState($0.0, $0.1) }
+            flags.versionsSection = true
+        }
+        return flags
+    }
+    private func renderLocalState(invalidateions: InvalidationTable) {
         assertMainThread()
         installer.installIfNeeded {
             navigationItem.titleView = {
@@ -122,81 +177,30 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
             }
             modeSelectorSegmentedControl.layoutIfNeeded()
             modeSelectorSegmentedControl.addTarget(self, action: #selector(EONIL_modeDidChangeValue(_:)), forControlEvents: .ValueChanged)
-            renderInfoViewLayoutOnly()
+            renderLayoutOnly()
         }
-        infoView.render(localState.crateState, animated: isAppeared)
-        renderInfoViewLayoutOnly()
-        downloadData()
-        renderData()
-        renderLayoutAnimated(isAppeared)
+        renderInvalidations(invalidateions)
+        renderLayoutOnly()
     }
-    private func renderInfoViewLayoutOnly() {
-        tableView.frame = view.bounds
-        let h = getInfoHeight()
-        let w = view.bounds.width
-        if infoView.frame.height != h {
-            func a() {
-                infoView.frame.size = CGSize(width: w, height: h)
-                infoView.setNeedsLayout()
-                infoView.layoutIfNeeded()
-                renderModeSelectorLayoutOnly()
-                tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
-            }
-            if isAppeared {
-                UIView.animateWithDuration(0.5) { a() }
-            }
-            else {
-                a()
-            }
+
+    private func renderInvalidations(flags: InvalidationTable) {
+        titleLabel.attributedText = localState.crateState?.basics?.name.attributed().stylizedSilently(.crateInspector(.titleName))
+        if flags.info {
+            infoView.render(localState.crateState, animated: isAppeared)
         }
-        else {
-            renderModeSelectorLayoutOnly()
-        }
-    }
-    private func downloadData() {
-        var needsReloadingDatasheetMode = false
-        localState.crateInspectionState = {
-            guard let index = indexInCrateInspectionStateStack else { return nil }
-            let newCrateInspectionState = state.navigation.crateInspectorStack[index]
-            if newCrateInspectionState.datasheetMode != localState.crateInspectionState?.datasheetMode {
-                needsReloadingDatasheetMode = true
-            }
-            return newCrateInspectionState
-        }()
-        if needsReloadingDatasheetMode {
+        if flags.mode {
+            renderDatasheetModeSelector()
             reloadDatasheetOf(localState.crateInspectionState?.datasheetMode)
         }
-        localState.crateState = (localState.crateInspectionState?.crateID).flatMap({ state.database.crates[$0] })
-
-        func toLinkItemState(name: String, _ address: String?) -> LinkItemState? {
-            guard let a = address else { return nil }
-            guard let u = NSURL(string: a) else { return nil }
-            return LinkItemState(displayName: name, targetURL: u)
-        }
-        let newLinkDatasheetState = [
-            toLinkItemState("Website", localState.crateState?.basics?.homepage),
-            toLinkItemState("Documentation", localState.crateState?.basics?.documentation),
-            toLinkItemState("Repository", localState.crateState?.basics?.repository),
-            ].flatMap({ $0 }) as [LinkItemState]
-        if !(localState.linkDatasheetState == newLinkDatasheetState) {
-            localState.linkDatasheetState = newLinkDatasheetState
+        if flags.linksSection {
             reloadDatasheetOf(.links)
         }
-        if localState.dependencyDatasheetState.version != localState.crateState?.extras.dependencies.version {
-            localState.dependencyDatasheetState.version = localState.crateState?.extras.dependencies.version ?? Version()
-            localState.dependencyDatasheetState.content = (localState.crateState?.extras.dependencies.result ?? []).map { DependencyItemState($0.name, $0.id) }
+        if flags.dependenciesSection {
             reloadDatasheetOf(.dependencies)
         }
-        if localState.versionDatasheetState.version != localState.crateState?.extras.versions.version {
-            localState.versionDatasheetState.version = localState.crateState?.extras.versions.version ?? Version()
-            localState.versionDatasheetState.content = (localState.crateState?.extras.versions.result ?? []).map { VersionItemState($0.0, $0.1) }
+        if flags.versionsSection {
             reloadDatasheetOf(.versions)
         }
-    }
-    private func renderData() {
-        titleLabel.attributedText = localState.crateState?.basics?.name.attributed().stylizedSilently(.crateInspector(.titleName))
-        infoView.layoutIfNeeded()
-        renderDatasheetModeSelector()
     }
     private func renderDatasheetModeSelector() {
         func getSegmentEnabled() -> [Bool] {
@@ -250,9 +254,28 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
 
 
 
-
-    private func renderLayoutAnimated(animated: Bool) {
-
+    private func renderLayoutOnly() {
+        tableView.frame = view.bounds
+        let h = getInfoHeight()
+        let w = view.bounds.width
+        if infoView.frame.height != h {
+            func a() {
+                infoView.frame.size = CGSize(width: w, height: h)
+                infoView.setNeedsLayout()
+                infoView.layoutIfNeeded()
+                renderModeSelectorLayoutOnly()
+                tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+            }
+            if isAppeared {
+                UIView.animateWithDuration(0.5) { a() }
+            }
+            else {
+                a()
+            }
+        }
+        else {
+            renderModeSelectorLayoutOnly()
+        }
     }
     private func renderModeSelectorLayoutOnly() {
         let contentOffsetY = tableView.contentOffset.y
@@ -298,16 +321,16 @@ extension CrateInspectorViewController2 {
         super.viewWillAppear(animated)
         (localState.crateInspectionState?.crateID).applyOptionally { driver.operation.reloadCrateExtrasFor($0) }
         isAppeared = true
-        renderLocalState()
+        renderLocalState(InvalidationTable())
     }
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         isAppeared = false
-        renderLocalState()
+        renderLocalState(InvalidationTable())
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        renderLocalState()
+        renderLocalState(InvalidationTable())
     }
 }
 

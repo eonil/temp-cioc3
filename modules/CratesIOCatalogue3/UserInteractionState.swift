@@ -29,11 +29,13 @@ extension UserInteractionState {
 /// View-level state database.
 /// Some data can be thought as a local-cache of remote data obtained by API call.
 /// Some data can be stored in local storage such as SQLite database if needed.
-struct DatabaseState {
+struct DatabaseState: VersioningState {
+    private(set) var version = Version()
     private(set) var crates = [CrateID: CrateState]()
     private var crateServersideIDMapping = [String: CrateID]()
     mutating func setCrateExtrasTransferring(crateID: CrateID) {
         crates[crateID]?.setExtrasTransferrings()
+        version.revise()
     }
     private mutating func pushCrate(serversideID serversideID: String) -> CrateID {
         if let oldCrateID = crateServersideIDMapping[serversideID] {
@@ -45,29 +47,37 @@ struct DatabaseState {
             crates[newCrateID] = CrateState(serversideID: serversideID)
             return newCrateID
         }
+        version.revise()
     }
     private mutating func appendOrUpdateCrate(dto: DTODependency) -> CrateID {
-        return pushCrate(serversideID: dto.crate_id)
+        let crateID = pushCrate(serversideID: dto.crate_id)
+        version.revise()
+        return crateID
     }
     mutating func appendOrUpdateCrate(dto: DTOCrate) -> CrateID {
         let crateID = pushCrate(serversideID: dto.id)
         crates[crateID]?.update(dto)
+        version.revise()
         return crateID
     }
     mutating func clearExtrasOf(crateID: CrateID) {
         crates[crateID]?.extras.authors.reset()
         crates[crateID]?.extras.dependencies.reset()
         crates[crateID]?.extras.versions.reset()
+        version.revise()
     }
     mutating func update(crateID crateID: CrateID, dto: [DTOAuthor]) {
         crates[crateID]?.update(dto)
+        version.revise()
     }
     mutating func update(crateID crateID: CrateID, dto: [DTODependency]) {
         let dto1 = dto.map({ dtoDependency in (pushCrate(serversideID: dtoDependency.crate_id), dtoDependency) })
         crates[crateID]?.update(dto1)
+        version.revise()
     }
     mutating func update(crateID crateID: CrateID, dto: [DTOVersion]) {
         crates[crateID]?.update(dto)
+        version.revise()
     }
 }
 

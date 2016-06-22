@@ -12,13 +12,10 @@ import BoltsSwift
 import EonilToolbox
 
 extension Renderable where Self: DriverAccessible {
-    /// Gets current UI state (scene-graph)
-    ///
-    /// - Note: Must be called in main-thread.
-    ///
-    var state: UserInteractionState {
-        assert(NSThread.isMainThread())
-        return driver.userInteraction.state
+    /// Renders with current service state.
+    /// Can be called only in main thread.
+    func renderWithCurrentUserInteractionServiceState() {
+        render(driver.userInteraction.state)
     }
 }
 
@@ -85,7 +82,7 @@ final class UserInteractionService: DriverAccessible {
             let result = try transaction(&S.state)
             let newVersion = S.state.version
             if oldVersion != newVersion {
-                S.renderer.render()
+                S.renderer.render(S.state)
             }
             return Task(result)
         }
