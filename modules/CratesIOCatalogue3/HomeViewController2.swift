@@ -42,8 +42,9 @@ private extension TableCell {
 
 /// The first screen.
 final class HomeViewController2: UIViewController, Renderable, DriverAccessible {
-    private let tableView = UITableView(frame: CGRect.zero, style: .Grouped)
     private let searchController = UISearchController(searchResultsController: HomeSearchResultViewController())
+    private let tableView = UITableView(frame: CGRect.zero, style: .Grouped)
+    private let creditAttributionView = CreditAttributionView()
     private var installer = ViewInstaller()
     private var localState = LocalState()
 
@@ -52,6 +53,7 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
     }
     func render(newState: UserInteractionState) {
         getSearchResultViewController()?.render(newState)
+        creditAttributionView.render()
         installer.installIfNeeded {
             view.addSubview(tableView)
             tableView.registerClass(CrateSummaryCell.self, forCellReuseIdentifier: TableCell.crate.rawValue)
@@ -77,6 +79,12 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
     }
     func renderLayoutOnly() {
         tableView.frame = view.bounds
+
+        // Resize attribution.
+        tableView.tableFooterView = nil
+        let s = creditAttributionView.sizeThatFits(CGSize(width: view.bounds.size.width, height: CGFloat.max))
+        creditAttributionView.frame.size = s
+        tableView.tableFooterView = creditAttributionView
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

@@ -12,8 +12,12 @@ import UIKit
 enum Style {
     static let defaultTintColor = UIColor(red: 50.0/255.0, green: 118.0/255.0, blue: 177.0/255.0, alpha: 1)
     static let weakTintColor = UIColor(hue: 0, saturation: 0, brightness: 0.5, alpha: 1)
+    case attribution(AttributionStyle)
     case crateList(CrateListStyle)
     case crateInspector(CrateInspectorStyle)
+}
+enum AttributionStyle {
+    case text
 }
 enum CrateListStyle {
     case itemName
@@ -42,6 +46,10 @@ extension Style {
 private extension Style {
     private func getForegroundColor() -> UIColor {
         switch self {
+        case let .attribution(substyle):
+            switch substyle {
+            case .text:                 return UIColor(hue: 0, saturation: 0, brightness: 0.6, alpha: 1)
+            }
         case let .crateList(substyle):
             switch substyle {
             case .itemName:             return UIColor(hue: 0, saturation: 0, brightness: 0.3, alpha: 1)
@@ -74,6 +82,10 @@ private extension Style {
         }
         let CRATE_NAME_FONT_NAME = "DINCondensed-Bold"
         switch self {
+        case let .attribution(substyle):
+            switch substyle {
+            case .text:                 return try getFont(name: "HelveticaNeue", size: 10)
+            }
         case let .crateList(substyle):
             switch substyle {
             case .itemName:             return try getFont(name: CRATE_NAME_FONT_NAME, size: 22)
@@ -98,6 +110,10 @@ private extension Style {
     }
     private func getAlignment() -> NSTextAlignment {
         switch self {
+        case let .attribution(substyle):
+            switch substyle {
+            case .text:                 return .Center
+            }
         case let .crateList(substyle):
             switch substyle {
             case .itemName:             return .Left

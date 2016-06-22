@@ -52,6 +52,7 @@
 		459B5FD91D031C8D0081D8FF /* BoltsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FBE1D031C780081D8FF /* BoltsSwift.framework */; };
 		459B5FDA1D031C8D0081D8FF /* BoltsSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FBE1D031C780081D8FF /* BoltsSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		459B5FDE1D031D140081D8FF /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */; };
+		45C040171D1AE16A00E471AD /* CreditAttributionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C040161D1AE16A00E471AD /* CreditAttributionView.swift */; };
 		45D1B99D1D170B4100B9F7C3 /* CrateSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */; };
 		45D1B9AC1D171A5400B9F7C3 /* HomeSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */; };
 		45D1B9AE1D18305E00B9F7C3 /* VersioningContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */; };
@@ -246,6 +247,7 @@
 		459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BoltsSwift.xcodeproj; path = "../submodules/Bolts-Swift/BoltsSwift.xcodeproj"; sourceTree = "<group>"; };
 		459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EonilToolbox.xcodeproj; path = ../submodules/toolbox.swift/EonilToolbox.xcodeproj; sourceTree = "<group>"; };
 		459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
+		45C040161D1AE16A00E471AD /* CreditAttributionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditAttributionView.swift; sourceTree = "<group>"; };
 		45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateSummaryCell.swift; sourceTree = "<group>"; };
 		45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSearchResultViewController.swift; sourceTree = "<group>"; };
 		45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersioningContainer.swift; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 				459B5FAB1D0319860081D8FF /* RootViewController.swift */,
 				458EE5BC1D12E6AE004A1942 /* HomeViewController2.swift */,
 				45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */,
+				45C040161D1AE16A00E471AD /* CreditAttributionView.swift */,
 				45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */,
 				45D1B9DE1D196EE100B9F7C3 /* CrateInspectorViewController2.swift */,
 				45D1B9CF1D1879F700B9F7C3 /* CrateInspectorInfoView2.swift */,
@@ -606,6 +609,7 @@
 				451C93EB1D0359FE00C5F640 /* DTODownload.swift in Sources */,
 				451C93F11D035A0900C5F640 /* JSONParsingExtensions.swift in Sources */,
 				459B5F9C1D03109F0081D8FF /* Renderer.swift in Sources */,
+				45C040171D1AE16A00E471AD /* CreditAttributionView.swift in Sources */,
 				451C93E81D0359FE00C5F640 /* DTOAuthor.swift in Sources */,
 				458EE64D1D14D5AA004A1942 /* Transmissive.swift in Sources */,
 				451C93E91D0359FE00C5F640 /* DTOCrate.swift in Sources */,
