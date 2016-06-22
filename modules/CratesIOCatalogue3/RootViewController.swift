@@ -15,7 +15,6 @@ private struct LocalState {
 
 final class RootViewController: UINavigationController, DriverAccessible, Renderable {
     private let home = HomeViewController2()
-    private let search = SearchViewController()
     private var crateInspectors = [CrateInspectorViewController2]()
     private var installer = ViewInstaller()
     private var inTransition = false

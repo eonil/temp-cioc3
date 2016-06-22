@@ -1,3 +1,11 @@
+
+
+
+// This is Auto Layout supporting feature, and disabled
+// due to unreliability of Auto Layout system.
+
+
+
 //
 //  UIKitExtensionsForAutoLayoutConvenience.swift
 //  StackViewPlayground
@@ -13,15 +21,15 @@ import UIKit
 /// Anyway, installed constraints will be deinstalled automatically when the views die.
 protocol PinnableViewType {
 }
-protocol OutlinePinnableViewType: PinnableViewType {
-}
+//protocol OutlinePinnableViewType: PinnableViewType {
+//}
 
 extension UIView: PinnableViewType {
 }
-extension UIScrollView: OutlinePinnableViewType {
-}
-extension UIStackView: OutlinePinnableViewType {
-}
+//extension UIScrollView: OutlinePinnableViewType {
+//}
+//extension UIStackView: OutlinePinnableViewType {
+//}
 
 extension PinnableViewType where Self: UIView {
     private func prepare() {
