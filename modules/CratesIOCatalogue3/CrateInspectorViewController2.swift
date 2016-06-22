@@ -284,7 +284,7 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
         let filteredDisplacementInY = max(topInset, displacementInY)
         let modeBox = tableView.bounds.toBox().toSilentBox().splitInY(44, 0%, 100%).min.translatedBy((0, filteredDisplacementInY))
         modeSelectorContainerView.frame = modeBox.toCGRect()
-        modeSelectorSegmentedControl.frame = modeSelectorContainerView.bounds.insetBy(dx: 20, dy: 10)
+        modeSelectorSegmentedControl.frame = modeSelectorContainerView.bounds.insetBy(dx: 10, dy: 5)
     }
     private func getInfoHeight() -> CGFloat {
         let fit = CGSize(width: tableView.bounds.width, height: CGFloat.max)
