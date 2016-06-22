@@ -89,10 +89,13 @@ struct NavigationState {
     private(set) var version = Version()
     private(set) var mode: ModeID = .Browse
     private(set) var home = HomeState()
-    private(set) var search: SearchNavigationState?
+    private(set) var search = SearchNavigationState()
     private(set) var crateInspectorStack = [CrateInspectionState]()
 
     init() {
+    }
+    mutating func setSearchResult(newResult: SearchResultState) {
+        search.result = newResult
     }
     mutating func resetCrateInspectorStack(newCrateInspectorStack: [CrateInspectionState]) {
         crateInspectorStack = newCrateInspectorStack
@@ -113,7 +116,6 @@ struct NavigationState {
         version.revise()
     }
 }
-
 
 enum ModeID {
     case Browse
@@ -147,10 +149,10 @@ struct HomeState {
 }
 struct SearchNavigationState {
     var expression: String?
-    var result: SearchResultState
+    var result = SearchResultState()
 }
 struct SearchResultState {
-    var items: [CrateID]
+    var transmission = Transmissive<[CrateID]>()
 }
 struct DetailNavigationState {
     var crateID: CrateID

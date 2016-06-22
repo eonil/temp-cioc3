@@ -47,6 +47,30 @@ final class OperationService: DriverAccessible {
             driver.userInteraction.networkActivityRendering.renderFor($0)
         }
     }
+
+    func search(query: String) -> Task<()> {
+        enum Error: ErrorType {
+            case resultUndefined
+        }
+        return Task(()).continueOnSuccessWith(Executor.Queue(gcdq)) { [driver] in
+            return APIService.Search.index(query, page: 0, per_page: 128, sort: .Downloads).continueWithTask { [driver] (task: Task<[DTOCrate]>) -> Task<()> in
+                debugLog(task.error)
+                guard let result = task.result else { return Task(error: Error.resultUndefined) }
+                debugLog(result)
+                return driver.userInteraction.dispatchTransaction { state in
+                    var ids = [CrateID]()
+                    for dto in result {
+                        let id = state.database.appendOrUpdateCrate(dto)
+                        ids.append(id)
+                    }
+                    var s = SearchResultState()
+                    s.transmission.setDownloaded(ids)
+                    state.navigation.setSearchResult(s)
+                }
+            }
+        }
+    }
+
     func reloadCrateFor(crateID: CrateID) -> Task<()> {
         enum Error: ErrorType {
             case MissingCrateStateFor(CrateID)

@@ -36,7 +36,7 @@ private enum TableCell: String {
 }
 private extension TableCell {
     func getRowHeight() -> CGFloat {
-        return 96
+        return CrateSummaryCell.designedHeight
     }
 }
 
@@ -47,7 +47,11 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
     private var installer = ViewInstaller()
     private var localState = LocalState()
 
-    func render(state: UserInteractionState) {
+    private func getSearchResultViewController() -> HomeSearchResultViewController? {
+        return searchController.searchResultsController as? HomeSearchResultViewController
+    }
+    func render(newState: UserInteractionState) {
+        getSearchResultViewController()?.render(newState)
         installer.installIfNeeded {
             view.addSubview(tableView)
             tableView.registerClass(CrateSummaryCell.self, forCellReuseIdentifier: TableCell.crate.rawValue)
@@ -57,15 +61,17 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
             navigationItem.titleView = searchController.searchBar
             searchController.hidesNavigationBarDuringPresentation = false
             searchController.searchBar.placeholder = "crates.io"
+            searchController.searchBar.autocapitalizationType = .None
+            searchController.searchBar.autocorrectionType = .No
             searchController.searchResultsUpdater = self
             definesPresentationContext = true
         }
-        if localState.homeState.version != state.navigation.home.version {
-            localState.homeState = state.navigation.home
+        if localState.homeState.version != newState.navigation.home.version {
+            localState.homeState = newState.navigation.home
             tableView.reloadData()
         }
-        if localState.database.version != state.database.version {
-            localState.database = state.database
+        if localState.database.version != newState.database.version {
+            localState.database = newState.database
         }
         renderLayoutOnly()
     }
@@ -120,7 +126,7 @@ extension HomeViewController2: UITableViewDataSource, UITableViewDelegate {
         }
         let crateID = crateIDFor(section: TableSection.all[indexPath.section], row: indexPath.row)
         assert(localState.database.crates[crateID] != nil)
-        cell.state = localState.database.crates[crateID]?.basics
+        cell.render(localState.database.crates[crateID]?.basics)
         return cell
     }
     @objc
@@ -135,7 +141,8 @@ private final class ErrorCell: UITableViewCell {
 extension HomeViewController2: UISearchResultsUpdating {
     @objc
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        
+        let q = searchController.searchBar.text ?? ""
+        driver.operation.search(q)
     }
 }
 
