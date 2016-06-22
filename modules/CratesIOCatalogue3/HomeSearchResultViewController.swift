@@ -43,6 +43,7 @@ final class HomeSearchResultViewController: UIViewController, Renderable {
             tableView.rowHeight = CrateSummaryCell.designedHeight
             tableView.dataSource = self
             tableView.delegate = self
+            tableView.tableFooterView = UIView()
         }
         tableView.frame = view.bounds
         tableView.reloadData()
