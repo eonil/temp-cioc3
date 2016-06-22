@@ -20,7 +20,7 @@ private struct LocalState {
 }
 private typealias CrateSummary = (id: CrateID, basics: CrateStateBasics?)
 
-final class HomeSearchResultViewController: UIViewController, Renderable {
+final class HomeSearchResultViewController: UIViewController, Renderable, DriverAccessible {
     private let tableView = UITableView()
     private var installer = ViewInstaller()
     private var localState = LocalState()
@@ -69,6 +69,10 @@ extension HomeSearchResultViewController: UITableViewDataSource, UITableViewDele
         let crateBasics = localState.matchingCrateSummaries[indexPath.row].basics
         cell.render(crateBasics)
         return cell
+    }
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let crateID = localState.matchingCrateSummaries[indexPath.row].id
+        driver.operation.pushCrateInspectorFor(crateID)
     }
 }
 

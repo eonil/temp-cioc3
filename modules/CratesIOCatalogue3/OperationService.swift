@@ -53,7 +53,7 @@ final class OperationService: DriverAccessible {
             case resultUndefined
         }
         return Task(()).continueOnSuccessWith(Executor.Queue(gcdq)) { [driver] in
-            return APIService.Search.index(query, page: 0, per_page: 128, sort: .Downloads).continueWithTask { [driver] (task: Task<[DTOCrate]>) -> Task<()> in
+            return APIService.Search.index(query, page: 0, per_page: 50, sort: .Downloads).continueWithTask { [driver] (task: Task<[DTOCrate]>) -> Task<()> in
                 debugLog(task.error)
                 guard let result = task.result else { return Task(error: Error.resultUndefined) }
                 debugLog(result)
