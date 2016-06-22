@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import BoltsSwift
 import EonilToolbox
 
 private enum TableSection {
@@ -44,6 +45,7 @@ private extension TableCell {
 final class HomeViewController2: UIViewController, Renderable, DriverAccessible {
     private let searchController = UISearchController(searchResultsController: HomeSearchResultViewController())
     private let tableView = UITableView(frame: CGRect.zero, style: .Grouped)
+    private let reloadingRefresh = UIRefreshControl()
     private let creditAttributionView = CreditAttributionView()
     private var installer = ViewInstaller()
     private var localState = LocalState()
@@ -55,11 +57,6 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
         getSearchResultViewController()?.render(newState)
         creditAttributionView.render()
         installer.installIfNeeded {
-            view.addSubview(tableView)
-            tableView.registerClass(CrateSummaryCell.self, forCellReuseIdentifier: TableCell.crate.rawValue)
-            tableView.registerClass(ErrorCell.self, forCellReuseIdentifier: TableCell.error.rawValue)
-            tableView.dataSource = self
-            tableView.delegate = self
             navigationItem.titleView = searchController.searchBar
             searchController.hidesNavigationBarDuringPresentation = false
             searchController.searchBar.placeholder = "crates.io"
@@ -67,6 +64,17 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
             searchController.searchBar.autocorrectionType = .No
             searchController.searchResultsUpdater = self
             definesPresentationContext = true
+
+            view.addSubview(tableView)
+            tableView.registerClass(CrateSummaryCell.self, forCellReuseIdentifier: TableCell.crate.rawValue)
+            tableView.registerClass(ErrorCell.self, forCellReuseIdentifier: TableCell.error.rawValue)
+            tableView.dataSource = self
+            tableView.delegate = self
+
+            // `UIRefreshControl` controls its frame itself on a table view.
+            // So do not try to set its frame yourself.
+            tableView.addSubview(reloadingRefresh)
+            reloadingRefresh.addTarget(self, action: #selector(EONIL_didChangeValue(_:)), forControlEvents: .ValueChanged)
         }
         if localState.homeState.version != newState.navigation.home.version {
             localState.homeState = newState.navigation.home
@@ -82,13 +90,25 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
 
         // Resize attribution.
         tableView.tableFooterView = nil
-        let s = creditAttributionView.sizeThatFits(CGSize(width: view.bounds.size.width, height: CGFloat.max))
-        creditAttributionView.frame.size = s
+        creditAttributionView.frame.size = creditAttributionView.sizeThatFits(CGSize(width: view.bounds.size.width, height: CGFloat.max))
         tableView.tableFooterView = creditAttributionView
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         renderLayoutOnly()
+    }
+}
+
+extension HomeViewController2 {
+    @objc
+    private func EONIL_didChangeValue(_: NSObject?) {
+        driver.operation.reloadHome().continueWithTask { [weak self] (task: Task<()>) -> Task<()> in
+            guard let S = self else { return task }
+            // This might possibly can be wrongly ends the animation.
+            // Anyway, I think that's not really critical here...
+            S.reloadingRefresh.endRefreshing()
+            return task
+        }
     }
 }
 
