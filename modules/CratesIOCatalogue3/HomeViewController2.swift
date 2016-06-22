@@ -65,6 +65,7 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
             searchController.searchResultsUpdater = self
             definesPresentationContext = true
 
+            view.backgroundColor = tableView.backgroundColor
             view.addSubview(tableView)
             tableView.registerClass(CrateSummaryCell.self, forCellReuseIdentifier: TableCell.crate.rawValue)
             tableView.registerClass(ErrorCell.self, forCellReuseIdentifier: TableCell.error.rawValue)
@@ -76,18 +77,23 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
             tableView.addSubview(reloadingRefresh)
             reloadingRefresh.addTarget(self, action: #selector(EONIL_didChangeValue(_:)), forControlEvents: .ValueChanged)
         }
-        if localState.homeState.version != newState.navigation.home.version {
-            localState.homeState = newState.navigation.home
-            tableView.reloadData()
-        }
         if localState.database.version != newState.database.version {
             localState.database = newState.database
         }
-        if localState.homeState.summary.isTransferring {
-            reloadingRefresh.beginRefreshing()
-        }
-        else {
-            reloadingRefresh.endRefreshing()
+        if localState.homeState.version != newState.navigation.home.version {
+            localState.homeState = newState.navigation.home
+            if localState.homeState.summary.isTransferring {
+                reloadingRefresh.beginRefreshing()
+            }
+            else {
+                reloadingRefresh.endRefreshing()
+            }
+
+            tableView.reloadData()
+            func a() {
+                tableView.alpha = (localState.homeState.summary.result == nil) ? 0 : 1
+            }
+            UIView.animateWithDuration(0.5) { a() }
         }
     }
     func renderLayoutOnly() {
