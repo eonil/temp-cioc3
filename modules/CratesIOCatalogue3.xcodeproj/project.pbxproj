@@ -53,6 +53,8 @@
 		459B5FDA1D031C8D0081D8FF /* BoltsSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FBE1D031C780081D8FF /* BoltsSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		459B5FDE1D031D140081D8FF /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */; };
 		45C040171D1AE16A00E471AD /* CreditAttributionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C040161D1AE16A00E471AD /* CreditAttributionView.swift */; };
+		45C0401C1D1AF1D600E471AD /* CREDITS.md in Sources */ = {isa = PBXBuildFile; fileRef = 45C0401B1D1AF1D600E471AD /* CREDITS.md */; };
+		45C040291D1AF21600E471AD /* TODO.md in Sources */ = {isa = PBXBuildFile; fileRef = 45C040281D1AF21600E471AD /* TODO.md */; };
 		45D1B99D1D170B4100B9F7C3 /* CrateSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */; };
 		45D1B9AC1D171A5400B9F7C3 /* HomeSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */; };
 		45D1B9AE1D18305E00B9F7C3 /* VersioningContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */; };
@@ -248,6 +250,8 @@
 		459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EonilToolbox.xcodeproj; path = ../submodules/toolbox.swift/EonilToolbox.xcodeproj; sourceTree = "<group>"; };
 		459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
 		45C040161D1AE16A00E471AD /* CreditAttributionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditAttributionView.swift; sourceTree = "<group>"; };
+		45C0401B1D1AF1D600E471AD /* CREDITS.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CREDITS.md; sourceTree = "<group>"; };
+		45C040281D1AF21600E471AD /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateSummaryCell.swift; sourceTree = "<group>"; };
 		45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSearchResultViewController.swift; sourceTree = "<group>"; };
 		45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersioningContainer.swift; sourceTree = "<group>"; };
@@ -349,6 +353,8 @@
 			children = (
 				451C94D21D0482CB00C5F640 /* README.md */,
 				451C94D41D0482E800C5F640 /* NOTE.md */,
+				45C0401B1D1AF1D600E471AD /* CREDITS.md */,
+				45C040281D1AF21600E471AD /* TODO.md */,
 				451C949C1D045CD600C5F640 /* EonilJSON.xcodeproj */,
 				459B5FCB1D031C7C0081D8FF /* EonilToolbox.xcodeproj */,
 				459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */,
@@ -622,6 +628,7 @@
 				458EE5BD1D12E6AE004A1942 /* HomeViewController2.swift in Sources */,
 				45D1B9E61D19835500B9F7C3 /* LocalStateContainer.swift in Sources */,
 				451C93E71D0359FE00C5F640 /* DTOSummary.swift in Sources */,
+				45C040291D1AF21600E471AD /* TODO.md in Sources */,
 				451C93B21D031D9200C5F640 /* UserInteractionState.swift in Sources */,
 				451C94B01D045F4600C5F640 /* HTTPService.swift in Sources */,
 				458EE65B1D152AC0004A1942 /* BoltsExtensions.swift in Sources */,
@@ -647,6 +654,7 @@
 				459B5FAC1D0319860081D8FF /* RootViewController.swift in Sources */,
 				459B5FA61D0310E30081D8FF /* DriverCommand.swift in Sources */,
 				451C93EC1D0359FE00C5F640 /* DTOKeyword.swift in Sources */,
+				45C0401C1D1AF1D600E471AD /* CREDITS.md in Sources */,
 				45D1B9AC1D171A5400B9F7C3 /* HomeSearchResultViewController.swift in Sources */,
 				45D1B9F31D198A2600B9F7C3 /* PriorityContainer.swift in Sources */,
 			);
