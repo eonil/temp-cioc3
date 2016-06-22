@@ -1,11 +1,3 @@
-
-
-
-// This is Auto Layout supporting feature, and disabled
-// due to unreliability of Auto Layout system.
-
-
-
 //
 //  UIKitExtensionsForAutoLayoutConvenience.swift
 //  StackViewPlayground
