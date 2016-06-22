@@ -45,9 +45,9 @@ struct DatabaseState: VersioningState {
             let newCrateID = CrateID()
             crateServersideIDMapping[serversideID] = newCrateID
             crates[newCrateID] = CrateState(serversideID: serversideID)
+            version.revise()
             return newCrateID
         }
-        version.revise()
     }
     private mutating func appendOrUpdateCrate(dto: DTODependency) -> CrateID {
         let crateID = pushCrate(serversideID: dto.crate_id)
@@ -146,6 +146,9 @@ struct HomeState {
     var justUpdatedItems = [CrateID]() {
         didSet { version.revise() }
     }
+}
+struct SummaryState {
+
 }
 struct SearchNavigationState {
     var expression: String?

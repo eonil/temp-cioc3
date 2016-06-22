@@ -44,7 +44,6 @@
 		459B5F921D0310740081D8FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 459B5F901D0310740081D8FF /* LaunchScreen.storyboard */; };
 		459B5F9A1D03107C0081D8FF /* Driver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F991D03107C0081D8FF /* Driver.swift */; };
 		459B5F9C1D03109F0081D8FF /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5F9B1D03109F0081D8FF /* Renderer.swift */; };
-		459B5FA61D0310E30081D8FF /* DriverCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FA51D0310E30081D8FF /* DriverCommand.swift */; };
 		459B5FAA1D03132A0081D8FF /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FA91D03132A0081D8FF /* APIService.swift */; };
 		459B5FAC1D0319860081D8FF /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FAB1D0319860081D8FF /* RootViewController.swift */; };
 		459B5FD41D031C870081D8FF /* EonilToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FD11D031C7C0081D8FF /* EonilToolbox.framework */; };
@@ -53,8 +52,6 @@
 		459B5FDA1D031C8D0081D8FF /* BoltsSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 459B5FBE1D031C780081D8FF /* BoltsSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		459B5FDE1D031D140081D8FF /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459B5FDD1D031D140081D8FF /* UtilityFunctions.swift */; };
 		45C040171D1AE16A00E471AD /* CreditAttributionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C040161D1AE16A00E471AD /* CreditAttributionView.swift */; };
-		45C0401C1D1AF1D600E471AD /* CREDITS.md in Sources */ = {isa = PBXBuildFile; fileRef = 45C0401B1D1AF1D600E471AD /* CREDITS.md */; };
-		45C040291D1AF21600E471AD /* TODO.md in Sources */ = {isa = PBXBuildFile; fileRef = 45C040281D1AF21600E471AD /* TODO.md */; };
 		45D1B99D1D170B4100B9F7C3 /* CrateSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B99C1D170B4100B9F7C3 /* CrateSummaryCell.swift */; };
 		45D1B9AC1D171A5400B9F7C3 /* HomeSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AB1D171A5400B9F7C3 /* HomeSearchResultViewController.swift */; };
 		45D1B9AE1D18305E00B9F7C3 /* VersioningContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1B9AD1D18305E00B9F7C3 /* VersioningContainer.swift */; };
@@ -243,7 +240,6 @@
 		459B5F931D0310740081D8FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		459B5F991D03107C0081D8FF /* Driver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Driver.swift; sourceTree = "<group>"; };
 		459B5F9B1D03109F0081D8FF /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
-		459B5FA51D0310E30081D8FF /* DriverCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverCommand.swift; sourceTree = "<group>"; };
 		459B5FA91D03132A0081D8FF /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		459B5FAB1D0319860081D8FF /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		459B5FB31D031C780081D8FF /* BoltsSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BoltsSwift.xcodeproj; path = "../submodules/Bolts-Swift/BoltsSwift.xcodeproj"; sourceTree = "<group>"; };
@@ -375,7 +371,6 @@
 			isa = PBXGroup;
 			children = (
 				459B5F991D03107C0081D8FF /* Driver.swift */,
-				459B5FA51D0310E30081D8FF /* DriverCommand.swift */,
 				4526FE641D118BAE004495FD /* (operation service) */,
 				4526FE731D118D82004495FD /* (user interaction service) */,
 				451C93DE1D03598100C5F640 /* (API service) */,
@@ -628,7 +623,6 @@
 				458EE5BD1D12E6AE004A1942 /* HomeViewController2.swift in Sources */,
 				45D1B9E61D19835500B9F7C3 /* LocalStateContainer.swift in Sources */,
 				451C93E71D0359FE00C5F640 /* DTOSummary.swift in Sources */,
-				45C040291D1AF21600E471AD /* TODO.md in Sources */,
 				451C93B21D031D9200C5F640 /* UserInteractionState.swift in Sources */,
 				451C94B01D045F4600C5F640 /* HTTPService.swift in Sources */,
 				458EE65B1D152AC0004A1942 /* BoltsExtensions.swift in Sources */,
@@ -652,9 +646,7 @@
 				451C93EE1D0359FE00C5F640 /* DTOVersion.swift in Sources */,
 				458EE6591D152889004A1942 /* NetworkActivityRenderingService.swift in Sources */,
 				459B5FAC1D0319860081D8FF /* RootViewController.swift in Sources */,
-				459B5FA61D0310E30081D8FF /* DriverCommand.swift in Sources */,
 				451C93EC1D0359FE00C5F640 /* DTOKeyword.swift in Sources */,
-				45C0401C1D1AF1D600E471AD /* CREDITS.md in Sources */,
 				45D1B9AC1D171A5400B9F7C3 /* HomeSearchResultViewController.swift in Sources */,
 				45D1B9F31D198A2600B9F7C3 /* PriorityContainer.swift in Sources */,
 			);

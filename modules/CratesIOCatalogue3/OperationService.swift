@@ -38,6 +38,13 @@ final class OperationService: DriverAccessible {
             return f()
         }
     }
+
+    func boot() {
+        driver.userInteraction.dispatchTransaction { [driver] state in
+            state = UserInteractionState()
+            driver.operation.reloadHome()
+        }
+    }
     func reloadHome() -> Task<()> {
         return dispatch { [driver] in
             return API.Home.summary().dispatchTo(driver.userInteraction) { summary, state in
@@ -68,6 +75,8 @@ final class OperationService: DriverAccessible {
                     state.navigation.setSearchResult(s)
                 }
             }
+        }.branch {
+                driver.userInteraction.networkActivityRendering.renderFor($0)
         }
     }
 
@@ -85,6 +94,8 @@ final class OperationService: DriverAccessible {
                     state.database.update(crateID: crateID, dto: result.versions)
                 }
             }
+        }.branch {
+            driver.userInteraction.networkActivityRendering.renderFor($0)
         }
     }
     func reloadCrateExtrasFor(crateID: CrateID) -> Task<()> {
@@ -135,6 +146,8 @@ final class OperationService: DriverAccessible {
         let loadData = driver.operation.reloadCrateFor(crateID).continueOnSuccessWithTask { [driver] in
             // Extra data requires basic data (crate ID and version) to work properly.
             return driver.operation.reloadCrateExtrasFor(crateID)
+        }.branch {
+            driver.userInteraction.networkActivityRendering.renderFor($0)
         }
         return Task.whenAll([performUI, loadData])
     }

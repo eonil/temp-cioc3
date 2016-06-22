@@ -12,13 +12,7 @@ import UIKit
 final class ApplicationController: UIResponder, UIApplicationDelegate, DriverAccessible {
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        driver.dispatch(DriverCommand.Reset)
-//        var h = HomeState()
-//        h.newItems.appendContentsOf(Repeat(count: 4, repeatedValue: CrateID()))
-//        h.popularItems.appendContentsOf(Repeat(count: 4, repeatedValue: CrateID()))
-//        h.justUpdatedItems.appendContentsOf(Repeat(count: 4, repeatedValue: CrateID()))
-        driver.operation.reloadHome()
-
+        driver.operation.boot()
         return true
     }
 

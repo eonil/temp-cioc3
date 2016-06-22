@@ -22,64 +22,9 @@ import EonilToolbox
 ///
 final class Driver {
     private static let theDriver = Driver()
-    private var cmdq = [(DriverCommand,TaskCompletionSource<()>)]()
-    private var isPaused = false
-
 
     let userInteraction = UserInteractionService()
     let operation = OperationService()
-
-    init() {
-        do {
-            try DisplayLinkUtility.installMainScreenHandler(ObjectIdentifier(self)) { [weak self] in
-                self?.run()
-            }
-        }
-        catch let error {
-            MARK_unimplemented()
-        }
-    }
-    deinit {
-        DisplayLinkUtility.deinstallMainScreenHandler(ObjectIdentifier(self))
-    }
-    func dispatch(command: DriverCommand) -> Task<()> {
-        let completion = TaskCompletionSource<()>()
-        cmdq.append((command, completion))
-        return completion.task
-    }
-    private func run() {
-        guard isPaused == false else { return }
-        while let (command, completion) = cmdq.popFirst() {
-            do {
-                try step(command)
-                completion.trySetResult(())
-            }
-            catch let error {
-                completion.trySetError(error)
-            }
-        }
-    }
-    private func step(command: DriverCommand) throws {
-        debugLog(command)
-        switch command {
-        case .Reset:
-            // No-op for now.
-            userInteraction.dispatchTransaction { state in
-                state = UserInteractionState()
-            }
-            
-            break
-
-        case .Pause:
-            isPaused = true
-
-        case.Resume:
-            isPaused = false
-
-        case .WaitForDuration(let duration):
-            MARK_unimplemented()
-        }
-    }
 }
 
 protocol DriverAccessible {

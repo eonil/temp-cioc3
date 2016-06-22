@@ -32,26 +32,24 @@ final class UserInteractionService: DriverAccessible {
 
     let networkActivityRendering = NetworkActivityRenderingService()
 
-    init() {
-        do {
-            try DisplayLinkUtility.installMainScreenHandler(ObjectIdentifier(self)) { [weak self] in
+//    init() {
+//        do {
+//            try DisplayLinkUtility.installMainScreenHandler(ObjectIdentifier(self)) { [weak self] in
 //                self?.run()
-            }
-        }
-        catch let error {
-            fatalErrorWithReporting("No way to recover here. The error is: \(error).")
-        }
-    }
-    deinit {
-        DisplayLinkUtility.deinstallMainScreenHandler(ObjectIdentifier(self))
-    }
+//            }
+//        }
+//        catch let error {
+//            fatalErrorWithReporting("No way to recover here. The error is: \(error).")
+//        }
+//    }
+//    deinit {
+//        DisplayLinkUtility.deinstallMainScreenHandler(ObjectIdentifier(self))
+//    }
 
-    func pause() {
-        dispatch_suspend(gcdq)
-    }
-    func resume() {
-        dispatch_resume(gcdq)
-    }
+//    func pauseUserInteraction() {
+//    }
+//    func resumeUserInteraction() {
+//    }
 
 //    /// Read state in UI service's GCDQ.
 //    func dispatch(access: (UserInteractionState) -> ()) -> Task<()> {
