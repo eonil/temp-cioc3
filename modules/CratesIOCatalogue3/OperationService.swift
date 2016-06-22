@@ -46,7 +46,9 @@ final class OperationService: DriverAccessible {
         }
     }
     func reloadHome() -> Task<()> {
-        return dispatch { [driver] in
+        return Task(()).dispatchTo(driver.userInteraction) { _, state in
+            state.setReloadingHome()
+        }.continueWithTask(.Queue(gcdq)) { [driver] (task: Task<()>) -> Task<()> in
             return API.Home.summary().dispatchTo(driver.userInteraction) { summary, state in
                 state.reloadHome(summary)
             }

@@ -83,7 +83,12 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
         if localState.database.version != newState.database.version {
             localState.database = newState.database
         }
-        renderLayoutOnly()
+        if localState.homeState.summary.isTransferring {
+            reloadingRefresh.beginRefreshing()
+        }
+        else {
+            reloadingRefresh.endRefreshing()
+        }
     }
     func renderLayoutOnly() {
         tableView.frame = view.bounds
@@ -112,27 +117,19 @@ extension HomeViewController2 {
     }
 }
 
-extension HomeViewController2 {
-    private func crateIDFor(section section: TableSection, row: Int) -> CrateID {
-        switch section {
-        case .newCrates:        return localState.homeState.newItems[row]
-        case .justUpdated:      return localState.homeState.justUpdatedItems[row]
-        case .mostDownloaded:   return localState.homeState.mostDownloadedItems[row]
-        }
-    }
-}
 
 extension HomeViewController2: UITableViewDataSource, UITableViewDelegate {
     @objc
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return TableSection.all.count
+        return localState.homeState.summary.result == nil ? 0 : TableSection.all.count
     }
     @objc
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let summary = localState.homeState.summary.result else { return 0 }
         switch TableSection.all[section] {
-        case .newCrates:        return localState.homeState.newItems.count
-        case .justUpdated:      return localState.homeState.justUpdatedItems.count
-        case .mostDownloaded:   return localState.homeState.mostDownloadedItems.count
+        case .newCrates:        return summary.newItems.count
+        case .justUpdated:      return summary.justUpdatedItems.count
+        case .mostDownloaded:   return summary.mostDownloadedItems.count
         }
     }
     @objc
@@ -149,20 +146,33 @@ extension HomeViewController2: UITableViewDataSource, UITableViewDelegate {
     }
     @objc
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        guard let crateID = crateIDFor(section: TableSection.all[indexPath.section], row: indexPath.row) else {
+            return tableView.dequeueReusableCellWithIdentifier(TableCell.error.rawValue, forIndexPath: indexPath)
+        }
         guard let cell = tableView.dequeueReusableCellWithIdentifier(TableCell.crate.rawValue, forIndexPath: indexPath) as? CrateSummaryCell else {
             return tableView.dequeueReusableCellWithIdentifier(TableCell.error.rawValue, forIndexPath: indexPath)
         }
-        let crateID = crateIDFor(section: TableSection.all[indexPath.section], row: indexPath.row)
         assert(localState.database.crates[crateID] != nil)
         cell.render(localState.database.crates[crateID]?.basics)
         return cell
     }
     @objc
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let crateID = crateIDFor(section: TableSection.all[indexPath.section], row: indexPath.row)
+        guard let crateID = crateIDFor(section: TableSection.all[indexPath.section], row: indexPath.row) else { return }
         driver.operation.pushCrateInspectorFor(crateID)
     }
 }
+extension HomeViewController2 {
+    private func crateIDFor(section section: TableSection, row: Int) -> CrateID? {
+        guard let summary = localState.homeState.summary.result else { return nil }
+        switch section {
+        case .newCrates:        return summary.newItems[row]
+        case .justUpdated:      return summary.justUpdatedItems[row]
+        case .mostDownloaded:   return summary.mostDownloadedItems[row]
+        }
+    }
+}
+
 private final class ErrorCell: UITableViewCell {
 }
 

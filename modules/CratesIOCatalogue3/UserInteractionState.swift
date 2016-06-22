@@ -17,12 +17,16 @@ struct UserInteractionState {
         didSet { version.revise() }
     }
 }
-
 extension UserInteractionState {
+    mutating func setReloadingHome() {
+        navigation.home.summary.setTransferring()
+    }
     mutating func reloadHome(dtoSummary: DTOSummary) {
-        navigation.home.justUpdatedItems = dtoSummary.just_updated.map { database.appendOrUpdateCrate($0) }
-        navigation.home.newItems = dtoSummary.new_crates.map { database.appendOrUpdateCrate($0) }
-        navigation.home.mostDownloadedItems = dtoSummary.most_downloaded.map { database.appendOrUpdateCrate($0) }
+        var s = SummaryState()
+        s.justUpdatedItems = dtoSummary.just_updated.map { database.appendOrUpdateCrate($0) }
+        s.newItems = dtoSummary.new_crates.map { database.appendOrUpdateCrate($0) }
+        s.mostDownloadedItems = dtoSummary.most_downloaded.map { database.appendOrUpdateCrate($0) }
+        navigation.home.summary.setDownloaded(s)
     }
 }
 
@@ -137,18 +141,14 @@ extension DatasheetModeID {
 
 struct HomeState {
     private(set) var version = Version()
-    var newItems = [CrateID]() {
-        didSet { version.revise() }
-    }
-    var mostDownloadedItems = [CrateID]() {
-        didSet { version.revise() }
-    }
-    var justUpdatedItems = [CrateID]() {
+    private(set) var summary = Transmissive<SummaryState>() {
         didSet { version.revise() }
     }
 }
 struct SummaryState {
-
+    var newItems = [CrateID]()
+    var mostDownloadedItems = [CrateID]()
+    var justUpdatedItems = [CrateID]()
 }
 struct SearchNavigationState {
     var expression: String?
