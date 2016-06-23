@@ -48,8 +48,12 @@ struct APIService {
         /// - Parameter page:
         ///     0-based page index.
         static func index(query: String, page: Int, per_page: Int, sort: Sort) -> Task<[DTOCrate]> {
+            enum Error: ErrorType {
+                case queryStringCannotBeEmpty
+            }
             assertNonMainThread()
-//            assert(query == nil || query != "", "Query text must be `nil` or non-zero length string.")
+            assert(query != "")
+            guard query != "" else { return Task(error: Error.queryStringCannotBeEmpty) }
             let	ps = [
                 "page"		:	(page+1).description,
                 "per_page"	:	per_page.description,

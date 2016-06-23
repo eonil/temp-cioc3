@@ -61,6 +61,7 @@ final class OperationService: DriverAccessible {
         enum Error: ErrorType {
             case resultUndefined
         }
+        if query == "" { return Task.cancelledTask() }
         return Task(()).continueOnSuccessWith(Executor.Queue(gcdq)) { [driver] in
             return APIService.Search.index(query, page: 0, per_page: 50, sort: .Downloads).continueWithTask { [driver] (task: Task<[DTOCrate]>) -> Task<()> in
                 debugLog(task.error)

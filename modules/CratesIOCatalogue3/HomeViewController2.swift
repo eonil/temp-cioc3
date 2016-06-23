@@ -83,17 +83,17 @@ final class HomeViewController2: UIViewController, Renderable, DriverAccessible 
         if localState.homeState.version != newState.navigation.home.version {
             localState.homeState = newState.navigation.home
             if localState.homeState.summary.isTransferring {
-                reloadingRefresh.beginRefreshing()
+//                reloadingRefresh.beginRefreshing()
             }
             else {
                 reloadingRefresh.endRefreshing()
             }
 
             tableView.reloadData()
-            func a() {
-                tableView.alpha = (localState.homeState.summary.result == nil) ? 0 : 1
-            }
-            UIView.animateWithDuration(0.5) { a() }
+//            func a() {
+//                tableView.alpha = (localState.homeState.summary.isTransferring) ? 0 : 1
+//            }
+//            UIView.animateWithDuration(0.5) { a() }
         }
     }
     func renderLayoutOnly() {
