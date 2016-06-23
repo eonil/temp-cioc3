@@ -138,7 +138,7 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
         }
         return flags
     }
-    private func renderLocalState(invalidateions: InvalidationTable) {
+    private func renderLocalState(invalidations: InvalidationTable) {
         assertMainThread()
         installer.installIfNeeded {
             navigationItem.titleView = {
@@ -179,7 +179,7 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
             modeSelectorSegmentedControl.addTarget(self, action: #selector(EONIL_modeDidChangeValue(_:)), forControlEvents: .ValueChanged)
             renderLayoutOnly()
         }
-        renderInvalidations(invalidateions)
+        renderInvalidations(invalidations)
         renderLayoutOnly()
     }
 
@@ -225,31 +225,36 @@ final class CrateInspectorViewController2: UIViewController, Renderable, DriverA
     private func reloadDatasheetOf(datasheetMode: DatasheetModeID?) {
         guard localState.crateInspectionState?.datasheetMode == datasheetMode else { return }
         if let datasheetSectionIndex = TableSection.all.indexOf(.datasheet) {
-            CATransaction.begin()
-            CATransaction.setAnimationDuration(1)
-            tableView.beginUpdates()
-//            CATransaction.setCompletionBlock { [weak self] in
-//                guard let S = self else { return }
-//                S.infoView.render(crateStateToRender, animated: true)
-//                S.reloadDatasheetWithAnimation()
-//            }
+            if isAppeared {
+                CATransaction.begin()
+                CATransaction.setAnimationDuration(1)
+                tableView.beginUpdates()
+//                CATransaction.setCompletionBlock { [weak self] in
+//                    guard let S = self else { return }
+//                    S.infoView.render(crateStateToRender, animated: true)
+//                    S.reloadDatasheetWithAnimation()
+//                }
 
-            let oldRowCount = tableView.numberOfRowsInSection(datasheetSectionIndex)
-            let newRowCount = tableView(tableView, numberOfRowsInSection: datasheetSectionIndex)
-            let sharedRowCount = min(oldRowCount, newRowCount)
-            let rowsToDelete = (sharedRowCount..<max(sharedRowCount, oldRowCount)).map { NSIndexPath(forRow: $0, inSection: datasheetSectionIndex) }
-            let rowsToReload = (0..<sharedRowCount).map { NSIndexPath(forRow: $0, inSection: datasheetSectionIndex) }
-            let rowsToInsert = (sharedRowCount..<max(sharedRowCount, newRowCount)).map { NSIndexPath(forRow: $0, inSection: datasheetSectionIndex) }
-            if rowsToDelete.count > 0 {
-                tableView.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: .Fade)
+                let oldRowCount = tableView.numberOfRowsInSection(datasheetSectionIndex)
+                let newRowCount = tableView(tableView, numberOfRowsInSection: datasheetSectionIndex)
+                let sharedRowCount = min(oldRowCount, newRowCount)
+                let rowsToDelete = (sharedRowCount..<max(sharedRowCount, oldRowCount)).map { NSIndexPath(forRow: $0, inSection: datasheetSectionIndex) }
+                let rowsToReload = (0..<sharedRowCount).map { NSIndexPath(forRow: $0, inSection: datasheetSectionIndex) }
+                let rowsToInsert = (sharedRowCount..<max(sharedRowCount, newRowCount)).map { NSIndexPath(forRow: $0, inSection: datasheetSectionIndex) }
+                if rowsToDelete.count > 0 {
+                    tableView.deleteRowsAtIndexPaths(rowsToDelete, withRowAnimation: .Fade)
+                }
+                tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Fade)
+                if rowsToInsert.count > 0 {
+                    tableView.insertRowsAtIndexPaths(rowsToInsert, withRowAnimation: .Fade)
+                }
+                tableView.endUpdates()
+                CATransaction.commit()
             }
-            tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Fade)
-            if rowsToInsert.count > 0 {
-                tableView.insertRowsAtIndexPaths(rowsToInsert, withRowAnimation: .Fade)
+            else {
+                tableView.reloadData()
             }
-            tableView.endUpdates()
         }
-        CATransaction.commit()
     }
 
 
